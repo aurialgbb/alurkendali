@@ -1,0 +1,31 @@
+{
+  "name": "alur-kendali-landing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test:demo:state": "tsc --ignoreConfig --target es2022 --moduleResolution node16 --module node16 --outDir qa/generated --skipLibCheck src/lib/demo-scenarios.ts src/lib/demo-explorer-state.ts && node qa/guided-domain.cjs",
+    "test:demo:browser": "node qa/guided-browser.cjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "lighthouse": "^13.4.1",
+    "prettier": "^3.9.6",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}

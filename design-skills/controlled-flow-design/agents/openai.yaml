@@ -1,0 +1,6 @@
+interface:
+  display_name: "Controlled Flow Design"
+  short_description: "Minimalist B2B style for web, finance SaaS, and decks"
+  default_prompt: "Use $controlled-flow-design to apply the reference typography, hierarchy, palette, and medium-specific layout to this deliverable."
+policy:
+  allow_implicit_invocation: true
