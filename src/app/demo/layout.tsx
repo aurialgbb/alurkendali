@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { cookies } from "next/headers";
+import { LocalizedText } from "@/lib/locale";
+import { localeCookie, pageCopy } from "@/lib/translate";
 import { DemoProvider } from "@/lib/demo-store";
 import { GuidedProvider } from "@/lib/guided-store";
 import { DemoNav } from "./demo-nav";
 import "./demo.css";
-export const metadata: Metadata = {
-  title: "Coba alur bisnis | Alur Kendali",
-  description:
-    "Demo terpandu Finance, Inventory, Procurement, dan Operations dengan data contoh.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale =
+    (await cookies()).get(localeCookie)?.value === "en" ? "en" : "id";
+  return {
+    title: pageCopy[locale].demoTitle,
+    description: pageCopy[locale].demoDescription,
+  };
+}
 export default function DemoLayout({
   children,
 }: {
@@ -19,7 +25,11 @@ export default function DemoLayout({
       <GuidedProvider>
         <div className="demo-shell">
           <Suspense
-            fallback={<div className="demo-loading">Memuat navigasi demo…</div>}
+            fallback={
+              <div className="demo-loading">
+                <LocalizedText>Memuat navigasi demo…</LocalizedText>
+              </div>
+            }
           >
             <DemoNav />
           </Suspense>

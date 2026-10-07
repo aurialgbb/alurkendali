@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -44,6 +45,7 @@ const guidance = {
   ],
 };
 export default function GuidedScenario({ id }: { id: ScenarioId }) {
+  const { t: tr } = useLocale();
   const { states, loaded, notice, act, reset } = useGuided();
   const s = states[id];
   const c = scenarios[id];
@@ -74,22 +76,26 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
     ? configuredNumber
     : "";
   const contact = waNumber
-    ? `https://wa.me/${waNumber}?text=${encodeURIComponent(`Halo, saya sudah mencoba demo ${c.label} Alur Kendali. Saya ingin mendiskusikan proses ${c.label} di perusahaan kami.`)}`
+    ? `https://wa.me/${waNumber}?text=${encodeURIComponent(tr(`Halo, saya sudah mencoba demo ${c.label} Alur Kendali. Saya ingin mendiskusikan proses ${c.label} di perusahaan kami.`))}`
     : `/?demo=${id}#diskusi`;
   if (!loaded)
     return (
       <div className="demo-loading" role="status">
-        Menyiapkan kasus {c.label}…
+        {tr("Menyiapkan kasus ")}
+        {tr(c.label)}
+        {"…"}
       </div>
     );
   return (
     <div className="guided-scenario">
       <div className="scenario-breadcrumb">
-        <Link href="/demo">Semua kasus</Link>
-        <span>/</span>
-        <span>{c.label}</span>
+        <Link href="/demo">{tr("Semua kasus")}</Link>
+        <span>{"/"}</span>
+        <span>{tr(c.label)}</span>
         <div>
-          <Link href={`/demo/${id}?mode=explore`}>Jelajahi sendiri</Link>
+          <Link href={`/demo/${id}?mode=explore`}>
+            {tr("Jelajahi sendiri")}
+          </Link>
           <ResetScenario
             label={c.label}
             onReset={() => {
@@ -102,60 +108,68 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
       <header className="scenario-heading">
         <div>
           <p className="demo-eyebrow">
-            Demo {c.label} · PT Selaras Niaga, perusahaan contoh
+            {"Demo "}
+            {tr(c.label)}
+            {tr(" · PT Selaras Niaga, perusahaan contoh")}
           </p>
-          <h1>{c.title}</h1>
-          <p>{c.description}</p>
+          <h1>{tr(c.title)}</h1>
+          <p>{tr(c.description)}</p>
         </div>
         <span className="scenario-mode">
-          {complete ? "✓ Skenario selesai" : "Panduan interaktif"}
+          {tr(complete ? "✓ Skenario selesai" : "Panduan interaktif")}
         </span>
       </header>
-      <ol className="scenario-progress" aria-label="Tahap skenario">
+      <ol className="scenario-progress" aria-label={tr("Tahap skenario")}>
         {c.steps.map((label, i) => (
           <li
             key={label}
             className={i < step ? "is-done" : i === step ? "is-active" : ""}
             aria-current={i === step ? "step" : undefined}
           >
-            <span>{i < step ? "✓" : String(i + 1).padStart(2, "0")}</span>
-            <strong>{label}</strong>
+            <span>{tr(i < step ? "✓" : String(i + 1).padStart(2, "0"))}</span>
+            <strong>{tr(label)}</strong>
           </li>
         ))}
       </ol>
       {notice && (
         <p className="demo-storage-notice" role="status">
-          {notice}
+          {tr(notice)}
         </p>
       )}
       <div className="scenario-layout">
         <aside className={`scenario-guide ${complete ? "guide-complete" : ""}`}>
           <span className="guide-step">
-            {complete
-              ? "Hasil yang bisa ditelusuri"
-              : `Langkah ${step + 1} dari ${c.steps.length - 1}`}
+            {tr(
+              complete
+                ? "Hasil yang bisa ditelusuri"
+                : `Langkah ${step + 1} dari ${c.steps.length - 1}`,
+            )}
           </span>
           <h2 ref={heading} tabIndex={-1}>
-            {complete
-              ? "Alurnya selesai. Buktinya tersimpan."
-              : !s.started
-                ? "Mari coba kasus ini."
-                : needsRole
-                  ? `Sekarang giliran ${roleLabels[required]}.`
-                  : c.steps[step]}
+            {tr(
+              complete
+                ? "Alurnya selesai. Buktinya tersimpan."
+                : !s.started
+                  ? "Mari coba kasus ini."
+                  : needsRole
+                    ? `Sekarang giliran ${roleLabels[required]}.`
+                    : c.steps[step],
+            )}
           </h2>
-          <p>{guidance[id][step]}</p>
+          <p>{tr(guidance[id][step])}</p>
           <div className="guide-role">
-            <span>Anda berperan sebagai</span>
-            <strong>{roleLabels[s.role]}</strong>
+            <span>{tr("Anda berperan sebagai")}</span>
+            <strong>{tr(roleLabels[s.role])}</strong>
             <small>
-              {id === "inventory" && s.role === "staff"
-                ? "Tim Gudang Pusat"
-                : s.role === "manager"
-                  ? "Penanggung jawab cabang"
-                  : s.role === "finance"
-                    ? "Tim pemeriksa keuangan"
-                    : "Tim operasional cabang"}
+              {tr(
+                id === "inventory" && s.role === "staff"
+                  ? "Tim Gudang Pusat"
+                  : s.role === "manager"
+                    ? "Penanggung jawab cabang"
+                    : s.role === "finance"
+                      ? "Tim pemeriksa keuangan"
+                      : "Tim operasional cabang",
+              )}
             </small>
           </div>
           {!s.started && (
@@ -163,8 +177,9 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
               className="demo-primary"
               onClick={() => act(id, { type: "start" })}
             >
-              Mulai demo {c.label}
-              <span aria-hidden="true">→</span>
+              {tr("Mulai demo ")}
+              {tr(c.label)}
+              <span aria-hidden="true">{"→"}</span>
             </button>
           )}
           {needsRole && (
@@ -172,17 +187,20 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
               className="demo-primary"
               onClick={() => act(id, { type: "role", role: required })}
             >
-              Lanjut sebagai {roleLabels[required]}
-              <span aria-hidden="true">→</span>
+              {tr("Lanjut sebagai ")}
+              {tr(roleLabels[required])}
+              <span aria-hidden="true">{"→"}</span>
             </button>
           )}
           {enabled && (
             <div className="guide-next">
-              <span aria-hidden="true">↳</span>
+              <span aria-hidden="true">{"↳"}</span>
               <p>
-                {id === "operations" && step === 0
-                  ? "Tandai pemeriksaan pada checklist di area kerja."
-                  : "Periksa area kerja, lalu gunakan tombol tindakan di bawah dokumen."}
+                {tr(
+                  id === "operations" && step === 0
+                    ? "Tandai pemeriksaan pada checklist di area kerja."
+                    : "Periksa area kerja, lalu gunakan tombol tindakan di bawah dokumen.",
+                )}
               </p>
             </div>
           )}
@@ -192,10 +210,10 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
                 className="demo-primary"
                 href={`/demo/reporting?scenario=${id}&doc=${c.code}`}
               >
-                Lihat riwayat dokumen
+                {tr("Lihat riwayat dokumen")}
               </Link>
               <Link className="demo-secondary" href="/demo">
-                Coba kategori lain
+                {tr("Coba kategori lain")}
               </Link>
               <a
                 className="demo-text-link"
@@ -203,24 +221,28 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
                 target={waNumber ? "_blank" : undefined}
                 rel={waNumber ? "noopener noreferrer" : undefined}
               >
-                Diskusikan proses {c.label}
+                {tr("Diskusikan proses ")}
+                {tr(c.label)}
               </a>
             </div>
           )}
           <p className="guide-disclaimer">
-            Data dan tindakan adalah simulasi. Tidak ada transaksi atau
-            pengiriman barang nyata.
+            {tr(
+              "Data dan tindakan adalah simulasi. Tidak ada transaksi atau pengiriman barang nyata.",
+            )}
           </p>
         </aside>
         <div className="scenario-workspace">
           <div className="workspace-label">
             <span>{c.code}</span>
             <span>
-              {complete
-                ? "Selesai"
-                : s.started
-                  ? `Peran aktif: ${roleLabels[s.role]}`
-                  : "Pratinjau kasus"}
+              {tr(
+                complete
+                  ? "Selesai"
+                  : s.started
+                    ? `Peran aktif: ${roleLabels[s.role]}`
+                    : "Pratinjau kasus",
+              )}
             </span>
           </div>
           <div key={`${id}-${revision}`} className="workspace-content">
@@ -233,24 +255,26 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
           >
             {s.error ? (
               <p role="alert" className="scenario-error">
-                {s.error}
+                {tr(s.error)}
               </p>
             ) : s.events.length > 0 ? (
               <p className="scenario-success">
-                ✓ {s.events[s.events.length - 1].action}
+                {"✓ "}
+                {tr(s.events[s.events.length - 1].action)}
               </p>
             ) : null}
           </div>
           {s.finance.status === "rejected" && id === "finance" && (
             <div className="scenario-rejection">
-              <h3>Pengajuan ditolak</h3>
+              <h3>{tr("Pengajuan ditolak")}</h3>
               <p>{s.finance.reason}</p>
               <p>
-                Keputusan dan alasannya tersimpan. Gunakan “Ulangi skenario”
-                untuk mencoba alur persetujuan.
+                {tr(
+                  "Keputusan dan alasannya tersimpan. Gunakan “Ulangi skenario” untuk mencoba alur persetujuan.",
+                )}
               </p>
               <Link href="/demo/reporting?scenario=finance&doc=EXP-DEMO-001">
-                Lihat catatan keputusan
+                {tr("Lihat catatan keputusan")}
               </Link>
             </div>
           )}
@@ -258,12 +282,14 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
       </div>
       <section className="scenario-history">
         <div>
-          <p className="demo-eyebrow">Jejak pekerjaan</p>
-          <h2>Setiap tindakan punya catatan.</h2>
+          <p className="demo-eyebrow">{tr("Jejak pekerjaan")}</p>
+          <h2>{tr("Setiap tindakan punya catatan.")}</h2>
           <p>
-            {s.events.length
-              ? `${s.events.length} aktivitas pada ${c.code}.`
-              : "Riwayat akan muncul setelah Anda melakukan tindakan pertama."}
+            {tr(
+              s.events.length
+                ? `${s.events.length} aktivitas pada ${c.code}.`
+                : "Riwayat akan muncul setelah Anda melakukan tindakan pertama.",
+            )}
           </p>
         </div>
         <ol>
@@ -274,13 +300,16 @@ export default function GuidedScenario({ id }: { id: ScenarioId }) {
               <li key={e.id}>
                 <span className="event-dot" />
                 <div>
-                  <strong>{e.action}</strong>
+                  <strong>{tr(e.action)}</strong>
                   <span>
-                    {roleLabels[e.actor]} ·{" "}
-                    {new Date(e.at).toLocaleTimeString("id-ID", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {tr(roleLabels[e.actor])}
+                    {" ·"}{" "}
+                    {tr(
+                      new Date(e.at).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }),
+                    )}
                   </span>
                 </div>
               </li>

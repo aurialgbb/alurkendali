@@ -8,7 +8,9 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test:demo:state": "tsc --ignoreConfig --target es2022 --moduleResolution node16 --module node16 --outDir qa/generated --skipLibCheck src/lib/demo-scenarios.ts src/lib/demo-explorer-state.ts && node qa/guided-domain.cjs",
-    "test:demo:browser": "node qa/guided-browser.cjs"
+    "test:demo:browser": "node qa/guided-browser.cjs",
+    "test:locale:copy": "tsc --ignoreConfig --target es2022 --moduleResolution node16 --module node16 --outDir qa/generated --skipLibCheck src/lib/translate.ts src/lib/demo-copy.ts src/lib/demo-scenarios.ts && node qa/locale-copy.cjs",
+    "test:locale:browser": "node qa/locale-browser.cjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "latest",

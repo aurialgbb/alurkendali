@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import { useState } from "react";
 import Link from "next/link";
 import { useGuided } from "@/lib/guided-store";
@@ -11,6 +12,7 @@ export default function Reporting({
   initialScenario?: string;
   initialDocument?: string;
 }) {
+  const { t: tr } = useLocale();
   const { states, loaded } = useGuided();
   const { auditLogs } = useDemo();
   const [category, setCategory] = useState(
@@ -25,8 +27,9 @@ export default function Reporting({
         key: e.id,
         module: id as string,
         code: e.code,
-        action: e.action,
-        actor: roleLabels[e.actor],
+        action: tr(e.action),
+        searchAction: e.action,
+        actor: tr(roleLabels[e.actor]),
         date: new Date(e.at).toLocaleString("id-ID"),
         sort: e.at,
         href: `/demo/${id}?mode=guided`,
@@ -37,7 +40,8 @@ export default function Reporting({
     key: e.id,
     module: e.module as string,
     code: e.docCode,
-    action: e.details,
+    action: e.action === "Pengajuan ditolak" ? e.details : tr(e.details),
+    searchAction: e.details,
     actor: e.user,
     date: e.timestamp,
     sort: "",
@@ -47,7 +51,7 @@ export default function Reporting({
   const filtered = records.filter(
     (e) =>
       (category === "all" || e.module === category) &&
-      `${e.code} ${e.action} ${e.actor}`
+      `${e.code} ${e.action} ${e.searchAction} ${e.actor}`
         .toLocaleLowerCase("id-ID")
         .includes(query.toLocaleLowerCase("id-ID")),
   );
@@ -55,7 +59,7 @@ export default function Reporting({
     const cell = (value: string) =>
       `"${(/^[=+@\-\t\r]/.test(value) ? "'" + value : value).replaceAll('"', '""')}"`;
     const csv = [
-      "Dokumen,Modul,Aktivitas,Pelaksana,Waktu",
+      ["Dokumen", "Modul", "Aktivitas", "Pelaksana", "Waktu"].map(tr).join(","),
       ...filtered.map((e) =>
         [e.code, e.module, e.action, e.actor, e.date].map(cell).join(","),
       ),
@@ -73,28 +77,28 @@ export default function Reporting({
   if (!loaded)
     return (
       <p className="demo-loading" role="status">
-        Memuat riwayat demo…
+        {tr("Memuat riwayat demo…")}
       </p>
     );
   return (
     <div className="demo-report">
       <header className="report-heading">
         <div>
-          <p className="demo-eyebrow">Riwayat & pelaporan</p>
-          <h1>Dari hasil, kembali ke prosesnya.</h1>
-          <p>Lihat siapa melakukan apa pada setiap dokumen simulasi.</p>
+          <p className="demo-eyebrow">{tr("Riwayat & pelaporan")}</p>
+          <h1>{tr("Dari hasil, kembali ke prosesnya.")}</h1>
+          <p>{tr("Lihat siapa melakukan apa pada setiap dokumen simulasi.")}</p>
         </div>
         <button
           className="demo-secondary"
           disabled={!filtered.length}
           onClick={download}
         >
-          Unduh riwayat CSV
+          {tr("Unduh riwayat CSV")}
         </button>
       </header>
       <div className="report-filters">
         <label className="demo-field">
-          Sumber data
+          {tr("Sumber data")}
           <select
             value={source}
             onChange={(e) => {
@@ -102,36 +106,39 @@ export default function Reporting({
               setQuery("");
             }}
           >
-            <option value="guided">Demo terpandu</option>
-            <option value="exploration">Mode eksplorasi</option>
+            <option value="guided">{tr("Demo terpandu")}</option>
+            <option value="exploration">{tr("Mode eksplorasi")}</option>
           </select>
         </label>
         <label className="demo-field">
-          Kategori
+          {tr("Kategori")}
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="all">Semua kategori</option>
+            <option value="all">{tr("Semua kategori")}</option>
             {scenarioIds.map((id) => (
               <option key={id} value={id}>
-                {scenarios[id].label}
+                {tr(scenarios[id].label)}
               </option>
             ))}
           </select>
         </label>
         <label className="demo-field report-search">
-          Cari dokumen atau aktivitas
+          {tr("Cari dokumen atau aktivitas")}
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Contoh: EXP-DEMO-001"
+            placeholder={tr("Contoh: EXP-DEMO-001")}
           />
         </label>
       </div>
       <div className="report-count">
-        <span>{filtered.length} aktivitas</span>
+        <span>
+          {filtered.length}
+          {tr(" aktivitas")}
+        </span>
         {(query || category !== "all") && (
           <button
             className="demo-text-button"
@@ -140,13 +147,13 @@ export default function Reporting({
               setCategory("all");
             }}
           >
-            Hapus filter
+            {tr("Hapus filter")}
           </button>
         )}
       </div>
       {notice && (
         <p role="status" className="scenario-success">
-          {notice}
+          {tr(notice)}
         </p>
       )}
       {filtered.length ? (
@@ -154,35 +161,40 @@ export default function Reporting({
           {filtered.map((e) => (
             <li key={e.key}>
               <div className="report-record-code">
-                <Link href={e.href}>{e.code || "Catatan sistem"}</Link>
-                <span>{e.module}</span>
+                <Link href={e.href}>{tr(e.code || "Catatan sistem")}</Link>
+                <span>{tr(e.module)}</span>
               </div>
               <div className="report-record-action">
                 <p>{e.action}</p>
-                <span>{e.actor}</span>
+                <span>{tr(e.actor)}</span>
               </div>
-              <time>{e.date}</time>
+              <time>{tr(e.date)}</time>
             </li>
           ))}
         </ol>
       ) : (
         <div className="report-empty">
           <h2>
-            {records.length
-              ? "Tidak ada aktivitas yang cocok."
-              : "Riwayat dimulai dari tindakan pertama."}
+            {tr(
+              records.length
+                ? "Tidak ada aktivitas yang cocok."
+                : "Riwayat dimulai dari tindakan pertama.",
+            )}
           </h2>
           <p>
-            {records.length
-              ? "Ubah kata pencarian atau hapus filter untuk melihat catatan lainnya."
-              : "Coba pengajuan biaya, kirim barang, atau isi checklist. Tindakan Anda akan tercatat di sini."}
+            {tr(
+              records.length
+                ? "Ubah kata pencarian atau hapus filter untuk melihat catatan lainnya."
+                : "Coba pengajuan biaya, kirim barang, atau isi checklist. Tindakan Anda akan tercatat di sini.",
+            )}
           </p>
-          <Link href="/demo">Pilih kasus demo →</Link>
+          <Link href="/demo">{tr("Pilih kasus demo →")}</Link>
         </div>
       )}
       <p className="report-footnote">
-        Catatan disimpan pada browser ini untuk keperluan demo. Mengulang
-        skenario akan menghapus riwayat skenario tersebut.
+        {tr(
+          "Catatan disimpan pada browser ini untuk keperluan demo. Mengulang skenario akan menghapus riwayat skenario tersebut.",
+        )}
       </p>
     </div>
   );

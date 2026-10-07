@@ -1,4 +1,47 @@
 @import "tailwindcss";
+.language-switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  width: fit-content;
+}
+.language-switch button {
+  min-width: 46px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1;
+  transition: background 160ms, color 160ms;
+}
+.language-switch button:hover { background: var(--tint); color: var(--blue-dark); }
+.language-switch button[aria-pressed="true"] { background: var(--blue); color: white; }
+.language-switch button:focus-visible { outline-offset: 2px; }
+.language-dialog { margin-bottom: 16px; }
+.record-dialog-heading:has(> .language-switch) { flex-wrap: wrap; gap: 12px; }
+.record-dialog-heading:has(> .language-switch) > h2 { margin-right: auto; }
+.mobile-nav > .language-switch { margin-bottom: 8px; }
+.demo-header > .language-switch { margin-left: auto; }
+.demo-header:has(> .language-switch) > .demo-header-back { margin-left: 0; }
+@media (min-width: 1051px) and (max-width: 1280px) {
+  .nav-inner:has(.language-switch) { gap: 14px; }
+  .nav-inner:has(.language-switch) .desktop-nav { gap: 18px; }
+}
+@media (max-width: 1050px) { .language-desktop { display: none; } }
+@media (max-width: 640px) {
+  .demo-header:has(> .language-switch) { flex-wrap: wrap; }
+  .demo-header:has(> .language-switch) > .demo-header-back { flex-basis: 100%; text-align: right; }
+}
+@media (prefers-reduced-motion: reduce) { .language-switch button { transition: none; } }
 @layer base {
 :root {
   --ink: #192334;

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 
 import {
   createContext,
@@ -14,6 +15,7 @@ import Link from "next/link";
 import { faqs, navigation, site, solutions } from "@/lib/site";
 import ControlledFlow from "@/components/controlled-flow";
 import SolutionIllustration from "@/components/solution-illustration";
+import LanguageSwitch from "@/components/language-switch";
 
 type EventDetails = Record<string, string>;
 declare global {
@@ -120,15 +122,16 @@ function Icon({
 }
 
 function Brand({ footer = false }: { footer?: boolean }) {
+  const { t: tr } = useLocale();
   return (
     <a
       className={`brand ${footer ? "brand-footer" : ""}`}
       href="#top"
-      aria-label={`${site.name}, kembali ke atas`}
+      aria-label={tr(`${site.name}, kembali ke atas`)}
     >
       <Image
         src="/logo.png"
-        alt={site.name}
+        alt={tr(site.name)}
         width={360}
         height={110}
         priority={!footer}
@@ -154,6 +157,7 @@ function ContactButton({
   className?: string;
   arrow?: boolean;
 }) {
+  const { t: tr } = useLocale();
   const open = useContext(ContactContext);
   return (
     <button
@@ -161,7 +165,7 @@ function ContactButton({
       className={`button primary ${className}`}
       onClick={() => open(source, context)}
     >
-      {children}
+      {tr(children)}
       {arrow && <Icon name="arrow" />}
     </button>
   );
@@ -182,6 +186,7 @@ function Tabs({
   label: string;
   className?: string;
 }) {
+  const { t: tr } = useLocale();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   function handleKey(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     let next = index;
@@ -196,7 +201,7 @@ function Tabs({
     refs.current[next]?.focus();
   }
   return (
-    <div className={`tabs ${className}`} role="tablist" aria-label={label}>
+    <div className={`tabs ${className}`} role="tablist" aria-label={tr(label)}>
       {items.map((item, index) => (
         <button
           key={item}
@@ -212,7 +217,7 @@ function Tabs({
           onKeyDown={(event) => handleKey(event, index)}
           onClick={() => onChange(index)}
         >
-          {item}
+          {tr(item)}
         </button>
       ))}
     </div>
@@ -220,15 +225,18 @@ function Tabs({
 }
 
 function HeroFlow() {
+  const { t: tr } = useLocale();
   return (
     <div
       className="hero-flow"
       role="img"
-      aria-label="Ilustrasi: spreadsheet, approval di chat, dan dokumen terpisah disatukan menjadi pengajuan dengan approval, bukti, dan audit trail."
+      aria-label={tr(
+        "Ilustrasi: spreadsheet, approval di chat, dan dokumen terpisah disatukan menjadi pengajuan dengan approval, bukti, dan audit trail.",
+      )}
     >
       <div className="flow-caption">
-        <span>Proses yang tersebar</span>
-        <span>Alur yang terkendali</span>
+        <span>{tr("Proses yang tersebar")}</span>
+        <span>{tr("Alur yang terkendali")}</span>
       </div>
       <div className="flow-canvas">
         <svg
@@ -245,7 +253,7 @@ function HeroFlow() {
         <div className="source-doc source-sheet">
           <div className="source-label">
             <Icon name="grid" />
-            Spreadsheet
+            {"Spreadsheet"}
           </div>
           <div className="sheet-lines">
             <i />
@@ -258,42 +266,42 @@ function HeroFlow() {
             <i />
             <i />
           </div>
-          <small>rekap_final_v3.xlsx</small>
+          <small>{"rekap_final_v3.xlsx"}</small>
         </div>
         <div className="source-doc source-chat">
           <div className="source-label">
             <Icon name="chat" />
-            Approval di chat
+            {tr("Approval di chat")}
           </div>
-          <div className="chat-line">Sudah disetujui?</div>
-          <div className="chat-line short">Cek file yang mana?</div>
+          <div className="chat-line">{tr("Sudah disetujui?")}</div>
+          <div className="chat-line short">{tr("Cek file yang mana?")}</div>
         </div>
         <div className="source-doc source-evidence">
           <div className="source-label">
             <Icon name="document" />
-            Dokumen terpisah
+            {tr("Dokumen terpisah")}
           </div>
           <div className="document-lines">
             <i />
             <i />
           </div>
-          <small>Invoice & bukti transaksi</small>
+          <small>{tr("Invoice & bukti transaksi")}</small>
         </div>
         <div className="controlled-card">
           <div className="controlled-top">
-            <span className="tiny-monogram">ak.</span>
-            <span>Semua terkait pengajuan ini</span>
+            <span className="tiny-monogram">{"ak."}</span>
+            <span>{tr("Semua terkait pengajuan ini")}</span>
           </div>
           <div className="controlled-body">
-            <span className="small-label">Purchase request</span>
-            <div className="request-title">Pengadaan peralatan</div>
+            <span className="small-label">{"Purchase request"}</span>
+            <div className="request-title">{tr("Pengadaan peralatan")}</div>
             <div className="flow-step">
               <span className="step-check">
                 <Icon name="check" />
               </span>
               <div>
-                <strong>Kebutuhan sudah dicatat</strong>
-                <span>Data pengajuan lengkap</span>
+                <strong>{tr("Kebutuhan sudah dicatat")}</strong>
+                <span>{tr("Data pengajuan lengkap")}</span>
               </div>
             </div>
             <div className="flow-step">
@@ -301,8 +309,8 @@ function HeroFlow() {
                 <Icon name="check" />
               </span>
               <div>
-                <strong>Atasan sudah menyetujui</strong>
-                <span>Keputusannya tersimpan</span>
+                <strong>{tr("Atasan sudah menyetujui")}</strong>
+                <span>{tr("Keputusannya tersimpan")}</span>
               </div>
             </div>
             <div className="flow-step">
@@ -310,26 +318,28 @@ function HeroFlow() {
                 <Icon name="check" />
               </span>
               <div>
-                <strong>Bukti sudah dilampirkan</strong>
-                <span>Bisa dibuka saat dibutuhkan</span>
+                <strong>{tr("Bukti sudah dilampirkan")}</strong>
+                <span>{tr("Bisa dibuka saat dibutuhkan")}</span>
               </div>
             </div>
             <div className="audit-strip">
               <Icon name="clock" />
-              <span>Setiap perubahan tercatat.</span>
+              <span>{tr("Setiap perubahan tercatat.")}</span>
             </div>
           </div>
         </div>
       </div>
       <div className="flow-footnote">
         <span className="flow-key" />
-        Ilustrasi alur bisnis<span>Dari pengajuan sampai laporan</span>
+        {tr("Ilustrasi alur bisnis")}
+        <span>{tr("Dari pengajuan sampai laporan")}</span>
       </div>
     </div>
   );
 }
 
 function SolutionSection() {
+  const { t: tr } = useLocale();
   const [active, setActive] = useState(0);
   const solution = solutions[active];
   return (
@@ -337,18 +347,19 @@ function SolutionSection() {
       <div className="lp-container">
         <div className="section-heading split-heading">
           <div>
-            <span className="eyebrow">Area solusi</span>
+            <span className="eyebrow">{tr("Area solusi")}</span>
             <h2>
-              Proses mana yang paling
+              {tr("Proses mana yang paling")}
               <br />
-              menyita waktu tim Anda?
+              {tr("menyita waktu tim Anda?")}
             </h2>
           </div>
           <p>
-            Tidak perlu merombak semuanya sekaligus.
+            {tr("Tidak perlu merombak semuanya sekaligus.")}
             <br />
-            Kita bisa mulai dari satu proses yang paling sering membuat
-            pekerjaan tersendat.
+            {tr(
+              "Kita bisa mulai dari satu proses yang paling sering membuat pekerjaan tersendat.",
+            )}
           </p>
         </div>
         <Tabs
@@ -370,15 +381,18 @@ function SolutionSection() {
         >
           <div className="solution-copy" key={`copy-${active}`}>
             <span className="section-index">
-              0{active + 1} / {solution.label}
+              {"0"}
+              {active + 1}
+              {" / "}
+              {tr(solution.label)}
             </span>
-            <h3>{solution.title}</h3>
-            <p>{solution.description}</p>
+            <h3>{tr(solution.title)}</h3>
+            <p>{tr(solution.description)}</p>
             <ul className="check-list">
               {solution.outcomes.map((outcome) => (
                 <li key={outcome}>
                   <Icon name="check" />
-                  {outcome}
+                  {tr(outcome)}
                 </li>
               ))}
             </ul>
@@ -390,7 +404,8 @@ function SolutionSection() {
               }
               className="text-button"
             >
-              Coba demo {solution.short}
+              {tr("Coba demo ")}
+              {tr(solution.short)}
               <Icon name="arrow" />
             </Link>
             <ContactButton
@@ -398,7 +413,8 @@ function SolutionSection() {
               source="solution_whatsapp_click"
               context={solution.context}
             >
-              Diskusikan {solution.short}
+              {tr("Diskusikan ")}
+              {tr(solution.short)}
               <Icon name="arrow" />
             </ContactButton>
           </div>
@@ -458,6 +474,7 @@ const demoStages = [
 ];
 
 function DemoSection() {
+  const { t: tr } = useLocale();
   const [active, setActive] = useState(0);
   const stage = demoStages[active];
   return (
@@ -465,19 +482,19 @@ function DemoSection() {
       <div className="lp-container">
         <div className="demo-heading">
           <div>
-            <span className="eyebrow">Lihat alurnya</span>
+            <span className="eyebrow">{tr("Lihat alurnya")}</span>
             <h2>
-              Ikuti satu pengajuan,
+              {tr("Ikuti satu pengajuan,")}
               <br />
-              dari awal sampai selesai.
+              {tr("dari awal sampai selesai.")}
             </h2>
           </div>
           <div>
-            <span className="demo-label">Simulasi Alur Kerja</span>
+            <span className="demo-label">{tr("Simulasi Alur Kerja")}</span>
             <p>
-              Contoh Purchase & Expense Control.
+              {tr("Contoh Purchase & Expense Control.")}
               <br />
-              Klik tahap untuk mengikuti satu pengajuan.
+              {tr("Klik tahap untuk mengikuti satu pengajuan.")}
             </p>
             <div style={{ marginTop: "0.5rem" }}>
               <Link
@@ -491,7 +508,7 @@ function DemoSection() {
                   gap: "0.25rem",
                 }}
               >
-                Buka Portal Demo Lengkap (5 Modul) →
+                {tr("Buka Portal Demo Lengkap (5 Modul) →")}
               </Link>
             </div>
           </div>
@@ -499,11 +516,11 @@ function DemoSection() {
         <div className="demo-frame" data-stage={active}>
           <div className="demo-toolbar">
             <div className="demo-app-name">
-              <span className="tiny-monogram">ak.</span>
-              <span>Purchase & Expense Control</span>
+              <span className="tiny-monogram">{"ak."}</span>
+              <span>{"Purchase & Expense Control"}</span>
             </div>
             <span className="demo-readonly">
-              Simulasi alur · Data ilustrasi
+              {tr("Simulasi alur · Data ilustrasi")}
             </span>
           </div>
           <Tabs
@@ -530,63 +547,68 @@ function DemoSection() {
               <div className="record-heading">
                 <div>
                   <span className="record-code">
-                    PR-2026-042 · Contoh pengajuan
+                    {tr("PR-2026-042 · Contoh pengajuan")}
                   </span>
-                  <h3>Pengadaan peralatan cabang</h3>
+                  <h3>{tr("Pengadaan peralatan cabang")}</h3>
                 </div>
-                <span className="status">{stage.status}</span>
+                <span className="status">{tr(stage.status)}</span>
               </div>
               {active < 3 ? (
                 <>
                   <dl className="record-details">
                     <div>
-                      <dt>Diajukan oleh</dt>
-                      <dd>Tim operasional</dd>
+                      <dt>{tr("Diajukan oleh")}</dt>
+                      <dd>{tr("Tim operasional")}</dd>
                     </div>
                     <div>
-                      <dt>Unit</dt>
-                      <dd>Cabang Jakarta</dd>
+                      <dt>{"Unit"}</dt>
+                      <dd>{tr("Cabang Jakarta")}</dd>
                     </div>
                     <div>
-                      <dt>Kategori</dt>
-                      <dd>Peralatan operasional</dd>
+                      <dt>{tr("Kategori")}</dt>
+                      <dd>{tr("Peralatan operasional")}</dd>
                     </div>
                     <div>
-                      <dt>Total pengajuan</dt>
-                      <dd>Rp3.500.000</dd>
+                      <dt>{tr("Total pengajuan")}</dt>
+                      <dd>{"Rp3.500.000"}</dd>
                     </div>
                   </dl>
                   <div className="evidence-box">
                     <Icon name="clip" />
                     <div>
                       <strong>
-                        {active === 2
-                          ? "Invoice & bukti penerimaan"
-                          : "Penawaran peralatan.pdf"}
+                        {tr(
+                          active === 2
+                            ? "Invoice & bukti penerimaan"
+                            : "Penawaran peralatan.pdf",
+                        )}
                       </strong>
                       <span>
-                        {active === 2
-                          ? "Nilai sesuai pengajuan · Dokumen diperiksa"
-                          : "Dokumen pendukung · Data ilustrasi"}
+                        {tr(
+                          active === 2
+                            ? "Nilai sesuai pengajuan · Dokumen diperiksa"
+                            : "Dokumen pendukung · Data ilustrasi",
+                        )}
                       </span>
                     </div>
                     <Icon name="check" />
                   </div>
                   {active === 1 && (
                     <div className="review-note">
-                      <strong>Catatan persetujuan</strong>
+                      <strong>{tr("Catatan persetujuan")}</strong>
                       <p>
-                        Kebutuhan sesuai rencana operasional cabang. Lanjutkan
-                        untuk verifikasi finance.
+                        {tr(
+                          "Kebutuhan sesuai rencana operasional cabang. Lanjutkan untuk verifikasi finance.",
+                        )}
                       </p>
                     </div>
                   )}
                   {active === 2 && (
                     <div className="verification-row">
                       <Icon name="check" />
-                      Nilai cocok
+                      {tr("Nilai cocok")}
                       <Icon name="check" />
-                      Bukti lengkap
+                      {tr("Bukti lengkap")}
                     </div>
                   )}
                 </>
@@ -597,8 +619,8 @@ function DemoSection() {
                       <span className="audit-dot" />
                       <time>{item.time}</time>
                       <div>
-                        <strong>{item.action}</strong>
-                        <span>{item.role}</span>
+                        <strong>{tr(item.action)}</strong>
+                        <span>{tr(item.role)}</span>
                       </div>
                       <Icon name="check" />
                     </div>
@@ -608,24 +630,30 @@ function DemoSection() {
               <div className="record-footer">
                 <Icon name="clock" />
                 <span>
-                  {stage.time} · {stage.action}
+                  {stage.time}
+                  {" · "}
+                  {tr(stage.action)}
                 </span>
               </div>
             </div>
             <aside className="demo-explainer" key={active}>
-              <span className="section-index">Tahap 0{active + 1}</span>
-              <h3>{stage.title}</h3>
-              <p>{stage.description}</p>
+              <span className="section-index">
+                {tr("Tahap 0")}
+                {active + 1}
+              </span>
+              <h3>{tr(stage.title)}</h3>
+              <p>{tr(stage.description)}</p>
               <div className="role-line">
-                <span>Peran dalam proses</span>
-                <strong>{stage.role}</strong>
+                <span>{tr("Peran dalam proses")}</span>
+                <strong>{tr(stage.role)}</strong>
               </div>
             </aside>
           </div>
         </div>
         <p className="demo-disclaimer">
-          Ilustrasi untuk menjelaskan pendekatan sistem. Bukan implementasi
-          klien atau aplikasi transaksi aktif.
+          {tr(
+            "Ilustrasi untuk menjelaskan pendekatan sistem. Bukan implementasi klien atau aplikasi transaksi aktif.",
+          )}
         </p>
       </div>
     </section>
@@ -639,6 +667,7 @@ function ContactDialog({
   dialogRef: React.RefObject<HTMLDialogElement | null>;
   message: string;
 }) {
+  const { t: tr } = useLocale();
   const [copyStatus, setCopyStatus] = useState("");
   useEffect(() => {
     setCopyStatus("");
@@ -646,7 +675,7 @@ function ContactDialog({
   async function copyMessage() {
     setCopyStatus("Menyalin pesan...");
     try {
-      await navigator.clipboard.writeText(message);
+      await navigator.clipboard.writeText(tr(message));
       setCopyStatus("Pesan tersalin. Nomor WhatsApp dapat ditambahkan nanti.");
     } catch {
       setCopyStatus(
@@ -665,29 +694,31 @@ function ContactDialog({
       }}
     >
       <div className="dialog-content">
+        <LanguageSwitch className="language-dialog" />
         <form method="dialog">
           <button
             className="icon-button dialog-close"
-            aria-label="Tutup formulir kontak"
+            aria-label={tr("Tutup formulir kontak")}
           >
             <Icon name="close" />
           </button>
         </form>
-        <span className="eyebrow">Konsultasi Sistem</span>
-        <h2 id="contact-title">Mulai dari proses Anda</h2>
+        <span className="eyebrow">{tr("Konsultasi Sistem")}</span>
+        <h2 id="contact-title">{tr("Mulai dari proses Anda")}</h2>
         <p>
-          Salin pesan pembuka berikut untuk memulai diskusi dengan tim konsultan
-          kami melalui WhatsApp atau email.
+          {tr(
+            "Salin pesan pembuka berikut untuk memulai diskusi dengan tim konsultan kami melalui WhatsApp atau email.",
+          )}
         </p>
         <label className="message-label" htmlFor="contact-message">
-          Pesan pembuka
+          {tr("Pesan pembuka")}
         </label>
-        <textarea id="contact-message" readOnly value={message} rows={6} />
+        <textarea id="contact-message" readOnly value={tr(message)} rows={6} />
         <button className="button primary" type="button" onClick={copyMessage}>
-          Salin pesan
+          {tr("Salin pesan")}
         </button>
         <p className="copy-status" role="status">
-          {copyStatus}
+          {tr(copyStatus)}
         </p>
       </div>
     </dialog>
@@ -695,6 +726,7 @@ function ContactDialog({
 }
 
 export default function Landing() {
+  const { t: tr } = useLocale();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [stickyCTA, setStickyCTA] = useState(false);
@@ -771,7 +803,7 @@ export default function Landing() {
     const number = site.whatsappNumber.replace(/[^0-9]/g, "");
     if (/^[1-9]\d{7,14}$/.test(number)) {
       window.open(
-        `https://wa.me/${number}?text=${encodeURIComponent(text)}`,
+        `https://wa.me/${number}?text=${encodeURIComponent(tr(text))}`,
         "_blank",
         "noopener,noreferrer",
       );
@@ -784,18 +816,22 @@ export default function Landing() {
   return (
     <ContactContext.Provider value={openContact}>
       <a className="skip-link" href="#main">
-        Lewati ke konten utama
+        {tr("Lewati ke konten utama")}
       </a>
       <header className={`site-header ${scrolled ? "scrolled" : ""}`} id="top">
         <div className="lp-container nav-inner">
           <Brand />
-          <nav className="desktop-nav" aria-label="Navigasi utama">
-            {navigation.map((item) => (
-              <a href={item.href} key={item.href}>
-                {item.label}
-              </a>
-            ))}
+          <nav className="desktop-nav" aria-label={tr("Navigasi utama")}>
+            {navigation.map((item) => {
+              const NavLink = item.href.startsWith("#") ? "a" : Link;
+              return (
+                <NavLink href={item.href} key={item.href}>
+                  {tr(item.label)}
+                </NavLink>
+              );
+            })}
           </nav>
+          <LanguageSwitch className="language-desktop" />
           <ContactButton className="nav-cta" source="nav_whatsapp_click" />
           <button
             ref={menuRef}
@@ -805,25 +841,29 @@ export default function Landing() {
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <span>{menuOpen ? "Tutup" : "Menu"}</span>
+            <span>{tr(menuOpen ? "Tutup" : "Menu")}</span>
             <Icon name={menuOpen ? "close" : "menu"} />
           </button>
         </div>
         <nav
           id="mobile-nav"
           className="mobile-nav"
-          aria-label="Navigasi seluler"
+          aria-label={tr("Navigasi seluler")}
           hidden={!menuOpen}
         >
-          {navigation.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
+          <LanguageSwitch />
+          {navigation.map((item) => {
+            const NavLink = item.href.startsWith("#") ? "a" : Link;
+            return (
+              <NavLink
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+              >
+                {tr(item.label)}
+              </NavLink>
+            );
+          })}
           <ContactButton source="nav_whatsapp_click" />
         </nav>
       </header>
@@ -832,31 +872,33 @@ export default function Landing() {
           <div className="lp-container hero-grid">
             <div className="hero-copy">
               <span className="eyebrow hero-enter">
-                Business Systems & Controls Consulting
+                {"Business Systems & Controls Consulting"}
               </span>
               <h1 className="hero-enter">
-                When spreadsheets
-                <br className="desktop-break" /> are no longer
-                <br className="desktop-break" /> <span>enough.</span>
+                {"When spreadsheets"}
+                <br className="desktop-break" />
+                {" are no longer"}
+                <br className="desktop-break" /> <span>{"enough."}</span>
               </h1>
               <p className="hero-description hero-enter">
-                Bisnis makin besar, tapi alur kerja masih tersebar di file Excel
-                dan grup chat? Kami bantu bangun sistem kerja internal yang
-                terkontrol, rapi, dan mudah diawasi.
+                {tr(
+                  "Bisnis makin besar, tapi alur kerja masih tersebar di file Excel dan grup chat? Kami bantu bangun sistem kerja internal yang terkontrol, rapi, dan mudah diawasi.",
+                )}
               </p>
               <div className="hero-actions hero-enter">
                 <ContactButton source="hero_whatsapp_click" arrow />
                 <Link className="button secondary" href="/demo">
-                  Buka Live Demo (5 Modul) →
+                  {tr("Buka Live Demo (5 Modul) →")}
                 </Link>
               </div>
               <div className="hero-trust">
                 <span>
-                  Built with an Audit Mindset
+                  {"Built with an Audit Mindset"}
                   <br />
                   <strong>
-                    Memastikan setiap transaksi jelas buktinya, persetujuan
-                    tercatat, dan laporan minim selisih.
+                    {tr(
+                      "Memastikan setiap transaksi jelas buktinya, persetujuan tercatat, dan laporan minim selisih.",
+                    )}
                   </strong>
                 </span>
               </div>
@@ -865,24 +907,27 @@ export default function Landing() {
           </div>
           <div className="lp-container hero-baseline">
             <span>
-              Sistem operasional yang rapi: lebih sedikit mencari file, lebih
-              mudah memvalidasi angka.
+              {tr(
+                "Sistem operasional yang rapi: lebih sedikit mencari file, lebih mudah memvalidasi angka.",
+              )}
             </span>
           </div>
         </section>
         <section id="tantangan" className="pain-section">
           <div className="lp-container">
             <div className="pain-heading reveal">
-              <span className="eyebrow">Sering Mengalami Situasi Ini?</span>
+              <span className="eyebrow">
+                {tr("Sering Mengalami Situasi Ini?")}
+              </span>
               <h2>
-                Bisnis makin ramai.
+                {tr("Bisnis makin ramai.")}
                 <br />
-                Tim makin sibuk mencocokkan file.
+                {tr("Tim makin sibuk mencocokkan file.")}
               </h2>
               <p>
-                Excel tetap berguna. Masalah muncul ketika satu pengajuan harus
-                melewati banyak orang, nota fisik, dan chat yang gampang
-                terselip.
+                {tr(
+                  "Excel tetap berguna. Masalah muncul ketika satu pengajuan harus melewati banyak orang, nota fisik, dan chat yang gampang terselip.",
+                )}
               </p>
             </div>
             <div className="pain-grid reveal">
@@ -911,10 +956,13 @@ export default function Landing() {
                 <article className="pain-item" key={title}>
                   <div className="pain-icon">
                     <Icon name={icon as "grid"} />
-                    <span>0{index + 1}</span>
+                    <span>
+                      {"0"}
+                      {index + 1}
+                    </span>
                   </div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
+                  <h3>{tr(title)}</h3>
+                  <p>{tr(text)}</p>
                 </article>
               ))}
             </div>
@@ -925,30 +973,30 @@ export default function Landing() {
           <div className="lp-container">
             <div className="comparison-heading reveal">
               <span className="eyebrow">
-                Apa yang berubah dalam pekerjaan sehari-hari?
+                {tr("Apa yang berubah dalam pekerjaan sehari-hari?")}
               </span>
               <h2>
-                Tidak perlu lagi mencari status
+                {tr("Tidak perlu lagi mencari status")}
                 <br />
-                dari satu chat ke chat lain.
+                {tr("dari satu chat ke chat lain.")}
               </h2>
             </div>
             <div className="comparison-grid reveal">
               <div className="before-column">
                 <span className="comparison-label">
-                  Saat semuanya masih terpisah
+                  {tr("Saat semuanya masih terpisah")}
                 </span>
-                <h3>Tim harus bertanya dan mencocokkan ulang.</h3>
+                <h3>{tr("Tim harus bertanya dan mencocokkan ulang.")}</h3>
                 <div className="before-flow">
-                  <span>Spreadsheet</span>
-                  <span>Chat approval</span>
-                  <span>Folder bukti</span>
-                  <span>Rekap ulang</span>
+                  <span>{"Spreadsheet"}</span>
+                  <span>{"Chat approval"}</span>
+                  <span>{tr("Folder bukti")}</span>
+                  <span>{tr("Rekap ulang")}</span>
                 </div>
                 <p>
-                  Pengajuan ada di spreadsheet, persetujuan di chat, dan bukti
-                  di folder lain. Untuk mengecek satu transaksi, tim harus
-                  membuka semuanya.
+                  {tr(
+                    "Pengajuan ada di spreadsheet, persetujuan di chat, dan bukti di folder lain. Untuk mengecek satu transaksi, tim harus membuka semuanya.",
+                  )}
                 </p>
               </div>
               <div className="transition-arrow" aria-hidden="true">
@@ -963,16 +1011,17 @@ export default function Landing() {
           <div className="lp-container">
             <div className="split-heading section-heading reveal">
               <div>
-                <span className="eyebrow">Cara kami bekerja</span>
+                <span className="eyebrow">{tr("Cara kami bekerja")}</span>
                 <h2>
-                  Kami pelajari cara kerja tim Anda,
+                  {tr("Kami pelajari cara kerja tim Anda,")}
                   <br />
-                  lalu bangun sistemnya bersama.
+                  {tr("lalu bangun sistemnya bersama.")}
                 </h2>
               </div>
               <p>
-                Sebelum membahas tampilan aplikasi, kami ingin tahu pekerjaan
-                mana yang sering tersendat dan apa yang perlu Anda awasi.
+                {tr(
+                  "Sebelum membahas tampilan aplikasi, kami ingin tahu pekerjaan mana yang sering tersendat dan apa yang perlu Anda awasi.",
+                )}
               </p>
             </div>
             <ol className="work-grid reveal">
@@ -996,11 +1045,12 @@ export default function Landing() {
               ].map(([title, text], index) => (
                 <li key={title}>
                   <div className="work-number">
-                    0{index + 1}
+                    {"0"}
+                    {index + 1}
                     <span />
                   </div>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
+                  <h3>{tr(title)}</h3>
+                  <p>{tr(text)}</p>
                 </li>
               ))}
             </ol>
@@ -1011,101 +1061,107 @@ export default function Landing() {
             <div className="founder-grid">
               <div className="founder-statement">
                 <span className="eyebrow">
-                  Mengapa pendekatan kami berbeda?
+                  {tr("Mengapa pendekatan kami berbeda?")}
                 </span>
                 <h2>
-                  Yang kami perhatikan:
+                  {tr("Yang kami perhatikan:")}
                   <br />
-                  cara kerja tim,
+                  {tr("cara kerja tim,")}
                   <br />
-                  <span>dan kontrol di baliknya.</span>
+                  <span>{tr("dan kontrol di baliknya.")}</span>
                 </h2>
                 <div className="founder-signature">
-                  <span className="signature-mark">ak.</span>
+                  <span className="signature-mark">{"ak."}</span>
                   <div>
-                    <strong>Didampingi langsung oleh founder</strong>
+                    <strong>{tr("Didampingi langsung oleh founder")}</strong>
                     <span>
-                      Top-tier audit pedigree · Spesialis sistem kontrol dan
-                      tata kelola bisnis
+                      {tr(
+                        "Top-tier audit pedigree · Spesialis sistem kontrol dan tata kelola bisnis",
+                      )}
                     </span>
                   </div>
                 </div>
               </div>
               <div className="founder-copy">
                 <blockquote className="founder-lead">
-                  <strong>We don't do guesswork.</strong>
+                  <strong>{"We don't do guesswork."}</strong>
                   <p>
-                    &ldquo;Sistem bisnis yang baik tidak dibangun dari
-                    kira-kira, melainkan dari pola pikir kontrol dan audit.
-                    Setiap transaksi, persetujuan, dan angka di laporan Anda
-                    dipastikan siap diaudit (audit-ready) kapan pun
-                    dibutuhkan.&rdquo;
+                    {tr(
+                      "“Sistem bisnis yang baik tidak dibangun dari kira-kira, melainkan dari pola pikir kontrol dan audit. Setiap transaksi, persetujuan, dan angka di laporan Anda dipastikan siap diaudit (audit-ready) kapan pun dibutuhkan.”",
+                    )}
                   </p>
                 </blockquote>
                 <p>
-                  Karena itu, sejak awal kami membahas siapa yang boleh
-                  mengajukan, siapa yang menyetujui, dan bukti apa yang harus
-                  disimpan.
+                  {tr(
+                    "Karena itu, sejak awal kami membahas siapa yang boleh mengajukan, siapa yang menyetujui, dan bukti apa yang harus disimpan.",
+                  )}
                 </p>
                 <p>
-                  Pengalaman di audit dan finance membantu kami melihat bagian
-                  yang mudah terlewat: angka yang perlu dicocokkan, perubahan
-                  yang harus dicatat, dan pekerjaan yang perlu diperiksa lagi.
+                  {tr(
+                    "Pengalaman di audit dan finance membantu kami melihat bagian yang mudah terlewat: angka yang perlu dicocokkan, perubahan yang harus dicatat, dan pekerjaan yang perlu diperiksa lagi.",
+                  )}
                 </p>
               </div>
             </div>
 
             <div className="founder-pillars reveal">
               <div className="pillar-card">
-                <span className="pillar-badge">01</span>
-                <h3>Audit & Control Mindset</h3>
+                <span className="pillar-badge">{"01"}</span>
+                <h3>{"Audit & Control Mindset"}</h3>
                 <p>
-                  Melihat proses dari kacamata kontrol risiko, pemisahan
-                  persetujuan, dan bukti transaksi yang rapi.
+                  {tr(
+                    "Melihat proses dari kacamata kontrol risiko, pemisahan persetujuan, dan bukti transaksi yang rapi.",
+                  )}
                 </p>
               </div>
               <div className="pillar-card">
-                <span className="pillar-badge">02</span>
-                <h3>Institutional Governance & Compliance</h3>
+                <span className="pillar-badge">{"02"}</span>
+                <h3>{"Institutional Governance & Compliance"}</h3>
                 <p>
-                  Pemisahan wewenang dan kelengkapan bukti transaksi sesuai
-                  standar akuntansi dan perpajakan.
+                  {tr(
+                    "Pemisahan wewenang dan kelengkapan bukti transaksi sesuai standar akuntansi dan perpajakan.",
+                  )}
                 </p>
               </div>
               <div className="pillar-card">
-                <span className="pillar-badge">03</span>
-                <h3>High-Impact Systems Execution</h3>
+                <span className="pillar-badge">{"03"}</span>
+                <h3>{"High-Impact Systems Execution"}</h3>
                 <p>
-                  Penerjemahan alur bisnis yang rumit menjadi sistem internal
-                  yang gesit, mudah dipakai tim, dan transparan.
+                  {tr(
+                    "Penerjemahan alur bisnis yang rumit menjadi sistem internal yang gesit, mudah dipakai tim, dan transparan.",
+                  )}
                 </p>
               </div>
             </div>
             <p className="founder-note">
-              Pendekatan profesional berbasis tata kelola risiko, audit alur
-              transaksi, dan integritas data bisnis.
+              {tr(
+                "Pendekatan profesional berbasis tata kelola risiko, audit alur transaksi, dan integritas data bisnis.",
+              )}
             </p>
           </div>
         </section>
         <section className="section fit-section">
           <div className="lp-container">
             <div className="fit-header reveal">
-              <span className="eyebrow">Apakah ini untuk Anda?</span>
+              <span className="eyebrow">{tr("Apakah ini untuk Anda?")}</span>
               <h2>
-                Sudah terasa perlu dirapikan,
+                {tr("Sudah terasa perlu dirapikan,")}
                 <br />
-                tapi bingung mulai dari mana?
+                {tr("tapi bingung mulai dari mana?")}
               </h2>
               <p>
-                Pilih proses kerja yang paling sering terhambat. Kita evaluasi
-                apakah sistem internal terkontrol adalah solusi yang tepat.
+                {tr(
+                  "Pilih proses kerja yang paling sering terhambat. Kita evaluasi apakah sistem internal terkontrol adalah solusi yang tepat.",
+                )}
               </p>
             </div>
             <div className="fit-cards-grid reveal">
               <div className="fit-card fit-card-match">
                 <div className="fit-card-header">
-                  <span className="fit-badge match">Kualifikasi Utama</span>
-                  <h3>Sangat cocok jika bisnis Anda...</h3>
+                  <span className="fit-badge match">
+                    {tr("Kualifikasi Utama")}
+                  </span>
+                  <h3>{tr("Sangat cocok jika bisnis Anda...")}</h3>
                 </div>
                 <ul className="check-list">
                   {[
@@ -1116,23 +1172,20 @@ export default function Landing() {
                   ].map((item) => (
                     <li key={item}>
                       <Icon name="check" />
-                      {item}
+                      {tr(item)}
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="fit-card fit-card-alt">
                 <div className="fit-card-header">
-                  <span className="fit-badge alt">Saran Objektif</span>
-                  <h3>Pertimbangkan solusi lain jika...</h3>
+                  <span className="fit-badge alt">{tr("Saran Objektif")}</span>
+                  <h3>{tr("Pertimbangkan solusi lain jika...")}</h3>
                 </div>
                 <p>
-                  Jika kebutuhan Anda sudah terjawab baik oleh software
-                  akuntansi atau POS standar yang ada di pasaran, gunakan itu
-                  dulu. Layanan kami berfokus pada alur kerja internal spesifik
-                  yang membutuhkan kontrol ketat dan audit trail, bukan
-                  pembuatan website sederhana atau penggantian seluruh sistem
-                  ERP sekaligus.
+                  {tr(
+                    "Jika kebutuhan Anda sudah terjawab baik oleh software akuntansi atau POS standar yang ada di pasaran, gunakan itu dulu. Layanan kami berfokus pada alur kerja internal spesifik yang membutuhkan kontrol ketat dan audit trail, bukan pembuatan website sederhana atau penggantian seluruh sistem ERP sekaligus.",
+                  )}
                 </p>
               </div>
             </div>
@@ -1141,21 +1194,21 @@ export default function Landing() {
         <section className="section faq-section">
           <div className="lp-container faq-centered">
             <div className="faq-centered-heading reveal">
-              <span className="eyebrow">Sebelum kita berdiskusi</span>
+              <span className="eyebrow">{tr("Sebelum kita berdiskusi")}</span>
               <h2>
-                Beberapa hal
+                {tr("Beberapa hal")}
                 <br />
-                yang sering ditanyakan.
+                {tr("yang sering ditanyakan.")}
               </h2>
             </div>
             <div className="faq-list faq-centered-list reveal">
               {faqs.map(([question, answer]) => (
                 <details key={question}>
                   <summary>
-                    {question}
+                    {tr(question)}
                     <span className="faq-plus" aria-hidden="true" />
                   </summary>
-                  <p>{answer}</p>
+                  <p>{tr(answer)}</p>
                 </details>
               ))}
             </div>
@@ -1163,23 +1216,24 @@ export default function Landing() {
         </section>
         <section id="diskusi" className="final-section">
           <div className="lp-container final-inner">
-            <span className="eyebrow">Mulai dari satu percakapan</span>
+            <span className="eyebrow">{tr("Mulai dari satu percakapan")}</span>
             <h2>
-              Ada alur kerja yang mulai
+              {tr("Ada alur kerja yang mulai")}
               <br />
-              terlalu rumit untuk spreadsheet?
+              {tr("terlalu rumit untuk spreadsheet?")}
             </h2>
             <p>
-              Ceritakan proses yang paling sering membuat tim bolak-balik
-              mengecek file. Cukup obrolan santai 15 menit tanpa perlu dokumen
-              teknis atau data rahasia.
+              {tr(
+                "Ceritakan proses yang paling sering membuat tim bolak-balik mengecek file. Cukup obrolan santai 15 menit tanpa perlu dokumen teknis atau data rahasia.",
+              )}
             </p>
             <ContactButton source="final_whatsapp_click" arrow>
-              Diskusikan via WhatsApp
+              {tr("Diskusikan via WhatsApp")}
             </ContactButton>
             <span className="final-microcopy">
-              Diskusi awal membahas alur umum. Data keuangan dan file sensitif
-              internal tidak diperlukan.
+              {tr(
+                "Diskusi awal membahas alur umum. Data keuangan dan file sensitif internal tidak diperlukan.",
+              )}
             </span>
           </div>
         </section>
@@ -1188,42 +1242,44 @@ export default function Landing() {
         <div className="lp-container footer-top">
           <div>
             <Brand footer />
-            <p>{site.descriptor}</p>
+            <p>{tr(site.descriptor)}</p>
           </div>
           <div className="footer-links">
-            <span>Indonesia · By appointment</span>
+            <span>{"Indonesia · By appointment"}</span>
             <button
               type="button"
               onClick={() => privacyRef.current?.showModal()}
             >
-              Privasi
+              {tr("Privasi")}
             </button>
             <button
               type="button"
               onClick={() => openContact("footer_whatsapp_click")}
             >
-              WhatsApp
+              {"WhatsApp"}
               <Icon name="arrow" />
             </button>
-            {site.email && <a href={`mailto:${site.email}`}>Email</a>}
+            {site.email && <a href={`mailto:${site.email}`}>{"Email"}</a>}
             {site.linkedin && (
               <a href={site.linkedin} target="_blank" rel="noreferrer">
-                LinkedIn
+                {"LinkedIn"}
               </a>
             )}
           </div>
         </div>
         <div className="lp-container footer-bottom">
           <span>
-            © 2026 {site.name} · Business Systems & Controls Consulting
+            {"© 2026 "}
+            {site.name}
+            {" · Business Systems & Controls Consulting"}
           </span>
-          <span>Seluruh hak cipta dilindungi.</span>
+          <span>{tr("Seluruh hak cipta dilindungi.")}</span>
         </div>
       </footer>
       {stickyCTA && (
         <div className="mobile-sticky">
           <ContactButton source="mobile_whatsapp_click">
-            Diskusikan Proses Anda
+            {tr("Diskusikan Proses Anda")}
             <Icon name="arrow" />
           </ContactButton>
         </div>
@@ -1235,33 +1291,36 @@ export default function Landing() {
         aria-labelledby="privacy-title"
       >
         <div className="dialog-content">
+          <LanguageSwitch className="language-dialog" />
           <form method="dialog">
             <button
               className="icon-button dialog-close"
-              aria-label="Tutup kebijakan privasi"
+              aria-label={tr("Tutup kebijakan privasi")}
             >
               <Icon name="close" />
             </button>
           </form>
-          <span className="eyebrow">Kebijakan Privasi</span>
-          <h2 id="privacy-title">Privasi & Kerahasiaan Data</h2>
+          <span className="eyebrow">{tr("Kebijakan Privasi")}</span>
+          <h2 id="privacy-title">{tr("Privasi & Kerahasiaan Data")}</h2>
           <p>
-            Kami menghargai kerahasiaan proses bisnis, sistem operasional, dan
-            data keuangan Anda. Halaman ini tidak mengumpulkan data pribadi
-            tanpa persetujuan Anda.
+            {tr(
+              "Kami menghargai kerahasiaan proses bisnis, sistem operasional, dan data keuangan Anda. Halaman ini tidak mengumpulkan data pribadi tanpa persetujuan Anda.",
+            )}
           </p>
           <p>
-            Seluruh diskusi awal dan informasi alur kerja yang Anda bagikan
-            diperlakukan secara rahasia dan profesional.
+            {tr(
+              "Seluruh diskusi awal dan informasi alur kerja yang Anda bagikan diperlakukan secara rahasia dan profesional.",
+            )}
           </p>
           <p>
-            Saat Anda menghubungi kami melalui WhatsApp atau email, pesan baru
-            terkirim setelah Anda memvalidasi dan mengirimkannya secara mandiri.
+            {tr(
+              "Saat Anda menghubungi kami melalui WhatsApp atau email, pesan baru terkirim setelah Anda memvalidasi dan mengirimkannya secara mandiri.",
+            )}
           </p>
           <p>
-            Kerahasiaan alur kerja, data keuangan, dan sistem internal klien
-            terlindungi oleh perjanjian kerahasiaan (NDA) pada setiap sesi
-            implementasi.
+            {tr(
+              "Kerahasiaan alur kerja, data keuangan, dan sistem internal klien terlindungi oleh perjanjian kerahasiaan (NDA) pada setiap sesi implementasi.",
+            )}
           </p>
         </div>
       </dialog>

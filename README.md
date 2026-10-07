@@ -37,6 +37,16 @@ Route kategori memakai `?mode=guided` (juga default) atau `?mode=explore`. `/dem
 
 Event konversi tersimpan sementara di `window.alurEvents` (maksimum 100) dan dipancarkan sebagai event `alur:analytics`. `utm_source`, `utm_medium`, dan `utm_campaign` ikut dicatat untuk pengecekan lokal. Tidak ada penyedia analytics atau pengiriman event keluar. Muat ulang halaman untuk menghapus catatan.
 
+## Bahasa
+
+Pemilih `ID | ENG` tersedia pada landing page, portal demo, dan dialog kontak/detail. Kunjungan pertama menggunakan ID; cookie `alur_kendali_locale` mengingat pilihan selama 180 hari. Pilihan bahasa mengubah tampilan tanpa mereset progres, formulir, peran, atau filter. Jika cookie diblokir, pilihan tetap berlaku selama navigasi client pada sesi tersebut.
+
+Copy Indonesia tetap menjadi sumber acuan. Kamus Inggris berada di `src/lib/english-copy.ts`; template pesan sistem lama ditampilkan melalui `src/lib/translate.ts`. Data pengguna tetap ditampilkan apa adanya. Ekspor CSV memakai bahasa aktif untuk header dan pesan sistem, dengan nilai rupiah, kode dokumen, dan isi pengguna tetap dipertahankan.
+
+## Verifikasi bahasa
+
+Jalankan `npm run test:locale:copy` untuk copy dan kompatibilitas pesan lama, serta `npm run test:locale:browser` saat server lokal aktif. Bukti browser tersimpan di `qa/artifacts/language-verification.json`, dengan screenshot desktop/mobile dan contoh CSV di folder yang sama.
+
 ## Verifikasi
 
 ```powershell

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import { useEffect, useRef } from "react";
 export function ResetScenario({
   label,
@@ -7,6 +8,7 @@ export function ResetScenario({
   label: string;
   onReset: () => void;
 }) {
+  const { t: tr } = useLocale();
   const ref = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -22,13 +24,18 @@ export function ResetScenario({
         className="demo-text-button"
         onClick={() => ref.current?.showModal()}
       >
-        Ulangi skenario
+        {tr("Ulangi skenario")}
       </button>
       <dialog className="demo-dialog" ref={ref} aria-labelledby="reset-title">
-        <h2 id="reset-title">Ulangi demo {label}?</h2>
+        <h2 id="reset-title">
+          {tr("Ulangi demo ")}
+          {tr(label)}
+          {"?"}
+        </h2>
         <p>
-          Data dan riwayat skenario ini kembali ke awal. Progress kategori lain
-          tetap tersimpan.
+          {tr(
+            "Data dan riwayat skenario ini kembali ke awal. Progress kategori lain tetap tersimpan.",
+          )}
         </p>
         <div>
           <button
@@ -36,7 +43,7 @@ export function ResetScenario({
             className="demo-secondary"
             onClick={() => ref.current?.close()}
           >
-            Lanjutkan demo
+            {tr("Lanjutkan demo")}
           </button>
           <button
             className="demo-primary"
@@ -45,7 +52,7 @@ export function ResetScenario({
               ref.current?.close();
             }}
           >
-            Ya, ulangi
+            {tr("Ya, ulangi")}
           </button>
         </div>
       </dialog>

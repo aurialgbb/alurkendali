@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import { useState, type FormEvent } from "react";
 import {
   checklist,
@@ -12,6 +13,7 @@ type Props = {
   act: (a: ScenarioAction) => void;
 };
 export function FinanceWorkbench({ s, enabled, act }: Props) {
+  const { t: tr } = useLocale();
   const [note, setNote] = useState(s.finance.note);
   const [reject, setReject] = useState(false);
   const [reason, setReason] = useState("");
@@ -28,96 +30,101 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
       <div className="document-pair">
         <section className="business-document">
           <div className="document-topline">
-            <span>EXP-DEMO-001</span>
-            <span>Pengajuan biaya</span>
+            <span>{"EXP-DEMO-001"}</span>
+            <span>{tr("Pengajuan biaya")}</span>
           </div>
           <h2>
-            Perlengkapan
+            {tr("Perlengkapan")}
             <br />
-            Cabang Kemang
+            {tr("Cabang Kemang")}
           </h2>
           <p className="document-description">
-            Kertas dan alat tulis untuk kegiatan operasional cabang.
+            {tr("Kertas dan alat tulis untuk kegiatan operasional cabang.")}
           </p>
           <dl className="document-fields">
             <div>
-              <dt>Pemohon</dt>
-              <dd>Rian · Staf cabang</dd>
+              <dt>{tr("Pemohon")}</dt>
+              <dd>{tr("Rian · Staf cabang")}</dd>
             </div>
             <div>
-              <dt>Kategori</dt>
-              <dd>Operasional toko</dd>
+              <dt>{tr("Kategori")}</dt>
+              <dd>{tr("Operasional toko")}</dd>
             </div>
             <div>
-              <dt>Cabang</dt>
-              <dd>Kemang</dd>
+              <dt>{tr("Cabang")}</dt>
+              <dd>{"Kemang"}</dd>
             </div>
             <div className="document-total">
-              <dt>Total pengajuan</dt>
-              <dd>{rupiah(350000)}</dd>
+              <dt>{tr("Total pengajuan")}</dt>
+              <dd>{tr(rupiah(350000))}</dd>
             </div>
           </dl>
           {status === "draft" ? (
             <label className="demo-field">
-              Catatan pengajuan <span>(opsional)</span>
+              {tr("Catatan pengajuan ")}
+              <span>{tr("(opsional)")}</span>
               <textarea
                 value={note}
                 maxLength={500}
                 onChange={(e) => setNote(e.target.value)}
                 disabled={!enabled}
-                placeholder="Contoh: untuk kebutuhan kasir minggu ini"
+                placeholder={tr("Contoh: untuk kebutuhan kasir minggu ini")}
                 rows={2}
               />
             </label>
           ) : (
             <div className="document-note">
-              <span>Catatan pengajuan</span>
+              <span>{tr("Catatan pengajuan")}</span>
               <p>
                 {s.finance.note ||
-                  "Perlengkapan untuk kegiatan operasional cabang."}
+                  tr("Perlengkapan untuk kegiatan operasional cabang.")}
               </p>
             </div>
           )}
           {status === "paid" && (
             <div className="document-verified">
-              ✓ Pembayaran simulasi tercatat
-              <span>Referensi {s.finance.reference}</span>
+              {tr("✓ Pembayaran simulasi tercatat")}
+              <span>
+                {tr("Referensi ")}
+                {s.finance.reference}
+              </span>
             </div>
           )}
         </section>
-        <aside className="receipt-paper" aria-label="Nota belanja contoh">
-          <span className="receipt-label">Lampiran · Nota contoh</span>
-          <h3>Toko Perlengkapan</h3>
-          <p>Dokumen simulasi, bukan nota transaksi nyata.</p>
+        <aside className="receipt-paper" aria-label={tr("Nota belanja contoh")}>
+          <span className="receipt-label">{tr("Lampiran · Nota contoh")}</span>
+          <h3>{tr("Toko Perlengkapan")}</h3>
+          <p>{tr("Dokumen simulasi, bukan nota transaksi nyata.")}</p>
           <div className="receipt-rule" />
           <div className="receipt-item">
             <span>
-              Kertas A4
+              {tr("Kertas A4")}
               <br />
-              <small>5 rim × Rp50.000</small>
+              <small>{tr("5 rim × Rp50.000")}</small>
             </span>
-            <strong>Rp250.000</strong>
+            <strong>{"Rp250.000"}</strong>
           </div>
           <div className="receipt-item">
             <span>
-              Alat tulis
+              {tr("Alat tulis")}
               <br />
-              <small>2 paket × Rp50.000</small>
+              <small>{tr("2 paket × Rp50.000")}</small>
             </span>
-            <strong>Rp100.000</strong>
+            <strong>{"Rp100.000"}</strong>
           </div>
           <div className="receipt-rule" />
           <div className="receipt-item receipt-total">
-            <span>Total</span>
-            <strong>Rp350.000</strong>
+            <span>{"Total"}</span>
+            <strong>{"Rp350.000"}</strong>
           </div>
           <div className="receipt-match">
-            <span>✓</span> Sama dengan nilai pengajuan
+            <span>{"✓"}</span>
+            {tr(" Sama dengan nilai pengajuan")}
           </div>
           <div className="receipt-end">
-            Bukti dan pengajuan
+            {tr("Bukti dan pengajuan")}
             <br />
-            tersimpan bersama.
+            {tr("tersimpan bersama.")}
           </div>
         </aside>
       </div>
@@ -125,7 +132,7 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
         <div className="workbench-actions">
           {reject && (
             <label className="demo-field rejection-field">
-              Alasan penolakan
+              {tr("Alasan penolakan")}
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
@@ -137,14 +144,16 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
           )}
           <div className="action-row">
             <button className="demo-primary" type="submit">
-              {reject
-                ? "Simpan penolakan"
-                : status === "draft"
-                  ? "Kirim pengajuan Rp350.000"
-                  : status === "submitted"
-                    ? "Setujui pengajuan"
-                    : "Verifikasi & catat pembayaran"}
-              <span aria-hidden="true">→</span>
+              {tr(
+                reject
+                  ? "Simpan penolakan"
+                  : status === "draft"
+                    ? "Kirim pengajuan Rp350.000"
+                    : status === "submitted"
+                      ? "Setujui pengajuan"
+                      : "Verifikasi & catat pembayaran",
+              )}
+              <span aria-hidden="true">{"→"}</span>
             </button>
             {status === "submitted" && (
               <button
@@ -152,14 +161,16 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
                 type="button"
                 onClick={() => setReject(!reject)}
               >
-                {reject ? "Batal menolak" : "Tolak dengan alasan"}
+                {tr(reject ? "Batal menolak" : "Tolak dengan alasan")}
               </button>
             )}
           </div>
           <p>
-            {status === "approved"
-              ? "Pembayaran ini simulasi. Tidak ada uang yang ditransfer."
-              : "Tindakan Anda akan tercatat pada riwayat dokumen."}
+            {tr(
+              status === "approved"
+                ? "Pembayaran ini simulasi. Tidak ada uang yang ditransfer."
+                : "Tindakan Anda akan tercatat pada riwayat dokumen.",
+            )}
           </p>
         </div>
       )}
@@ -167,13 +178,14 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
   );
 }
 export function InventoryWorkbench({ s, enabled, act }: Props) {
+  const { t: tr } = useLocale();
   const [quantity, setQuantity] = useState(String(s.inventory.quantity));
   const inv = s.inventory;
   return (
     <div className="workbench-inventory">
       <div className="stock-route">
         <section className="stock-location">
-          <span>Lokasi asal</span>
+          <span>{tr("Lokasi asal")}</span>
           <div className="warehouse-mark" aria-hidden="true">
             <i />
             <i />
@@ -182,40 +194,46 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
             <i />
             <i />
           </div>
-          <h2>Gudang Pusat</h2>
+          <h2>{tr("Gudang Pusat")}</h2>
           <strong>
-            {inv.source}
-            <small>rim</small>
+            {tr(inv.source)}
+            <small>{tr("rim")}</small>
           </strong>
-          <p>Saldo tersedia</p>
+          <p>{tr("Saldo tersedia")}</p>
         </section>
         <div className={`stock-transit ${inv.transit ? "is-moving" : ""}`}>
-          <span aria-hidden="true">→</span>
-          <strong>{inv.transit} rim</strong>
+          <span aria-hidden="true">{"→"}</span>
+          <strong>
+            {tr(inv.transit)}
+            {tr(" rim")}
+          </strong>
           <p>
-            {inv.status === "received" ? "Sudah diterima" : "Dalam perjalanan"}
+            {tr(
+              inv.status === "received" ? "Sudah diterima" : "Dalam perjalanan",
+            )}
           </p>
         </div>
         <section className="stock-location stock-destination">
-          <span>Lokasi tujuan</span>
+          <span>{tr("Lokasi tujuan")}</span>
           <div className="branch-mark" aria-hidden="true">
             <i />
             <i />
             <i />
           </div>
-          <h2>Cabang Kemang</h2>
+          <h2>{tr("Cabang Kemang")}</h2>
           <strong>
-            {inv.destination}
-            <small>rim</small>
+            {tr(inv.destination)}
+            <small>{tr("rim")}</small>
           </strong>
-          <p>Saldo tersedia</p>
+          <p>{tr("Saldo tersedia")}</p>
         </section>
       </div>
       <div className="stock-conservation">
-        <span>Kertas A4 · SKU-KRT-001</span>
+        <span>{tr("Kertas A4 · SKU-KRT-001")}</span>
         <strong>
-          Total {inv.source + inv.transit + inv.destination} rim di seluruh
-          lokasi
+          {"Total "}
+          {tr(inv.source + inv.transit + inv.destination)}
+          {tr(" rim di seluruh lokasi")}
         </strong>
       </div>
       <form
@@ -230,19 +248,20 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
         }}
       >
         <div className="document-topline">
-          <span>MOV-DEMO-001</span>
-          <span>Surat jalan contoh</span>
+          <span>{"MOV-DEMO-001"}</span>
+          <span>{tr("Surat jalan contoh")}</span>
         </div>
         <div className="transfer-details">
           <div>
-            <h3>Kirim perlengkapan ke cabang</h3>
+            <h3>{tr("Kirim perlengkapan ke cabang")}</h3>
             <p>
-              Saldo berpindah saat barang dikirim dan diterima. Tidak ada barang
-              yang ditambahkan.
+              {tr(
+                "Saldo berpindah saat barang dikirim dan diterima. Tidak ada barang yang ditambahkan.",
+              )}
             </p>
           </div>
           <label className="demo-field">
-            Jumlah kertas (rim)
+            {tr("Jumlah kertas (rim)")}
             <input
               type="number"
               min={1}
@@ -257,15 +276,19 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
         </div>
         {enabled && inv.status !== "received" && (
           <button className="demo-primary" type="submit">
-            {inv.status === "draft"
-              ? "Kirim dari Gudang Pusat"
-              : `Konfirmasi terima ${inv.quantity} rim`}
-            <span aria-hidden="true">→</span>
+            {tr(
+              inv.status === "draft"
+                ? "Kirim dari Gudang Pusat"
+                : `Konfirmasi terima ${inv.quantity} rim`,
+            )}
+            <span aria-hidden="true">{"→"}</span>
           </button>
         )}
         {inv.status === "received" && (
           <p className="document-verified">
-            ✓ {inv.quantity} rim diterima dan saldo cabang diperbarui.
+            {"✓ "}
+            {tr(inv.quantity)}
+            {tr(" rim diterima dan saldo cabang diperbarui.")}
           </p>
         )}
       </form>
@@ -273,6 +296,7 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
   );
 }
 export function ProcurementWorkbench({ s, enabled, act }: Props) {
+  const { t: tr } = useLocale();
   const [quantity, setQuantity] = useState("2");
   const [invoice, setInvoice] = useState(String(s.procurement.invoice));
   const p = s.procurement;
@@ -283,83 +307,90 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
   return (
     <div className="workbench-procurement">
       <div className="procurement-context">
-        <span>Pengadaan untuk Cabang Kemang</span>
-        <h2>2 barcode scanner wireless</h2>
-        <p>Supplier contoh · PT Teknologi Niaga</p>
+        <span>{tr("Pengadaan untuk Cabang Kemang")}</span>
+        <h2>{tr("2 barcode scanner wireless")}</h2>
+        <p>{tr("Supplier contoh · PT Teknologi Niaga")}</p>
       </div>
       <div className="match-documents">
         <section className="match-document">
-          <span className="document-index">01 / Pesanan</span>
-          <h3>Purchase order</h3>
-          <span className="document-reference">PO-DEMO-001</span>
+          <span className="document-index">{tr("01 / Pesanan")}</span>
+          <h3>{"Purchase order"}</h3>
+          <span className="document-reference">{"PO-DEMO-001"}</span>
           <dl>
             <div>
-              <dt>Jumlah</dt>
-              <dd>2 unit</dd>
+              <dt>{tr("Jumlah")}</dt>
+              <dd>{tr("2 unit")}</dd>
             </div>
             <div>
-              <dt>Harga satuan</dt>
-              <dd>Rp1.600.000</dd>
+              <dt>{tr("Harga satuan")}</dt>
+              <dd>{"Rp1.600.000"}</dd>
             </div>
           </dl>
-          <strong>Rp3.200.000</strong>
+          <strong>{"Rp3.200.000"}</strong>
           <span
             className={`document-status ${p.status !== "draft" ? "is-ok" : ""}`}
           >
-            {p.status === "draft"
-              ? "Menunggu persetujuan"
-              : "✓ Pesanan disetujui"}
+            {tr(
+              p.status === "draft"
+                ? "Menunggu persetujuan"
+                : "✓ Pesanan disetujui",
+            )}
           </span>
         </section>
         <section className="match-document">
-          <span className="document-index">02 / Penerimaan</span>
-          <h3>Barang diterima</h3>
-          <span className="document-reference">GR-DEMO-001</span>
+          <span className="document-index">{tr("02 / Penerimaan")}</span>
+          <h3>{tr("Barang diterima")}</h3>
+          <span className="document-reference">{"GR-DEMO-001"}</span>
           <dl>
             <div>
-              <dt>Tujuan</dt>
-              <dd>Kemang</dd>
+              <dt>{tr("Tujuan")}</dt>
+              <dd>{"Kemang"}</dd>
             </div>
             <div>
-              <dt>Kondisi contoh</dt>
-              <dd>{received ? "Baik" : "Belum diperiksa"}</dd>
+              <dt>{tr("Kondisi contoh")}</dt>
+              <dd>{tr(received ? "Baik" : "Belum diperiksa")}</dd>
             </div>
           </dl>
-          <strong>{p.received} unit</strong>
+          <strong>
+            {tr(p.received)}
+            {" unit"}
+          </strong>
           <span className={`document-status ${received ? "is-ok" : ""}`}>
-            {received ? "✓ Jumlah sesuai pesanan" : "Belum dicatat"}
+            {tr(received ? "✓ Jumlah sesuai pesanan" : "Belum dicatat")}
           </span>
         </section>
         <section
           className={`match-document ${p.mismatch ? "has-mismatch" : ""}`}
         >
-          <span className="document-index">03 / Tagihan</span>
-          <h3>Invoice supplier</h3>
-          <span className="document-reference">INV-DEMO-001</span>
+          <span className="document-index">{tr("03 / Tagihan")}</span>
+          <h3>{tr("Invoice supplier")}</h3>
+          <span className="document-reference">{"INV-DEMO-001"}</span>
           <dl>
             <div>
-              <dt>Jumlah</dt>
-              <dd>2 unit</dd>
+              <dt>{tr("Jumlah")}</dt>
+              <dd>{tr("2 unit")}</dd>
             </div>
             <div>
-              <dt>Pembanding</dt>
-              <dd>PO-DEMO-001</dd>
+              <dt>{tr("Pembanding")}</dt>
+              <dd>{"PO-DEMO-001"}</dd>
             </div>
           </dl>
-          <strong>{rupiah(configuredInvoice)}</strong>
+          <strong>{tr(rupiah(configuredInvoice))}</strong>
           <span className={`document-status ${matched ? "is-ok" : ""}`}>
-            {matched
-              ? "✓ Tagihan cocok"
-              : p.mismatch
-                ? "Selisih perlu diperiksa"
-                : "Belum dicocokkan"}
+            {tr(
+              matched
+                ? "✓ Tagihan cocok"
+                : p.mismatch
+                  ? "Selisih perlu diperiksa"
+                  : "Belum dicocokkan",
+            )}
           </span>
         </section>
       </div>
       {p.status === "paid" && (
         <div className="document-verified">
-          ✓ Pembayaran simulasi Rp3.200.000 tercatat
-          <span>Referensi SIM-PO-001</span>
+          {tr("✓ Pembayaran simulasi Rp3.200.000 tercatat")}
+          <span>{tr("Referensi SIM-PO-001")}</span>
         </div>
       )}
       {enabled && p.status !== "paid" && (
@@ -380,7 +411,7 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
         >
           {p.status === "ordered" && (
             <label className="demo-field">
-              Jumlah scanner yang diterima
+              {tr("Jumlah scanner yang diterima")}
               <input
                 type="number"
                 min={1}
@@ -391,41 +422,50 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
                 required
               />
               <small>
-                PO memuat 2 unit. Periksa jumlah sebelum mencatat penerimaan.
+                {tr(
+                  "PO memuat 2 unit. Periksa jumlah sebelum mencatat penerimaan.",
+                )}
               </small>
             </label>
           )}
           {p.status === "received" && (
             <label className="demo-field">
-              Pilih tagihan contoh
+              {tr("Pilih tagihan contoh")}
               <select
                 value={invoice}
                 onChange={(e) => setInvoice(e.target.value)}
               >
-                <option value="3200000">Rp3.200.000 · Sesuai pesanan</option>
+                <option value="3200000">
+                  {tr("Rp3.200.000 · Sesuai pesanan")}
+                </option>
                 <option value="3500000">
-                  Rp3.500.000 · Coba tagihan berselisih
+                  {tr("Rp3.500.000 · Coba tagihan berselisih")}
                 </option>
               </select>
               <small>
-                Selisih Rp300.000 akan menahan pembayaran sampai tagihan
-                dikoreksi.
+                {tr(
+                  "Selisih Rp300.000 akan menahan pembayaran sampai tagihan dikoreksi.",
+                )}
               </small>
             </label>
           )}
           <button className="demo-primary" type="submit">
-            {p.status === "draft"
-              ? "Setujui pesanan Rp3.200.000"
-              : p.status === "ordered"
-                ? "Catat penerimaan barang"
-                : p.status === "received"
-                  ? "Cocokkan tiga dokumen"
-                  : "Catat pembayaran simulasi"}
-            <span aria-hidden="true">→</span>
+            {tr(
+              p.status === "draft"
+                ? "Setujui pesanan Rp3.200.000"
+                : p.status === "ordered"
+                  ? "Catat penerimaan barang"
+                  : p.status === "received"
+                    ? "Cocokkan tiga dokumen"
+                    : "Catat pembayaran simulasi",
+            )}
+            <span aria-hidden="true">{"→"}</span>
           </button>
           {p.status === "matched" && (
             <p>
-              Tiga dokumen cocok. Tindakan ini hanya mencatat pembayaran contoh.
+              {tr(
+                "Tiga dokumen cocok. Tindakan ini hanya mencatat pembayaran contoh.",
+              )}
             </p>
           )}
         </form>
@@ -434,43 +474,47 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
   );
 }
 export function OperationsWorkbench({ s, enabled, act }: Props) {
+  const { t: tr } = useLocale();
   const done = s.operations.checks.filter(Boolean).length;
   return (
     <div className="workbench-operations">
       <div className="branch-summary">
-        <span>Cabang Kemang</span>
+        <span>{tr("Cabang Kemang")}</span>
         <h2>
-          Siap membuka
+          {tr("Siap membuka")}
           <br />
-          hari yang baru.
+          {tr("hari yang baru.")}
         </h2>
-        <p>Shift pagi · Penanggung jawab Rian</p>
+        <p>{tr("Shift pagi · Penanggung jawab Rian")}</p>
         <div className="operations-count">
-          <strong>{done}</strong>
+          <strong>{tr(done)}</strong>
           <span>
-            / 4<br />
-            pemeriksaan selesai
+            {"/ 4"}
+            <br />
+            {tr("pemeriksaan selesai")}
           </span>
         </div>
         <progress
-          aria-label="Kemajuan pemeriksaan cabang"
+          aria-label={tr("Kemajuan pemeriksaan cabang")}
           value={done}
           max={4}
         />
         <span className="branch-readiness">
-          {s.operations.completed
-            ? "✓ Laporan tersimpan"
-            : done === 4
-              ? "Siap menyimpan laporan"
-              : `${4 - done} pemeriksaan tersisa`}
+          {tr(
+            s.operations.completed
+              ? "✓ Laporan tersimpan"
+              : done === 4
+                ? "Siap menyimpan laporan"
+                : `${4 - done} pemeriksaan tersisa`,
+          )}
         </span>
       </div>
       <section className="checklist-paper">
         <div className="document-topline">
-          <span>OPS-DEMO-001</span>
-          <span>Checklist pembukaan</span>
+          <span>{"OPS-DEMO-001"}</span>
+          <span>{tr("Checklist pembukaan")}</span>
         </div>
-        <h3>Periksa sebelum pelanggan datang</h3>
+        <h3>{tr("Periksa sebelum pelanggan datang")}</h3>
         <div className="operations-checks">
           {checklist.map((label, index) => (
             <label
@@ -485,7 +529,7 @@ export function OperationsWorkbench({ s, enabled, act }: Props) {
                   act({ type: "check", index, checked: e.target.checked })
                 }
               />
-              <span>{label}</span>
+              <span>{tr(label)}</span>
             </label>
           ))}
         </div>
@@ -496,19 +540,23 @@ export function OperationsWorkbench({ s, enabled, act }: Props) {
               onClick={() => act({ type: "finish" })}
               disabled={done !== 4}
             >
-              Simpan laporan pembukaan<span aria-hidden="true">→</span>
+              {tr("Simpan laporan pembukaan")}
+              <span aria-hidden="true">{"→"}</span>
             </button>
             {done !== 4 && (
               <p className="checklist-hint">
-                Lengkapi {4 - done} pemeriksaan lagi untuk menyimpan laporan.
+                {tr("Lengkapi ")}
+                {tr(4 - done)}
+                {tr(" pemeriksaan lagi untuk menyimpan laporan.")}
               </p>
             )}
           </>
         )}
         {s.operations.completed && (
           <p className="document-verified">
-            ✓ Seluruh pemeriksaan selesai. Pelaksana dan waktu tersimpan di
-            riwayat.
+            {tr(
+              "✓ Seluruh pemeriksaan selesai. Pelaksana dan waktu tersimpan di riwayat.",
+            )}
           </p>
         )}
       </section>

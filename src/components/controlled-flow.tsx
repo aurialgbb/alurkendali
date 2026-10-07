@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -24,6 +25,7 @@ const steps = [
 ];
 
 export default function ControlledFlow() {
+  const { t: tr } = useLocale();
   const ref = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState(0);
   const [playing, setPlaying] = useState(true);
@@ -71,13 +73,15 @@ export default function ControlledFlow() {
       data-playing={playing && !reducedMotion}
     >
       <div className="sequence-header">
-        <span className="comparison-label">Dengan alur yang terhubung</span>
+        <span className="comparison-label">
+          {tr("Dengan alur yang terhubung")}
+        </span>
         {!reducedMotion && (
           <button
             type="button"
             className="sequence-toggle"
-            aria-label={playing ? "Jeda animasi" : "Putar animasi"}
-            title={playing ? "Jeda animasi" : "Putar animasi"}
+            aria-label={tr(playing ? "Jeda animasi" : "Putar animasi")}
+            title={tr(playing ? "Jeda animasi" : "Putar animasi")}
             aria-pressed={!playing}
             onClick={() => setPlaying((value) => !value)}
           >
@@ -91,10 +95,12 @@ export default function ControlledFlow() {
           </button>
         )}
       </div>
-      <h3>Dari pengajuan sampai laporan, statusnya bisa dicek.</h3>
+      <h3>{tr("Dari pengajuan sampai laporan, statusnya bisa dicek.")}</h3>
       <ol
         className="after-flow"
-        aria-label="Urutan proses: pengajuan, persetujuan, pemeriksaan bukti, dan laporan"
+        aria-label={tr(
+          "Urutan proses: pengajuan, persetujuan, pemeriksaan bukti, dan laporan",
+        )}
       >
         {steps.map((step, index) => {
           const done = index < current;
@@ -116,9 +122,9 @@ export default function ControlledFlow() {
                   index + 1
                 )}
               </span>
-              <strong>{step.title}</strong>
+              <strong>{tr(step.title)}</strong>
               <small>
-                {done ? "Selesai" : active ? "Berjalan" : "Menunggu"}
+                {tr(done ? "Selesai" : active ? "Berjalan" : "Menunggu")}
               </small>
             </li>
           );
@@ -126,16 +132,20 @@ export default function ControlledFlow() {
       </ol>
       <div className={`sequence-explanation ${complete ? "is-complete" : ""}`}>
         <span>
-          {complete ? "Semua tahap selesai" : `Langkah ${current + 1} dari 4`}
+          {tr(
+            complete ? "Semua tahap selesai" : `Langkah ${current + 1} dari 4`,
+          )}
         </span>
         <p>
-          {complete
-            ? "Pengajuan selesai. Dokumen dan riwayatnya tetap bisa ditelusuri saat dibutuhkan."
-            : steps[current].description}
+          {tr(
+            complete
+              ? "Pengajuan selesai. Dokumen dan riwayatnya tetap bisa ditelusuri saat dibutuhkan."
+              : steps[current].description,
+          )}
         </p>
       </div>
       <p className="sequence-note">
-        Contoh alur · Setiap keputusan dan perubahan tercatat.
+        {tr("Contoh alur · Setiap keputusan dan perubahan tercatat.")}
       </p>
     </div>
   );

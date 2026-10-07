@@ -1,11 +1,14 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useDemo } from "@/lib/demo-store";
 import { scenarioIds, scenarios, roleLabels } from "@/lib/demo-scenarios";
 import type { RoleType } from "@/lib/demo-data";
+import LanguageSwitch from "@/components/language-switch";
 export function DemoNav() {
+  const { t: tr } = useLocale();
   const path = usePathname();
   const search = useSearchParams();
   const { currentRole, switchRole } = useDemo();
@@ -13,28 +16,31 @@ export function DemoNav() {
   return (
     <>
       <a className="demo-skip" href="#demo-content">
-        Langsung ke isi demo
+        {tr("Langsung ke isi demo")}
       </a>
       <header className="demo-header">
-        <Link href="/" aria-label="Alur Kendali, kembali ke website">
+        <Link href="/" aria-label={tr("Alur Kendali, kembali ke website")}>
           <Image
             src="/logo.png"
             width={180}
             height={55}
-            alt="Alur Kendali"
+            alt={"Alur Kendali"}
             priority
           />
         </Link>
         <div className="demo-header-description">
-          Ruang demo<span>Data contoh · Tanpa pendaftaran</span>
+          {tr("Ruang demo")}
+          <span>{tr("Data contoh · Tanpa pendaftaran")}</span>
         </div>
+        <LanguageSwitch />
         <Link className="demo-header-back" href="/">
-          Kembali ke website <span aria-hidden="true">↗</span>
+          {tr("Kembali ke website ")}
+          <span aria-hidden="true">{"↗"}</span>
         </Link>
       </header>
-      <nav className="demo-category-nav" aria-label="Kategori demo">
+      <nav className="demo-category-nav" aria-label={tr("Kategori demo")}>
         <Link href="/demo" aria-current={path === "/demo" ? "page" : undefined}>
-          Pilih kasus
+          {tr("Pilih kasus")}
         </Link>
         {scenarioIds.map((id) => (
           <Link
@@ -42,34 +48,34 @@ export function DemoNav() {
             href={`/demo/${id}?mode=${explore ? "explore" : "guided"}`}
             aria-current={path === `/demo/${id}` ? "page" : undefined}
           >
-            {scenarios[id].label}
+            {tr(scenarios[id].label)}
           </Link>
         ))}
         <Link
           href="/demo/overview"
           aria-current={path === "/demo/overview" ? "page" : undefined}
         >
-          Ringkasan
+          {tr("Ringkasan")}
         </Link>
         <Link
           href="/demo/reporting"
           aria-current={path === "/demo/reporting" ? "page" : undefined}
         >
-          Riwayat
+          {tr("Riwayat")}
         </Link>
       </nav>
       {explore && (
         <div className="demo-explore-bar">
-          <p>Mode eksplorasi · Data contoh terpisah dari panduan</p>
+          <p>{tr("Mode eksplorasi · Data contoh terpisah dari panduan")}</p>
           <label>
-            Peran aktif{" "}
+            {tr("Peran aktif")}{" "}
             <select
               value={currentRole}
               onChange={(e) => switchRole(e.target.value as RoleType)}
             >
               {Object.entries(roleLabels).map(([id, label]) => (
                 <option key={id} value={id}>
-                  {label}
+                  {tr(label)}
                 </option>
               ))}
             </select>

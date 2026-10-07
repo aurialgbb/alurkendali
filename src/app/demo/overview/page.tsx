@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import Link from "next/link";
 import { useGuided } from "@/lib/guided-store";
 import { useDemo } from "@/lib/demo-store";
@@ -9,12 +10,13 @@ import {
   isComplete,
 } from "@/lib/demo-scenarios";
 export default function ManagementOverview() {
+  const { t: tr } = useLocale();
   const { states, loaded } = useGuided();
   const { expenses, procurement, inventory } = useDemo();
   if (!loaded)
     return (
       <p className="demo-loading" role="status">
-        Memuat ringkasan…
+        {tr("Memuat ringkasan…")}
       </p>
     );
   const completed = scenarioIds.filter((id) =>
@@ -30,61 +32,68 @@ export default function ManagementOverview() {
     <div className="management-overview">
       <header className="report-heading">
         <div>
-          <p className="demo-eyebrow">Ringkasan manajemen</p>
+          <p className="demo-eyebrow">{tr("Ringkasan manajemen")}</p>
           <h1>
-            Lihat hasil dari proses
+            {tr("Lihat hasil dari proses")}
             <br />
-            yang sudah Anda coba.
+            {tr("yang sudah Anda coba.")}
           </h1>
-          <p>Angka di bawah mengikuti tindakan Anda pada demo terpandu.</p>
+          <p>
+            {tr("Angka di bawah mengikuti tindakan Anda pada demo terpandu.")}
+          </p>
         </div>
         <Link className="demo-secondary" href="/demo">
-          Pilih kasus demo
+          {tr("Pilih kasus demo")}
         </Link>
       </header>
       <dl className="management-metrics">
         <div>
-          <dt>Skenario selesai</dt>
+          <dt>{tr("Skenario selesai")}</dt>
           <dd>
-            {completed}
-            <span>/ 4</span>
+            {tr(completed)}
+            <span>{"/ 4"}</span>
           </dd>
         </div>
         <div>
-          <dt>Pembayaran simulasi tercatat</dt>
-          <dd>Rp{payment.toLocaleString("id-ID")}</dd>
+          <dt>{tr("Pembayaran simulasi tercatat")}</dt>
+          <dd>
+            {"Rp"}
+            {tr(payment.toLocaleString("id-ID"))}
+          </dd>
         </div>
         <div>
-          <dt>Aktivitas dalam panduan</dt>
+          <dt>{tr("Aktivitas dalam panduan")}</dt>
           <dd>{events.length}</dd>
         </div>
       </dl>
       <div className="management-columns">
         <section>
-          <h2>Alur per kategori</h2>
+          <h2>{tr("Alur per kategori")}</h2>
           <div className="management-modules">
             {scenarioIds.map((id) => (
               <Link href={`/demo/${id}?mode=guided`} key={id}>
-                <span>{scenarios[id].label}</span>
+                <span>{tr(scenarios[id].label)}</span>
                 <div>
-                  <strong>{scenarios[id].title}</strong>
+                  <strong>{tr(scenarios[id].title)}</strong>
                   <p>
-                    {isComplete(id, states[id])
-                      ? "Selesai · Lihat hasil"
-                      : states[id].started
-                        ? `Tahap berikutnya: ${scenarios[id].steps[scenarioStep(id, states[id])]}`
-                        : "Belum dicoba · Mulai panduan"}
+                    {tr(
+                      isComplete(id, states[id])
+                        ? "Selesai · Lihat hasil"
+                        : states[id].started
+                          ? `Tahap berikutnya: ${scenarios[id].steps[scenarioStep(id, states[id])]}`
+                          : "Belum dicoba · Mulai panduan",
+                    )}
                   </p>
                 </div>
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true">{"→"}</span>
               </Link>
             ))}
           </div>
         </section>
         <section>
           <div className="report-section-title">
-            <h2>Aktivitas terakhir</h2>
-            <Link href="/demo/reporting">Lihat semua</Link>
+            <h2>{tr("Aktivitas terakhir")}</h2>
+            <Link href="/demo/reporting">{tr("Lihat semua")}</Link>
           </div>
           {events.length ? (
             <ol className="management-events">
@@ -94,34 +103,43 @@ export default function ManagementOverview() {
                     href={`/demo/reporting?scenario=${e.scenario}&doc=${e.code}`}
                   >
                     <span>{e.code}</span>
-                    <p>{e.action}</p>
+                    <p>{tr(e.action)}</p>
                   </Link>
                 </li>
               ))}
             </ol>
           ) : (
             <div className="report-empty">
-              <h3>Belum ada aktivitas.</h3>
-              <p>Coba satu skenario. Setiap tindakan akan muncul di sini.</p>
-              <Link href="/demo/finance?mode=guided">Mulai dari Finance →</Link>
+              <h3>{tr("Belum ada aktivitas.")}</h3>
+              <p>
+                {tr("Coba satu skenario. Setiap tindakan akan muncul di sini.")}
+              </p>
+              <Link href="/demo/finance?mode=guided">
+                {tr("Mulai dari Finance →")}
+              </Link>
             </div>
           )}
         </section>
       </div>
       <section className="exploration-summary">
-        <h2>Data contoh di mode eksplorasi</h2>
+        <h2>{tr("Data contoh di mode eksplorasi")}</h2>
         <p>
-          Terpisah dari panduan agar Anda dapat mencoba perubahan dengan bebas.
+          {tr(
+            "Terpisah dari panduan agar Anda dapat mencoba perubahan dengan bebas.",
+          )}
         </p>
         <div>
           <Link href="/demo/finance?mode=explore">
-            {expenses.length} pengajuan biaya
+            {expenses.length}
+            {tr(" pengajuan biaya")}
           </Link>
           <Link href="/demo/inventory?mode=explore">
-            {inventory.length} catatan persediaan
+            {inventory.length}
+            {tr(" catatan persediaan")}
           </Link>
           <Link href="/demo/procurement?mode=explore">
-            {procurement.length} dokumen pengadaan
+            {procurement.length}
+            {tr(" dokumen pengadaan")}
           </Link>
         </div>
       </section>

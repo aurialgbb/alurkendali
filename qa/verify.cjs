@@ -61,7 +61,7 @@ const fs = require("node:fs");
     );
   assert(links.every((l) => l.exists));
   ok("Every anchor has a destination");
-  for (const href of ["#solusi", "#cara-kerja", "#contoh", "#pendekatan"]) {
+  for (const href of ["#solusi", "#cara-kerja", "#pendekatan"]) {
     await page.locator(`.desktop-nav a[href="${href}"]`).click();
     assert.equal(new URL(page.url()).hash, href);
   }
@@ -73,10 +73,10 @@ const fs = require("node:fs");
       await solutionTabs.nth(i).getAttribute("aria-selected"),
       "true",
     );
-    await page.locator("#solutions-panel .text-button").click();
+    await page.locator("#solutions-panel button.text-button").click();
     assert(await page.locator("dialog[open]").isVisible());
     const value = await page.locator("#contact-message").inputValue();
-    assert.match(value, /Area yang ingin saya bahas:/);
+    assert.match(value, /Area yang ingin dibahas:/);
     const expected = [
       "finance / reconciliation",
       "inventory / asset",
@@ -128,7 +128,7 @@ const fs = require("node:fs");
   ]) {
     await page.locator(selector).click();
     assert(await page.locator("dialog[open]").isVisible());
-    await page.getByRole("button", { name: "Tutup pratinjau pesan" }).click();
+    await page.getByRole("button", { name: "Tutup formulir kontak" }).click();
   }
   ok("Navbar, hero, final and footer contact CTAs");
   await page.locator(".hero-actions .primary").click();
@@ -140,7 +140,7 @@ const fs = require("node:fs");
     .waitFor();
   assert.match(
     await page.evaluate(() => navigator.clipboard.readText()),
-    /Halo, saya tertarik/,
+    /Halo, saya ingin mendiskusikan/,
   );
   await page.keyboard.press("Escape");
   assert(
@@ -167,9 +167,9 @@ const fs = require("node:fs");
   ok("Clipboard failure gives manual-copy recovery");
   await page.getByRole("button", { name: "Privasi", exact: true }).click();
   assert(
-    await page.getByRole("heading", { name: "Privasi pratinjau" }).isVisible(),
+    await page.getByRole("heading", { name: "Privasi & Kerahasiaan Data" }).isVisible(),
   );
-  await page.getByRole("button", { name: "Tutup informasi privasi" }).click();
+  await page.getByRole("button", { name: "Tutup kebijakan privasi" }).click();
   ok("Privacy information dialog");
   const widths = [320, 375, 390, 640, 768, 1024, 1280, 1440];
   for (const width of widths) {
@@ -188,7 +188,7 @@ const fs = require("node:fs");
   assert(await page.locator("#mobile-nav").isVisible());
   await page.keyboard.press("Escape");
   assert.equal(await page.locator("#mobile-nav").isVisible(), false);
-  for (const href of ["#solusi", "#cara-kerja", "#contoh", "#pendekatan"]) {
+  for (const href of ["#solusi", "#cara-kerja", "#pendekatan"]) {
     await page.getByRole("button", { name: "Menu", exact: true }).click();
     await page.locator(`#mobile-nav a[href="${href}"]`).click();
     assert.equal(await page.locator("#mobile-nav").isVisible(), false);

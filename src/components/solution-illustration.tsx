@@ -1,3 +1,5 @@
+"use client";
+import { useLocale } from "@/lib/locale";
 import type { ReactNode } from "react";
 
 export default function SolutionIllustration({
@@ -9,33 +11,34 @@ export default function SolutionIllustration({
   title: string;
   note: string;
 }) {
+  const { t: tr } = useLocale();
   const views: Record<string, ReactNode> = {
     finance: (
       <div className="finance-match">
         <div className="sample-document">
-          <span className="visual-eyebrow">BUKTI PEMBAYARAN</span>
-          <strong>INV / 024</strong>
+          <span className="visual-eyebrow">{tr("BUKTI PEMBAYARAN")}</span>
+          <strong>{"INV / 024"}</strong>
           <div className="receipt-lines">
             <i />
             <i />
             <i />
           </div>
-          <span>Total tagihan</span>
-          <b>Rp2.450.000</b>
+          <span>{tr("Total tagihan")}</span>
+          <b>{"Rp2.450.000"}</b>
         </div>
         <div className="matching-detail">
-          <span className="visual-eyebrow">PENCOCOKAN</span>
+          <span className="visual-eyebrow">{tr("PENCOCOKAN")}</span>
           <h4>
-            Satu transaksi,
+            {tr("Satu transaksi,")}
             <br />
-            bukti lengkap.
+            {tr("bukti lengkap.")}
           </h4>
           <ul>
-            <li>✓ Nominal sesuai</li>
-            <li>✓ Bukti terlampir</li>
-            <li>✓ Persetujuan tercatat</li>
+            <li>{tr("✓ Nominal sesuai")}</li>
+            <li>{tr("✓ Bukti terlampir")}</li>
+            <li>{tr("✓ Persetujuan tercatat")}</li>
           </ul>
-          <span className="visual-success">Siap direkonsiliasi</span>
+          <span className="visual-success">{tr("Siap direkonsiliasi")}</span>
         </div>
       </div>
     ),
@@ -43,45 +46,45 @@ export default function SolutionIllustration({
       <div className="asset-map">
         <div className="asset-summary">
           <span className="asset-symbol" aria-hidden="true">
-            ▣
+            {"▣"}
           </span>
           <div>
-            <span className="visual-eyebrow">AST / 018</span>
-            <h4>Laptop operasional</h4>
+            <span className="visual-eyebrow">{"AST / 018"}</span>
+            <h4>{tr("Laptop operasional")}</h4>
           </div>
-          <span className="visual-success">Diterima</span>
+          <span className="visual-success">{tr("Diterima")}</span>
         </div>
         <div className="asset-route">
           <div>
             <span className="location-pin" aria-hidden="true">
-              A
+              {"A"}
             </span>
-            <strong>Gudang pusat</strong>
-            <span>Lokasi asal</span>
+            <strong>{tr("Gudang pusat")}</strong>
+            <span>{tr("Lokasi asal")}</span>
           </div>
           <span className="route-arrow" aria-hidden="true">
-            →
+            {"→"}
           </span>
           <div>
             <span className="location-pin destination" aria-hidden="true">
-              B
+              {"B"}
             </span>
-            <strong>Cabang Bandung</strong>
-            <span>Lokasi saat ini</span>
+            <strong>{tr("Cabang Bandung")}</strong>
+            <span>{tr("Lokasi saat ini")}</span>
           </div>
         </div>
         <div className="asset-owner">
           <span className="owner-avatar" aria-hidden="true">
-            DS
+            {"DS"}
           </span>
           <div>
-            <span>Penanggung jawab</span>
-            <strong>Dina S. · Operasional</strong>
+            <span>{tr("Penanggung jawab")}</span>
+            <strong>{tr("Dina S. · Operasional")}</strong>
           </div>
           <span>
-            Serah terima
+            {tr("Serah terima")}
             <br />
-            <b>Tercatat</b>
+            <b>{tr("Tercatat")}</b>
           </span>
         </div>
       </div>
@@ -89,9 +92,9 @@ export default function SolutionIllustration({
     procurement: (
       <div className="purchase-chain">
         <span className="visual-eyebrow">
-          PEMBELIAN PERLENGKAPAN · PR / 031
+          {tr("PEMBELIAN PERLENGKAPAN · PR / 031")}
         </span>
-        <h4>Setiap dokumen saling terhubung.</h4>
+        <h4>{tr("Setiap dokumen saling terhubung.")}</h4>
         <div className="purchase-documents">
           {[
             ["01", "Pengajuan", "Kebutuhan disetujui"],
@@ -99,28 +102,30 @@ export default function SolutionIllustration({
             ["03", "Tagihan", "Menunggu invoice"],
           ].map(([number, label, status]) => (
             <div className="purchase-document" key={number}>
-              <span>{number}</span>
-              <strong>{label}</strong>
-              <small>{status}</small>
+              <span>{tr(number)}</span>
+              <strong>{tr(label)}</strong>
+              <small>{tr(status)}</small>
             </div>
           ))}
         </div>
         <div className="budget-row">
           <span>
-            Anggaran tersedia <b>Rp8.000.000</b>
+            {tr("Anggaran tersedia ")}
+            <b>{"Rp8.000.000"}</b>
           </span>
           <span>
-            Nilai pesanan <b>Rp3.200.000</b>
+            {tr("Nilai pesanan ")}
+            <b>{"Rp3.200.000"}</b>
           </span>
         </div>
         <div
           className="budget-track"
-          aria-label="Pesanan menggunakan 40 persen anggaran"
+          aria-label={tr("Pesanan menggunakan 40 persen anggaran")}
         >
           <span />
         </div>
         <p className="visual-caption">
-          40% anggaran terpakai untuk pesanan ini
+          {tr("40% anggaran terpakai untuk pesanan ini")}
         </p>
       </div>
     ),
@@ -128,11 +133,11 @@ export default function SolutionIllustration({
       <div className="operations-board">
         <div className="board-heading">
           <h4>
-            Pekerjaan berpindah,
+            {tr("Pekerjaan berpindah,")}
             <br />
-            konteksnya ikut.
+            {tr("konteksnya ikut.")}
           </h4>
-          <span>3 tugas contoh</span>
+          <span>{tr("3 tugas contoh")}</span>
         </div>
         <div className="board-columns">
           {[
@@ -142,19 +147,22 @@ export default function SolutionIllustration({
           ].map(([label, task, owner, count], index) => (
             <div className={`board-column board-column-${index}`} key={label}>
               <div className="board-label">
-                {label}
-                <span>{count}</span>
+                {tr(label)}
+                <span>{tr(count)}</span>
               </div>
               <div className="task-slip">
-                <span className="visual-eyebrow">OPS / 0{index + 1}</span>
-                <strong>{task}</strong>
-                <span>{owner}</span>
+                <span className="visual-eyebrow">
+                  {"OPS / 0"}
+                  {index + 1}
+                </span>
+                <strong>{tr(task)}</strong>
+                <span>{tr(owner)}</span>
               </div>
             </div>
           ))}
         </div>
         <p className="board-handoff">
-          Setiap tugas punya status dan penanggung jawab.
+          {tr("Setiap tugas punya status dan penanggung jawab.")}
         </p>
       </div>
     ),
@@ -162,13 +170,15 @@ export default function SolutionIllustration({
       <div className="report-overview">
         <div className="report-heading">
           <div>
-            <span className="visual-eyebrow">RINGKASAN PENGELUARAN</span>
-            <h4>Rp24.000.000</h4>
+            <span className="visual-eyebrow">
+              {tr("RINGKASAN PENGELUARAN")}
+            </span>
+            <h4>{"Rp24.000.000"}</h4>
           </div>
           <span>
-            September
+            {"September"}
             <br />
-            Data ilustrasi
+            {tr("Data ilustrasi")}
           </span>
         </div>
         <div className="report-bars">
@@ -178,18 +188,24 @@ export default function SolutionIllustration({
             ["Lainnya", "4", "33.33%"],
           ].map(([label, value, width]) => (
             <div className="report-bar-row" key={label}>
-              <span>{label}</span>
+              <span>{tr(label)}</span>
               <div>
                 <i style={{ width }} />
               </div>
-              <strong>Rp{value} jt</strong>
+              <strong>
+                {"Rp"}
+                {tr(value)}
+                {tr(" jt")}
+              </strong>
             </div>
           ))}
         </div>
         <div className="report-source">
-          <span className="visual-eyebrow">DARI ANGKA KE TRANSAKSI</span>
-          <strong>Operasional → 12 transaksi</strong>
-          <span>Rincian dan bukti tersimpan bersama laporan.</span>
+          <span className="visual-eyebrow">
+            {tr("DARI ANGKA KE TRANSAKSI")}
+          </span>
+          <strong>{tr("Operasional → 12 transaksi")}</strong>
+          <span>{tr("Rincian dan bukti tersimpan bersama laporan.")}</span>
         </div>
       </div>
     ),
@@ -200,13 +216,15 @@ export default function SolutionIllustration({
       data-illustration={category}
     >
       <div className="mini-top">
-        <span>{title}</span>
-        <span className="illustration-label">Ilustrasi · contoh data</span>
+        <span>{tr(title)}</span>
+        <span className="illustration-label">
+          {tr("Ilustrasi · contoh data")}
+        </span>
       </div>
       <div className="category-scene">{views[category]}</div>
       <div className="category-note">
-        <span aria-hidden="true">✓</span>
-        <p>{note}</p>
+        <span aria-hidden="true">{"✓"}</span>
+        <p>{tr(note)}</p>
       </div>
     </div>
   );

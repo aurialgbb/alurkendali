@@ -1,9 +1,12 @@
 "use client";
+import { useLocale } from "@/lib/locale";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useDemo } from "@/lib/demo-store";
 import { scenarios, type ScenarioId } from "@/lib/demo-scenarios";
 import { rupiah } from "./workbenches";
+import { translateSample } from "@/lib/demo-copy";
+import LanguageSwitch from "@/components/language-switch";
 const statuses: Record<string, string> = {
   pending_manager: "Menunggu Manager",
   pending_finance: "Menunggu Finance",
@@ -30,6 +33,7 @@ function RecordDialog({
   onClose: () => void;
   children: ReactNode;
 }) {
+  const { t: tr } = useLocale();
   const ref = useRef<HTMLDialogElement>(null);
   const label = useId();
   useEffect(() => {
@@ -43,13 +47,14 @@ function RecordDialog({
       onClose={onClose}
     >
       <div className="record-dialog-heading">
-        <h2 id={label}>{title}</h2>
+        <h2 id={label}>{tr(title)}</h2>
+        <LanguageSwitch />
         <button
           className="demo-secondary"
           onClick={() => ref.current?.close()}
-          aria-label="Tutup detail"
+          aria-label={tr("Tutup detail")}
         >
-          Tutup
+          {tr("Tutup")}
         </button>
       </div>
       {children}
@@ -57,6 +62,9 @@ function RecordDialog({
   );
 }
 export default function Explorer({ id }: { id: ScenarioId }) {
+  const { t: tr, locale } = useLocale();
+  const sample = (recordId: string, text: string) =>
+    translateSample(locale, recordId, text);
   const d = useDemo();
   const [selected, setSelected] = useState<string | null>(null);
   const [newForm, setNewForm] = useState(false);
@@ -69,6 +77,19 @@ export default function Explorer({ id }: { id: ScenarioId }) {
   const [note, setNote] = useState("");
   const [resetting, setResetting] = useState(false);
   const expense = d.expenses.find((e) => e.id === selected);
+  const rejection =
+    expense &&
+    d.auditLogs.find(
+      (e) => e.docCode === expense.code && e.action === "Pengajuan ditolak",
+    );
+  const rejectionSuffix = rejection
+    ? ` Alasan penolakan: ${rejection.details}`
+    : "";
+  const expenseNotes = expense
+    ? locale === "en" && rejection && expense.notes.endsWith(rejectionSuffix)
+      ? `${sample(expense.id, expense.notes.slice(0, -rejectionSuffix.length))} Rejection reason: ${rejection.details}`
+      : sample(expense.id, expense.notes)
+    : "";
   const inventory = d.inventory.find((e) => e.id === selected);
   const po = d.procurement.find((e) => e.id === selected);
   const records =
@@ -82,7 +103,9 @@ export default function Explorer({ id }: { id: ScenarioId }) {
   const filtered = records.filter(
     (e) =>
       (filter === "all" || e.status === filter) &&
-      `${e.code} ${e.title}`.toLowerCase().includes(query.toLowerCase()),
+      `${e.code} ${e.title} ${sample(e.id, e.title)}`
+        .toLowerCase()
+        .includes(query.toLowerCase()),
   );
   const close = () => {
     setSelected(null);
@@ -94,73 +117,82 @@ export default function Explorer({ id }: { id: ScenarioId }) {
   if (!d.isLoaded)
     return (
       <p role="status" className="demo-loading">
-        Memuat data eksplorasi…
+        {tr("Memuat data eksplorasi…")}
       </p>
     );
   return (
     <div className="explorer-view">
       <Link className="explorer-return" href={`/demo/${id}?mode=guided`}>
-        Ikuti panduan {scenarios[id].label} →
+        {tr("Ikuti panduan ")}
+        {tr(scenarios[id].label)}
+        {" →"}
       </Link>
       <header className="report-heading">
         <div>
           <p className="demo-eyebrow">
-            Mode eksplorasi · {scenarios[id].label}
+            {tr("Mode eksplorasi · ")}
+            {tr(scenarios[id].label)}
           </p>
           <h1>
-            {id === "finance"
-              ? "Pengajuan & persetujuan biaya"
-              : id === "inventory"
-                ? "Persediaan & pergerakan aset"
-                : id === "procurement"
-                  ? "Pesanan & dokumen pengadaan"
-                  : "Pekerjaan harian cabang"}
+            {tr(
+              id === "finance"
+                ? "Pengajuan & persetujuan biaya"
+                : id === "inventory"
+                  ? "Persediaan & pergerakan aset"
+                  : id === "procurement"
+                    ? "Pesanan & dokumen pengadaan"
+                    : "Pekerjaan harian cabang",
+            )}
           </h1>
           <p>
-            Telusuri data contoh, buka dokumen, dan coba tindakan sesuai peran
-            Anda.
+            {tr(
+              "Telusuri data contoh, buka dokumen, dan coba tindakan sesuai peran Anda.",
+            )}
           </p>
         </div>
         {id === "finance" && (
           <button className="demo-primary" onClick={() => setNewForm(true)}>
-            Buat pengajuan contoh
+            {tr("Buat pengajuan contoh")}
           </button>
         )}
       </header>
       {d.notice && (
         <p role="status" className="demo-storage-notice">
-          {d.notice}
+          {tr(d.notice)}
         </p>
       )}
       {d.error && (
         <p role="alert" className="explorer-error">
-          {d.error}
+          {tr(d.error)}
         </p>
       )}
       <div className="report-filters">
         <label className="demo-field">
-          Status
+          {"Status"}
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-            <option value="all">Semua status</option>
+            <option value="all">{tr("Semua status")}</option>
             {Array.from(new Set(records.map((e) => e.status))).map((status) => (
               <option key={status} value={status}>
-                {statuses[status]}
+                {tr(statuses[status])}
               </option>
             ))}
           </select>
         </label>
         <label className="demo-field report-search">
-          Cari dokumen
+          {tr("Cari dokumen")}
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Nomor atau judul dokumen"
+            placeholder={tr("Nomor atau judul dokumen")}
           />
         </label>
       </div>
       <div className="report-count">
-        <span>{filtered.length} dokumen contoh</span>
+        <span>
+          {filtered.length}
+          {tr(" dokumen contoh")}
+        </span>
         <button
           className="demo-text-button"
           onClick={() => {
@@ -168,7 +200,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
             setQuery("");
           }}
         >
-          Tampilkan semua
+          {tr("Tampilkan semua")}
         </button>
       </div>
       {id === "operations" ? (
@@ -178,15 +210,20 @@ export default function Explorer({ id }: { id: ScenarioId }) {
             .map((task) => (
               <section key={task.id}>
                 <span className="explorer-code">
-                  {task.code} · {task.branch}
+                  {task.code}
+                  {" · "}
+                  {tr(task.branch)}
                 </span>
-                <h2>{task.title}</h2>
+                <h2>{sample(task.id, task.title)}</h2>
                 <p>
-                  {task.assignedTo} · {task.shift}
+                  {tr(task.assignedTo)}
+                  {" · "}
+                  {tr(task.shift)}
                 </p>
                 <span className="explorer-status">
-                  {statuses[task.status]} ·{" "}
-                  {task.checkItems.filter((e) => e.checked).length}/
+                  {tr(statuses[task.status])}
+                  {" ·"} {tr(task.checkItems.filter((e) => e.checked).length)}
+                  {"/"}
                   {task.checkItems.length}
                 </span>
                 <div className="operations-checks">
@@ -197,11 +234,11 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                         checked={item.checked}
                         onChange={() => d.toggleOperationItem(task.id, index)}
                       />
-                      <span>{item.label}</span>
+                      <span>{tr(item.label)}</span>
                     </label>
                   ))}
                 </div>
-                {task.supervisorNotes && <p>{task.supervisorNotes}</p>}
+                {task.supervisorNotes && <p>{tr(task.supervisorNotes)}</p>}
               </section>
             ))}
         </div>
@@ -215,42 +252,52 @@ export default function Explorer({ id }: { id: ScenarioId }) {
             >
               <span className="explorer-code">{record.code}</span>
               <span className="explorer-record-title">
-                {record.title}
+                {sample(record.id, record.title)}
                 <small>
-                  {"branch" in record
-                    ? record.branch
-                    : "origin" in record
-                      ? record.origin
-                      : ""}
+                  {tr(
+                    "branch" in record
+                      ? record.branch
+                      : "origin" in record
+                        ? record.origin
+                        : "",
+                  )}
                 </small>
               </span>
               <span className="explorer-record-amount">
-                {"amount" in record
-                  ? rupiah(record.amount)
-                  : "totalAmount" in record
-                    ? rupiah(record.totalAmount)
-                    : "itemsSummary" in record
-                      ? record.type === "adjustment"
-                        ? "Penyesuaian"
-                        : "Pergerakan barang"
-                      : ""}
+                {tr(
+                  "amount" in record
+                    ? rupiah(record.amount)
+                    : "totalAmount" in record
+                      ? rupiah(record.totalAmount)
+                      : "itemsSummary" in record
+                        ? record.type === "adjustment"
+                          ? "Penyesuaian"
+                          : "Pergerakan barang"
+                        : "",
+                )}
               </span>
-              <span className="explorer-status">{statuses[record.status]}</span>
-              <span className="explorer-open">Buka →</span>
+              <span className="explorer-status">
+                {tr(statuses[record.status])}
+              </span>
+              <span className="explorer-open">{tr("Buka →")}</span>
             </button>
           ))}
         </div>
       )}
       {!filtered.length && (
         <div className="report-empty">
-          <h2>Tidak ada dokumen yang cocok.</h2>
-          <p>Ubah pencarian atau tampilkan semua status.</p>
+          <h2>{tr("Tidak ada dokumen yang cocok.")}</h2>
+          <p>{tr("Ubah pencarian atau tampilkan semua status.")}</p>
         </div>
       )}
       <footer className="explorer-footer">
-        <p>Semua nama, lampiran, dan pembayaran di sini adalah data contoh.</p>
+        <p>
+          {tr(
+            "Semua nama, lampiran, dan pembayaran di sini adalah data contoh.",
+          )}
+        </p>
         <button className="demo-text-button" onClick={() => setResetting(true)}>
-          Reset data eksplorasi
+          {tr("Reset data eksplorasi")}
         </button>
       </footer>
       {selected && (
@@ -266,43 +313,46 @@ export default function Explorer({ id }: { id: ScenarioId }) {
         >
           {id === "finance" && expense && (
             <>
-              <h3>{expense.title}</h3>
+              <h3>{sample(expense.id, expense.title)}</h3>
               <div className="explorer-detail-total">
-                {rupiah(expense.amount)}
+                {tr(rupiah(expense.amount))}
               </div>
               <dl className="document-fields">
                 <div>
-                  <dt>Pemohon</dt>
+                  <dt>{tr("Pemohon")}</dt>
                   <dd>{expense.submitter}</dd>
                 </div>
                 <div>
-                  <dt>Cabang</dt>
-                  <dd>{expense.branch}</dd>
+                  <dt>{tr("Cabang")}</dt>
+                  <dd>{tr(expense.branch)}</dd>
                 </div>
                 <div>
-                  <dt>Status</dt>
-                  <dd>{statuses[expense.status]}</dd>
+                  <dt>{"Status"}</dt>
+                  <dd>{tr(statuses[expense.status])}</dd>
                 </div>
               </dl>
               <div className="explorer-evidence">
-                <strong>Referensi lampiran contoh</strong>
+                <strong>{tr("Referensi lampiran contoh")}</strong>
                 <p>{expense.receiptName}</p>
                 <span>
-                  Representasi dokumen untuk simulasi. Tidak ada nota asli atau
-                  berkas pribadi yang diunggah.
+                  {tr(
+                    "Representasi dokumen untuk simulasi. Tidak ada nota asli atau berkas pribadi yang diunggah.",
+                  )}
                 </span>
               </div>
-              <p className="explorer-notes">{expense.notes}</p>
+              <p className="explorer-notes">{expenseNotes}</p>
               {expense.managerApproval && (
                 <p className="explorer-approval">
-                  Disetujui: {expense.managerApproval.approvedBy}
+                  {tr("Disetujui: ")}
+                  {expense.managerApproval.approvedBy}
                   <br />
-                  {expense.managerApproval.approvedAt}
+                  {tr(expense.managerApproval.approvedAt)}
                 </p>
               )}
               {expense.financeVerification && (
                 <p className="explorer-approval">
-                  Pembayaran simulasi: {expense.financeVerification.refNo}
+                  {tr("Pembayaran simulasi: ")}
+                  {expense.financeVerification.refNo}
                   <br />
                   {expense.financeVerification.verifiedBy}
                 </p>
@@ -320,7 +370,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                       }}
                     >
                       <label className="demo-field">
-                        Alasan penolakan
+                        {tr("Alasan penolakan")}
                         <textarea
                           value={reason}
                           onChange={(e) => setReason(e.target.value)}
@@ -329,14 +379,14 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                         />
                       </label>
                       <button className="demo-primary" type="submit">
-                        Simpan penolakan
+                        {tr("Simpan penolakan")}
                       </button>
                       <button
                         className="demo-text-button"
                         type="button"
                         onClick={() => setRejecting(false)}
                       >
-                        Batal
+                        {tr("Batal")}
                       </button>
                     </form>
                   ) : (
@@ -353,54 +403,60 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                               )
                         }
                       >
-                        {expense.status === "pending_manager"
-                          ? "Setujui pengajuan"
-                          : "Catat pembayaran simulasi"}
+                        {tr(
+                          expense.status === "pending_manager"
+                            ? "Setujui pengajuan"
+                            : "Catat pembayaran simulasi",
+                        )}
                       </button>
                       <button
                         className="demo-text-button"
                         onClick={() => setRejecting(true)}
                       >
-                        Tolak dengan alasan
+                        {tr("Tolak dengan alasan")}
                       </button>
                     </>
                   )}
                 </div>
               ) : expense.status.startsWith("pending") ? (
                 <p className="explorer-role-hint">
-                  Pilih peran{" "}
-                  {expense.status === "pending_manager" ? "Manager" : "Finance"}{" "}
-                  di atas halaman untuk memproses dokumen ini.
+                  {tr("Pilih peran")}{" "}
+                  {tr(
+                    expense.status === "pending_manager"
+                      ? "Manager"
+                      : "Finance",
+                  )}{" "}
+                  {tr("di atas halaman untuk memproses dokumen ini.")}
                 </p>
               ) : null}
             </>
           )}
           {id === "inventory" && inventory && (
             <>
-              <h3>{inventory.title}</h3>
+              <h3>{sample(inventory.id, inventory.title)}</h3>
               <dl className="document-fields">
                 <div>
-                  <dt>Asal</dt>
-                  <dd>{inventory.origin}</dd>
+                  <dt>{tr("Asal")}</dt>
+                  <dd>{tr(inventory.origin)}</dd>
                 </div>
                 <div>
-                  <dt>Tujuan</dt>
-                  <dd>{inventory.destination ?? "Lokasi yang sama"}</dd>
+                  <dt>{tr("Tujuan")}</dt>
+                  <dd>{tr(inventory.destination ?? "Lokasi yang sama")}</dd>
                 </div>
                 <div>
-                  <dt>Penanggung jawab</dt>
-                  <dd>{inventory.responsiblePerson}</dd>
+                  <dt>{tr("Penanggung jawab")}</dt>
+                  <dd>{tr(inventory.responsiblePerson)}</dd>
                 </div>
                 <div>
-                  <dt>Status</dt>
-                  <dd>{statuses[inventory.status]}</dd>
+                  <dt>{"Status"}</dt>
+                  <dd>{tr(statuses[inventory.status])}</dd>
                 </div>
               </dl>
-              <p>{inventory.itemsSummary}</p>
+              <p>{tr(inventory.itemsSummary)}</p>
               <div className="explorer-evidence">
-                <strong>Dokumen contoh</strong>
-                <p>{inventory.documentName}</p>
-                <span>{inventory.notes}</span>
+                <strong>{tr("Dokumen contoh")}</strong>
+                <p>{tr(inventory.documentName)}</p>
+                <span>{sample(inventory.id, inventory.notes)}</span>
               </div>
               {inventory.status === "pending_approval" &&
                 (d.roleInfo.canApproveFinance ? (
@@ -408,12 +464,13 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                     className="demo-primary"
                     onClick={() => d.approveAdjustment(inventory.id)}
                   >
-                    Setujui penyesuaian stok
+                    {tr("Setujui penyesuaian stok")}
                   </button>
                 ) : (
                   <p className="explorer-role-hint">
-                    Pilih peran Manager atau Finance untuk menyetujui
-                    penyesuaian.
+                    {tr(
+                      "Pilih peran Manager atau Finance untuk menyetujui penyesuaian.",
+                    )}
                   </p>
                 ))}
               {inventory.type === "transfer" && (
@@ -421,52 +478,59 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                   className="demo-text-link"
                   href="/demo/inventory?mode=guided"
                 >
-                  Coba alur kirim dan terima barang →
+                  {tr("Coba alur kirim dan terima barang →")}
                 </Link>
               )}
             </>
           )}
           {id === "procurement" && po && (
             <>
-              <h3>{po.title}</h3>
+              <h3>{sample(po.id, po.title)}</h3>
               <p className="explorer-notes">
-                {po.vendor} · {po.branch}
+                {tr(po.vendor)}
+                {" · "}
+                {tr(po.branch)}
               </p>
               <div className="explorer-match">
                 <div>
-                  <span>Pesanan</span>
-                  <strong>{rupiah(po.threeWayMatch.poAmount)}</strong>
+                  <span>{tr("Pesanan")}</span>
+                  <strong>{tr(rupiah(po.threeWayMatch.poAmount))}</strong>
                 </div>
                 <div>
-                  <span>Penerimaan</span>
+                  <span>{tr("Penerimaan")}</span>
                   <strong>
-                    {po.threeWayMatch.goodsQtyMatched
-                      ? "Jumlah cocok"
-                      : "Belum diterima"}
+                    {tr(
+                      po.threeWayMatch.goodsQtyMatched
+                        ? "Jumlah cocok"
+                        : "Belum diterima",
+                    )}
                   </strong>
                 </div>
                 <div>
-                  <span>Tagihan</span>
+                  <span>{tr("Tagihan")}</span>
                   <strong>
-                    {po.threeWayMatch.invoiceAmount
-                      ? rupiah(po.threeWayMatch.invoiceAmount)
-                      : "Belum diterbitkan"}
+                    {tr(
+                      po.threeWayMatch.invoiceAmount
+                        ? rupiah(po.threeWayMatch.invoiceAmount)
+                        : "Belum diterbitkan",
+                    )}
                   </strong>
                 </div>
               </div>
-              <p className="explorer-status">{statuses[po.status]}</p>
+              <p className="explorer-status">{tr(statuses[po.status])}</p>
               {po.status === "3way_matched" &&
                 (d.roleInfo.canVerifyAudit ? (
                   <button
                     className="demo-primary"
                     onClick={() => d.payProcurementPO(po.id)}
                   >
-                    Catat pembayaran simulasi
+                    {tr("Catat pembayaran simulasi")}
                   </button>
                 ) : (
                   <p className="explorer-role-hint">
-                    Pilih peran Finance untuk mencatat pembayaran setelah
-                    dokumen cocok.
+                    {tr(
+                      "Pilih peran Finance untuk mencatat pembayaran setelah dokumen cocok.",
+                    )}
                   </p>
                 ))}
               {["pr_draft", "pr_approved"].includes(po.status) &&
@@ -475,7 +539,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                     className="demo-primary"
                     onClick={() => d.approveProcurementPR(po.id)}
                   >
-                    Setujui pesanan
+                    {tr("Setujui pesanan")}
                   </button>
                 )}
               {po.status === "po_issued" && (
@@ -483,14 +547,14 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                   className="demo-text-link"
                   href="/demo/procurement?mode=guided"
                 >
-                  Coba penerimaan dan pencocokan dokumen →
+                  {tr("Coba penerimaan dan pencocokan dokumen →")}
                 </Link>
               )}
             </>
           )}
           {d.error && (
             <p role="alert" className="explorer-error">
-              {d.error}
+              {tr(d.error)}
             </p>
           )}
         </RecordDialog>
@@ -525,7 +589,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
             }}
           >
             <label className="demo-field">
-              Kebutuhan cabang
+              {tr("Kebutuhan cabang")}
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -535,7 +599,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
               />
             </label>
             <label className="demo-field">
-              Nominal (rupiah)
+              {tr("Nominal (rupiah)")}
               <input
                 type="number"
                 min={1}
@@ -547,7 +611,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
               />
             </label>
             <label className="demo-field">
-              Catatan
+              {tr("Catatan")}
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
@@ -556,11 +620,13 @@ export default function Explorer({ id }: { id: ScenarioId }) {
               />
             </label>
             <div className="explorer-evidence">
-              <strong>Lampiran contoh disertakan</strong>
-              <p>nota_contoh.pdf · Tidak perlu mengunggah data pribadi.</p>
+              <strong>{tr("Lampiran contoh disertakan")}</strong>
+              <p>
+                {tr("nota_contoh.pdf · Tidak perlu mengunggah data pribadi.")}
+              </p>
             </div>
             <button className="demo-primary" type="submit">
-              Kirim pengajuan contoh
+              {tr("Kirim pengajuan contoh")}
             </button>
           </form>
         </RecordDialog>
@@ -571,15 +637,16 @@ export default function Explorer({ id }: { id: ScenarioId }) {
           onClose={() => setResetting(false)}
         >
           <p>
-            Seluruh perubahan pada mode eksplorasi kembali ke data awal.
-            Progress empat panduan tidak ikut direset.
+            {tr(
+              "Seluruh perubahan pada mode eksplorasi kembali ke data awal. Progress empat panduan tidak ikut direset.",
+            )}
           </p>
           <div className="explorer-detail-actions">
             <button
               className="demo-secondary"
               onClick={() => setResetting(false)}
             >
-              Batal
+              {tr("Batal")}
             </button>
             <button
               className="demo-primary"
@@ -590,7 +657,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                 setFilter("all");
               }}
             >
-              Ya, reset eksplorasi
+              {tr("Ya, reset eksplorasi")}
             </button>
           </div>
         </RecordDialog>
