@@ -1,11 +1,11 @@
 # Alur Kendali
 
-Landing page lokal untuk Business Systems & Controls Consulting, berdasarkan `../LP Implementation Plan`.
+Landing page lokal untuk Business Systems & Controls Consulting, berdasarkan `../docs/LP Implementation Plan.md`.
 
 ## Menjalankan
 
 ```powershell
-cd "C:\Users\auria\OneDrive\Documents\14. Business Project\landing-page"
+cd "C:\Users\auria\OneDrive\Documents\14. Business Project\04. Alur Kendali\landing-page"
 npm ci
 npm run dev
 ```

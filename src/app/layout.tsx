@@ -4,10 +4,21 @@ import { cookies } from "next/headers";
 import { LocaleProvider } from "@/lib/locale";
 import { localeCookie, pageCopy } from "@/lib/translate";
 import "./globals.css";
+import "./landing.css";
 
 const inter = localFont({
   src: "./fonts/inter-latin-variable.woff2",
   variable: "--font-inter",
+  display: "swap",
+});
+
+const plusJakartaSans = localFont({
+  src: [
+    { path: "./fonts/plus-jakarta-sans-latin-wght-normal.woff2", style: "normal" },
+    { path: "./fonts/plus-jakarta-sans-latin-wght-italic.woff2", style: "italic" },
+  ],
+  weight: "200 800",
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -41,7 +52,7 @@ export default async function RootLayout({
   const locale =
     (await cookies()).get(localeCookie)?.value === "en" ? "en" : "id";
   return (
-    <html lang={locale} className={inter.variable}>
+    <html lang={locale} className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body>
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
       </body>

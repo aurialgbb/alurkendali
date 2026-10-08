@@ -9,7 +9,7 @@ export const site = {
 
 export const navigation = [
   { label: "Solusi", href: "#solusi" },
-  { label: "Live Demo Portal", href: "/demo" },
+  { label: "Demo interaktif", href: "/demo" },
   { label: "Cara kerja", href: "#cara-kerja" },
   { label: "Pendekatan kami", href: "#pendekatan" },
 ];
@@ -22,7 +22,7 @@ export const solutions = [
     context: "finance / reconciliation",
     title: "Uangnya sudah keluar, tapi bukti dan notanya ada di mana?",
     description:
-      "Pengajuan biaya, reimbursement, dan uang muka tersimpan bersama persetujuan dan buktinya. Tim bisa mengecek kelengkapan tanpa membuka banyak file.",
+      "Pengajuan biaya, reimbursement, dan uang muka disimpan bersama persetujuan dan buktinya. Mau cek kelengkapannya, tidak perlu buka banyak file.",
     outcomes: [
       "Jelas siapa yang perlu menyetujui",
       "Bukti transaksi bisa dibuka dari pengajuan",
@@ -44,7 +44,7 @@ export const solutions = [
     context: "inventory / asset",
     title: "Barangnya sekarang di mana, dan siapa yang memegangnya?",
     description:
-      "Catat barang masuk, perpindahan antar lokasi, dan penyerahan aset. Saat ada selisih, tim punya catatan untuk mulai menelusurinya.",
+      "Barang masuk, pindah lokasi, dan serah terima aset tercatat. Kalau stok selisih, tim punya jejak untuk mulai menelusurinya.",
     outcomes: [
       "Riwayat perpindahan barang tersimpan",
       "Nama penanggung jawab aset bisa dicek",
@@ -66,7 +66,7 @@ export const solutions = [
     context: "procurement / spending",
     title: "Tagihan supplier tiba-tiba datang, tapi siapa yang pesan barangnya?",
     description:
-      "Hubungkan permintaan pembelian, persetujuan anggaran, PO, dan invoice. Tim bisa melihat apa yang dipesan dan sudah sampai tahap mana.",
+      "Permintaan pembelian, persetujuan anggaran, PO, dan invoice saling terhubung. Jadi kelihatan apa yang dipesan dan sudah sampai tahap mana.",
     outcomes: [
       "Kebutuhan dan anggaran diperiksa sebelum pembelian",
       "PO bisa ditelusuri ke permintaan awal",
@@ -88,7 +88,7 @@ export const solutions = [
     context: "workflow / approval",
     title: "Pekerjaan tersendat di tengah jalan karena tidak jelas giliran siapa?",
     description:
-      "Rapikan pekerjaan rutin antar tim atau cabang. Pengajuan, dokumen, dan statusnya bisa dilihat oleh orang yang perlu menindaklanjuti.",
+      "Pekerjaan rutin antar tim atau cabang jadi lebih rapi. Pengajuan, dokumen, dan statusnya langsung terlihat oleh orang yang harus menindaklanjuti.",
     outcomes: [
       "Jelas siapa yang sedang menangani pekerjaan",
       "Bukti penyelesaian bisa dicek tim berikutnya",
@@ -110,7 +110,7 @@ export const solutions = [
     context: "management reporting",
     title: "Mau tahu kondisi bisnis terbaru, tapi harus menunggu rekap manual berhari-hari?",
     description:
-      "Gunakan data dari pekerjaan yang sudah tercatat untuk menyusun laporan. Kalau ada angka yang perlu dijelaskan, tim bisa melihat transaksi di baliknya.",
+      "Laporan disusun dari pekerjaan yang sudah tercatat. Kalau ada angka yang perlu dijelaskan, transaksi di baliknya bisa dibuka.",
     outcomes: [
       "Isi laporan mengikuti kebutuhan manajemen",
       "Angka ringkasan bisa ditelusuri ke transaksi",
@@ -130,22 +130,22 @@ export const solutions = [
 export const faqs = [
   [
     "Apakah harus mengganti seluruh sistem yang sudah ada?",
-    "Tidak perlu. Kita bisa mulai dari satu proses yang paling sering bermasalah. Sistem yang masih bekerja dengan baik tetap digunakan. Jika perlu dihubungkan, kita bahas kebutuhannya sebelum menentukan lingkup pekerjaan.",
+    "Tidak perlu. Kita mulai dari satu proses yang paling sering bermasalah, dan sistem yang masih jalan baik tetap dipakai. Kalau perlu disambungkan, kita bahas dulu sebelum menentukan lingkup kerja.",
   ],
   [
     "Apakah sistem dibuat sesuai proses perusahaan?",
-    "Ya. Kami mempelajari cara kerja tim Anda dulu: siapa yang mengajukan, siapa yang memeriksa, dan laporan apa yang dibutuhkan. Dari situ, kita sepakati alur dan batasan sistem yang akan dibuat.",
+    "Ya. Kami pelajari dulu cara kerja tim Anda: siapa yang mengajukan, siapa yang memeriksa, laporan apa yang dibutuhkan. Dari situ kita sepakati alur dan batasan sistemnya.",
   ],
   [
     "Apakah harus berhenti menggunakan Excel?",
-    "Tidak. Excel tetap berguna untuk banyak pekerjaan. Yang kita rapikan adalah proses yang mulai sulit dikelola lewat spreadsheet, misalnya pengajuan yang melewati banyak orang atau transaksi yang membutuhkan bukti dan persetujuan.",
+    "Tidak. Excel masih berguna untuk banyak pekerjaan. Yang kita rapikan hanya proses yang mulai sulit dikelola lewat spreadsheet, misalnya pengajuan yang lewat banyak orang atau transaksi yang butuh bukti dan persetujuan.",
   ],
   [
     "Berapa biaya implementasinya?",
-    "Kami perlu memahami prosesnya dulu agar estimasinya masuk akal. Biaya dipengaruhi alur kerja, jumlah peran pengguna, dan kebutuhan hubungan dengan sistem lain. Ceritakan kebutuhannya lewat WhatsApp, lalu kita bahas lingkup pekerjaan dan perkiraan biayanya.",
+    "Kami perlu paham prosesnya dulu supaya estimasinya masuk akal. Biaya bergantung pada alur kerja, jumlah peran pengguna, dan apakah perlu terhubung ke sistem lain. Ceritakan kebutuhannya lewat WhatsApp, lalu kita bahas lingkup dan perkiraan biayanya.",
   ],
   [
     "Apakah bisa dimulai dari satu proses saja?",
-    "Bisa, dan biasanya itu titik mulai yang baik. Pilih satu proses yang paling terasa masalahnya, gunakan sistemnya, lalu evaluasi bersama tim. Setelah berjalan baik, baru kita bahas kebutuhan berikutnya.",
+    "Bisa, dan biasanya justru itu awal yang baik. Pilih satu proses yang paling terasa masalahnya, pakai sistemnya, lalu evaluasi bersama tim. Kalau sudah jalan baik, baru kita bahas yang berikutnya.",
   ],
 ] as const;

@@ -1020,4 +1020,144 @@ export const englishCopy: Readonly<Record<string, string>> = {
     "A Rp300.000 discrepancy blocks payment until the invoice is corrected.",
   "PO berisi 2 scanner. Lengkapi penerimaan 2 unit sebelum melanjutkan contoh ini.":
     "The PO contains 2 scanners. Record receipt of 2 units before continuing this example.",
+  // Landing revision 2026-10-08
+  "Coba Demo Interaktif": "Try the Interactive Demo",
+  "Demo interaktif": "Interactive demo",
+  "Bisnis makin ramai. Tim makin sibuk mencocokkan file.":
+    "Business is getting busier. Your team is spending more time reconciling files.",
+  "Proses mana yang paling menyita waktu tim Anda?":
+    "Which process takes up the most time for your team?",
+  "Tidak perlu merombak semuanya sekaligus. Kita bisa mulai dari satu proses yang paling sering membuat pekerjaan tersendat.":
+    "You do not need to change everything at once. We can start with the process that most often holds up your team's work.",
+  "Ikuti satu pengajuan, dari awal sampai selesai.":
+    "Follow one request from start to finish.",
+  "Pengajuan ada di spreadsheet, persetujuan di chat, dan bukti di folder lain. Untuk mengecek satu transaksi, tim harus membuka semuanya. Begini jadinya kalau semuanya terhubung.":
+    "Requests live in a spreadsheet, approvals in chat, and documents in another folder. Checking one transaction means opening them all. Here is what it looks like when everything is connected.",
+  "Buka portal demo lengkap": "Open the full demo portal",
+  "Chat approval": "Chat approval",
+  "Spreadsheet, approval di chat, folder bukti, dan rekap ulang digantikan oleh empat tahap yang terhubung: pengajuan, persetujuan, cek finance, serta riwayat dan laporan.":
+    "A spreadsheet, chat approvals, an evidence folder, and manual recaps are replaced by four connected stages: request, approval, finance check, and history and reporting.",
+  "Kami pelajari cara kerja tim Anda, lalu bangun sistemnya bersama.":
+    "We learn how your team works, then build the system together.",
+  "Kontrol dan audit": "Control and audit",
+  "Tata kelola dan kepatuhan": "Governance and compliance",
+  "Sistem yang dipakai tim": "Systems your team actually uses",
+  "Sudah terasa perlu dirapikan, tapi bingung mulai dari mana?":
+    "You know the workflow needs improving, but where do you start?",
+  "Beberapa hal yang sering ditanyakan.": "A few questions we often hear.",
+  "Ada alur kerja yang mulai terlalu rumit untuk spreadsheet?":
+    "Is a workflow becoming too complex for spreadsheets?",
+  "Salin pesan pembuka berikut, lalu kirimkan ke kontak Alur Kendali untuk memulai diskusi.":
+    "Copy this introductory message and send it to your Alur Kendali contact to start the discussion.",
+  "Pesan tersalin.": "Message copied.",
+  "Indonesia · Dengan janji temu": "Indonesia · By appointment",
+  Pusat: "Head office",
+  Penjualan: "Sales",
+  "Biaya cabang": "Branch costs",
+  "Kas kecil": "Petty cash",
+  "Selisih Rp450.000, dicari ulang satu per satu":
+    "A Rp450.000 gap, traced line by line",
+  "Contoh angka": "Sample figures",
+  "Transfer keluar": "Transfer out",
+  Nota: "Receipt",
+  "Belum ada": "Not yet",
+  "Menyusul 3 hari kemudian": "Arrives 3 days later",
+  "Oke, lanjut beli.": "OK, go ahead and buy it.",
+  "Foto barangnya sudah?": "Do we have a photo of it?",
+  "Sudah di grup sebelah": "It's in the other group",
+  "Rapat jam 3 ya": "Meeting at 3",
+  "Siapa yang setujui ini?": "Who approved this?",
+  "Riwayat perubahan: tidak ada": "Change history: none",
+  "Nominal sesuai": "Amount matches",
+  "Bukti terlampir": "Documents attached",
+  "Persetujuan tercatat": "Approval recorded",
+  // Landing copy pass 2026-10-08: spoken, less formal Indonesian
+  "Usaha makin besar, tapi pengajuan masih lewat Excel dan grup chat? Kami bantu bangun sistem internal supaya status, persetujuan, dan bukti setiap pengajuan ada di satu tempat.":
+    "Has the business grown, but requests still go through Excel and group chats? We help you build an internal system so the status, approval, and evidence for every request live in one place.",
+  "Dirancang dengan kacamata audit": "Designed with an auditor's eye",
+  "Setiap transaksi ada buktinya, setiap persetujuan tercatat, dan angka di laporan bisa ditelusuri.":
+    "Every transaction has its evidence, every approval is recorded, and the numbers in your reports can be traced.",
+  "Pernah mengalami ini?": "Does this sound familiar?",
+  "Usaha makin ramai, tapi tim malah sibuk mencocokkan file.":
+    "The business is busier, but the team is busy matching files.",
+  "Excel-nya sendiri tidak salah. Repotnya mulai saat satu pengajuan harus lewat banyak orang, nota kertas, dan chat yang gampang tenggelam.":
+    "Excel itself is not the problem. The trouble starts when one request passes through many people, paper receipts, and chats that are easy to lose.",
+  "Angka cabang tidak sama dengan catatan pusat, jadi tim lembur mencocokkannya satu per satu. Akibatnya laporan keuangan bisa molor berminggu-minggu.":
+    "Branch figures do not match head office records, so the team works late matching them one by one. Financial reports can end up weeks late.",
+  "Kasbon sudah diambil, transfer sudah jalan, tapi notanya hilang atau lupa difoto. Pas diperiksa, pengeluarannya susah dipertanggungjawabkan.":
+    "The cash advance is taken and the transfer has gone out, but the receipt is lost or never photographed. When it is reviewed, the spending is hard to justify.",
+  "Persetujuan cuma lewat chat WhatsApp": "Approvals only happen in WhatsApp chats",
+  "Persetujuan tenggelam di antara obrolan lain. Begitu barang datang tidak sesuai atau melewati anggaran, susah memastikan siapa yang tadi bilang boleh.":
+    "Approvals get buried among other messages. When goods arrive wrong or over budget, it is hard to tell who said yes.",
+  "Satu file diedit banyak orang. Kalau ada rumus yang berubah, tidak ketahuan siapa yang mengubahnya dan kapan.":
+    "One file is edited by many people. If a formula changes, nobody can tell who changed it or when.",
+  "Tidak perlu mengubah semuanya sekaligus. Mulai saja dari satu proses yang paling sering membuat pekerjaan macet.":
+    "You do not need to change everything at once. Start with the one process that most often stalls the work.",
+  "Sekarang pengajuan ada di spreadsheet, persetujuan di chat, buktinya di folder lain. Mengecek satu transaksi berarti membuka semuanya. Ini bedanya kalau semua tersambung.":
+    "Today the request is in a spreadsheet, the approval in chat, and the evidence in another folder. Checking one transaction means opening all of them. Here is the difference when everything is connected.",
+  "Apa yang dibutuhkan, berapa biayanya, untuk apa? Semua dilengkapi dulu sebelum pengajuan sampai ke atasan.":
+    "What is needed, how much will it cost, and what is it for? It is all filled in before the request reaches the manager.",
+  "Atasan melihat kebutuhan, anggaran, dan dokumennya di satu tempat. Keputusan dan catatannya tersimpan di situ, tidak hanya terkirim lewat chat.":
+    "The manager sees the need, the budget, and the documents in one place. The decision and its notes are saved there, not just sent in chat.",
+  "Nilai invoice sudah sesuai pengajuan? Buktinya lengkap? Finance bisa langsung memeriksa tanpa minta dokumen satu per satu lewat chat.":
+    "Does the invoice match the request? Is the evidence complete? Finance can check right away without asking for documents one by one in chat.",
+  "Manajemen bisa melihat siapa yang mengajukan, siapa yang menyetujui, dan kapan finance memeriksa buktinya, tanpa mencari ulang percakapannya.":
+    "Management can see who requested it, who approved it, and when finance checked the evidence, without digging through conversations again.",
+  "Sebelum bicara tampilan aplikasi, kami ingin tahu dulu pekerjaan mana yang sering macet dan apa yang perlu Anda awasi.":
+    "Before we talk about how an app looks, we want to know which work often stalls and what you need to keep an eye on.",
+  "Kami lihat dulu cara tim bekerja sekarang: siapa yang terlibat dan di mana pekerjaan sering tertahan.":
+    "First we look at how the team works today: who is involved and where work often gets held up.",
+  "Bersama tim Anda, kami tentukan langkah kerjanya, siapa yang menyetujui, serta bukti dan laporan apa yang perlu ada.":
+    "With your team, we decide the steps, who approves, and what evidence and reports are needed.",
+  "Sistem kami bangun sesuai alur yang disepakati, lalu tim Anda mencobanya dengan pekerjaan sehari-hari.":
+    "We build the system around the agreed flow, then your team tries it on everyday work.",
+  "Kami mendampingi tim saat mulai memakainya, lalu memperbaiki bagian yang masih menyulitkan.":
+    "We support the team as they start using it, then fix whatever is still getting in the way.",
+  "Kami menilai proses dari sisi risiko: siapa menyetujui apa, dan apakah buktinya rapi.":
+    "We assess a process from a risk angle: who approves what, and whether the evidence is in order.",
+  "Wewenang dipisah dengan jelas dan bukti transaksi dilengkapi sesuai standar akuntansi dan perpajakan.":
+    "Authority is clearly separated and transaction evidence is completed to accounting and tax standards.",
+  "Alur bisnis yang rumit kami terjemahkan jadi sistem internal yang ringan dipakai tim dan terang prosesnya.":
+    "We turn a complicated business flow into an internal system that is light for the team to use and clear in how it works.",
+  "Berlatar belakang audit top-tier · Spesialis sistem kontrol dan tata kelola bisnis":
+    "Top-tier audit background · Specialist in business control systems and governance",
+  "“Sistem bisnis yang baik dibangun dari pola pikir kontrol dan audit, bukan dari kira-kira. Setiap transaksi, persetujuan, dan angka di laporan Anda harus siap diaudit kapan pun dibutuhkan.”":
+    "“A good business system is built on a control and audit mindset, not on guesswork. Every transaction, approval, and number in your reports must be ready to audit whenever it is needed.”",
+  "Pengalaman di audit dan finance membuat kami peka pada bagian yang gampang terlewat, seperti angka yang harus dicocokkan atau perubahan yang harus dicatat.":
+    "Our audit and finance experience makes us alert to what is easy to miss, such as figures that must be matched or changes that must be recorded.",
+  "Punya minimal 3 cabang, gudang, atau departemen yang saling bertukar data":
+    "Has at least 3 branches, warehouses, or departments exchanging data",
+  "Tutup buku butuh lebih dari 2 hari hanya untuk mencocokkan nota":
+    "Closing the books takes more than 2 days just to match receipts",
+  "Persetujuan pengeluaran masih lewat chat WhatsApp pribadi":
+    "Spending approvals still go through personal WhatsApp chats",
+  "Software standar terasa kaku dan tidak pas dengan cara kerja tim":
+    "Off-the-shelf software feels rigid and does not fit how the team works",
+  "Coba pilih satu proses yang paling sering macet. Dari situ kita lihat bersama apakah sistem internal memang jawabannya.":
+    "Pick the one process that stalls most often. From there we can see together whether an internal system is really the answer.",
+  "Biasanya cocok kalau usaha Anda...": "Usually a good fit if your business...",
+  "Mungkin lebih baik pakai yang lain kalau...": "You may be better off with something else if...",
+  "Kebutuhan Anda sudah terpenuhi software akuntansi atau POS standar. Kalau begitu, pakai itu dulu. Kami fokus pada alur kerja internal yang butuh kontrol ketat dan jejak audit. Kami tidak membuat website sederhana dan tidak mengganti seluruh ERP sekaligus.":
+    "Standard accounting or POS software already covers your needs. In that case, use it first. We focus on internal workflows that need tight control and an audit trail. We do not build simple websites or replace an entire ERP in one go.",
+  "Yang sering ditanyakan": "Frequently asked",
+  "Pengajuan biaya, reimbursement, dan uang muka disimpan bersama persetujuan dan buktinya. Mau cek kelengkapannya, tidak perlu buka banyak file.":
+    "Expense claims, reimbursements, and advances are stored with their approvals and evidence. To check completeness, you do not have to open a pile of files.",
+  "Barang masuk, pindah lokasi, dan serah terima aset tercatat. Kalau stok selisih, tim punya jejak untuk mulai menelusurinya.":
+    "Goods received, location moves, and asset handovers are recorded. If stock does not add up, the team has a trail to start from.",
+  "Permintaan pembelian, persetujuan anggaran, PO, dan invoice saling terhubung. Jadi kelihatan apa yang dipesan dan sudah sampai tahap mana.":
+    "Purchase requests, budget approvals, POs, and invoices are linked, so you can see what was ordered and which stage it has reached.",
+  "Pekerjaan rutin antar tim atau cabang jadi lebih rapi. Pengajuan, dokumen, dan statusnya langsung terlihat oleh orang yang harus menindaklanjuti.":
+    "Routine work between teams or branches becomes tidier. Requests, documents, and status are visible right away to whoever needs to follow up.",
+  "Laporan disusun dari pekerjaan yang sudah tercatat. Kalau ada angka yang perlu dijelaskan, transaksi di baliknya bisa dibuka.":
+    "Reports are built from work that is already recorded. If a number needs explaining, the transactions behind it can be opened.",
+  "Tidak perlu. Kita mulai dari satu proses yang paling sering bermasalah, dan sistem yang masih jalan baik tetap dipakai. Kalau perlu disambungkan, kita bahas dulu sebelum menentukan lingkup kerja.":
+    "No need. We start with the one process that causes the most trouble, and systems that still work well stay in use. If they need to be connected, we discuss it before settling the scope.",
+  "Ya. Kami pelajari dulu cara kerja tim Anda: siapa yang mengajukan, siapa yang memeriksa, laporan apa yang dibutuhkan. Dari situ kita sepakati alur dan batasan sistemnya.":
+    "Yes. We first learn how your team works: who submits, who checks, and which reports are needed. From there we agree on the flow and limits of the system.",
+  "Tidak. Excel masih berguna untuk banyak pekerjaan. Yang kita rapikan hanya proses yang mulai sulit dikelola lewat spreadsheet, misalnya pengajuan yang lewat banyak orang atau transaksi yang butuh bukti dan persetujuan.":
+    "No. Excel is still useful for plenty of work. We only tidy up processes that have become hard to manage in a spreadsheet, such as requests that pass through many people or transactions that need evidence and approval.",
+  "Kami perlu paham prosesnya dulu supaya estimasinya masuk akal. Biaya bergantung pada alur kerja, jumlah peran pengguna, dan apakah perlu terhubung ke sistem lain. Ceritakan kebutuhannya lewat WhatsApp, lalu kita bahas lingkup dan perkiraan biayanya.":
+    "We need to understand the process first so the estimate makes sense. Cost depends on the workflow, the number of user roles, and whether it must connect to other systems. Tell us what you need on WhatsApp, then we will go over scope and a cost estimate.",
+  "Bisa, dan biasanya justru itu awal yang baik. Pilih satu proses yang paling terasa masalahnya, pakai sistemnya, lalu evaluasi bersama tim. Kalau sudah jalan baik, baru kita bahas yang berikutnya.":
+    "Yes, and that is usually a good place to begin. Pick the process that hurts most, use the system, then review it with the team. Once it is working well, we talk about the next one.",
 };

@@ -1757,9 +1757,6 @@ h1 > span {
 .hero-actions.hero-enter {
   animation-delay: 0.2s;
 }
-.reveal.in-view {
-  animation: panel-in 0.6s ease both;
-}
 @keyframes hero-in {
   from {
     opacity: 0;
@@ -3526,28 +3523,6 @@ h1 > span {
   font-size: 11px;
   color: #566173;
 }
-.reveal-pending {
-  opacity: 0;
-  transform: translateY(16px);
-}
-.reveal-pending:focus-within {
-  opacity: 1;
-  transform: none;
-}
-.reveal.in-view,
-.section-heading.in-view {
-  animation: scroll-reveal 0.65s ease both;
-}
-@keyframes scroll-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 @media (max-width: 540px) {
   .category-scene {
     padding: 20px 14px;
@@ -3613,16 +3588,6 @@ h1 > span {
   .solution-visual .mini-top {
     gap: 8px;
     flex-wrap: wrap;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .reveal-pending {
-    opacity: 1;
-    transform: none;
-  }
-  .reveal.in-view,
-  .section-heading.in-view {
-    animation: none;
   }
 }
 }

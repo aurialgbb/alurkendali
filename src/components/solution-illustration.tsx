@@ -1,6 +1,17 @@
 "use client";
 import { useLocale } from "@/lib/locale";
 import type { ReactNode } from "react";
+import { m } from "motion/react";
+import { ease } from "@/components/motion";
+
+// Each category moves the way its work moves: receipts get matched, stock travels
+// between locations, documents link up, tasks hand over, and totals build from rows.
+// The scene remounts per tab, so it replays when a visitor switches category.
+const appear = (delay: number, y = 10) => ({
+  initial: { opacity: 0, y },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.45, delay, ease },
+});
 
 export default function SolutionIllustration({
   category,
@@ -15,7 +26,12 @@ export default function SolutionIllustration({
   const views: Record<string, ReactNode> = {
     finance: (
       <div className="finance-match">
-        <div className="sample-document">
+        <m.div
+          className="sample-document"
+          initial={{ opacity: 0, x: -24, rotate: -8 }}
+          animate={{ opacity: 1, x: 0, rotate: -3 }}
+          transition={{ duration: 0.6, ease }}
+        >
           <span className="visual-eyebrow">{tr("BUKTI PEMBAYARAN")}</span>
           <strong>{"INV / 024"}</strong>
           <div className="receipt-lines">
@@ -25,7 +41,7 @@ export default function SolutionIllustration({
           </div>
           <span>{tr("Total tagihan")}</span>
           <b>{"Rp2.450.000"}</b>
-        </div>
+        </m.div>
         <div className="matching-detail">
           <span className="visual-eyebrow">{tr("PENCOCOKAN")}</span>
           <h4>
@@ -34,11 +50,23 @@ export default function SolutionIllustration({
             {tr("bukti lengkap.")}
           </h4>
           <ul>
-            <li>{tr("✓ Nominal sesuai")}</li>
-            <li>{tr("✓ Bukti terlampir")}</li>
-            <li>{tr("✓ Persetujuan tercatat")}</li>
+            {["Nominal sesuai", "Bukti terlampir", "Persetujuan tercatat"].map(
+              (item, index) => (
+                <m.li key={item} {...appear(0.45 + index * 0.25, 0)}>
+                  <span aria-hidden="true">{"✓ "}</span>
+                  {tr(item)}
+                </m.li>
+              ),
+            )}
           </ul>
-          <span className="visual-success">{tr("Siap direkonsiliasi")}</span>
+          <m.span
+            className="visual-success"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.35, delay: 1.3, ease }}
+          >
+            {tr("Siap direkonsiliasi")}
+          </m.span>
         </div>
       </div>
     ),
@@ -52,7 +80,14 @@ export default function SolutionIllustration({
             <span className="visual-eyebrow">{"AST / 018"}</span>
             <h4>{tr("Laptop operasional")}</h4>
           </div>
-          <span className="visual-success">{tr("Diterima")}</span>
+          <m.span
+            className="visual-success"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.35, delay: 1.5, ease }}
+          >
+            {tr("Diterima")}
+          </m.span>
         </div>
         <div className="asset-route">
           <div>
@@ -63,17 +98,28 @@ export default function SolutionIllustration({
             <span>{tr("Lokasi asal")}</span>
           </div>
           <span className="route-arrow" aria-hidden="true">
-            {"→"}
+            <m.i
+              className="route-parcel"
+              initial={{ left: "0%" }}
+              animate={{ left: "100%" }}
+              transition={{ duration: 1.1, delay: 0.35, ease: "easeInOut" }}
+            />
           </span>
           <div>
-            <span className="location-pin destination" aria-hidden="true">
+            <m.span
+              className="location-pin destination"
+              aria-hidden="true"
+              initial={{ backgroundColor: "#ffffff", color: "#24664f" }}
+              animate={{ backgroundColor: "#24664f", color: "#ffffff" }}
+              transition={{ duration: 0.3, delay: 1.4 }}
+            >
               {"B"}
-            </span>
+            </m.span>
             <strong>{tr("Cabang Bandung")}</strong>
             <span>{tr("Lokasi saat ini")}</span>
           </div>
         </div>
-        <div className="asset-owner">
+        <m.div className="asset-owner" {...appear(1.6)}>
           <span className="owner-avatar" aria-hidden="true">
             {"DS"}
           </span>
@@ -86,7 +132,7 @@ export default function SolutionIllustration({
             <br />
             <b>{tr("Tercatat")}</b>
           </span>
-        </div>
+        </m.div>
       </div>
     ),
     procurement: (
@@ -100,12 +146,16 @@ export default function SolutionIllustration({
             ["01", "Pengajuan", "Kebutuhan disetujui"],
             ["02", "Pesanan", "PO diterbitkan"],
             ["03", "Tagihan", "Menunggu invoice"],
-          ].map(([number, label, status]) => (
-            <div className="purchase-document" key={number}>
+          ].map(([number, label, status], index) => (
+            <m.div
+              className="purchase-document"
+              key={number}
+              {...appear(0.2 + index * 0.3, 14)}
+            >
               <span>{tr(number)}</span>
               <strong>{tr(label)}</strong>
               <small>{tr(status)}</small>
-            </div>
+            </m.div>
           ))}
         </div>
         <div className="budget-row">
@@ -122,7 +172,11 @@ export default function SolutionIllustration({
           className="budget-track"
           aria-label={tr("Pesanan menggunakan 40 persen anggaran")}
         >
-          <span />
+          <m.span
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 1.2, ease }}
+          />
         </div>
         <p className="visual-caption">
           {tr("40% anggaran terpakai untuk pesanan ini")}
@@ -150,14 +204,19 @@ export default function SolutionIllustration({
                 {tr(label)}
                 <span>{tr(count)}</span>
               </div>
-              <div className="task-slip">
+              <m.div
+                className="task-slip"
+                initial={{ opacity: 0, x: -24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.25 + index * 0.4, ease }}
+              >
                 <span className="visual-eyebrow">
                   {"OPS / 0"}
                   {index + 1}
                 </span>
                 <strong>{tr(task)}</strong>
                 <span>{tr(owner)}</span>
-              </div>
+              </m.div>
             </div>
           ))}
         </div>
@@ -186,11 +245,15 @@ export default function SolutionIllustration({
             ["Operasional", "12", "100%"],
             ["Pembelian", "8", "66.67%"],
             ["Lainnya", "4", "33.33%"],
-          ].map(([label, value, width]) => (
+          ].map(([label, value, width], index) => (
             <div className="report-bar-row" key={label}>
               <span>{tr(label)}</span>
               <div>
-                <i style={{ width }} />
+                <m.i
+                  initial={{ width: "0%" }}
+                  animate={{ width }}
+                  transition={{ duration: 0.7, delay: 0.2 + index * 0.18, ease }}
+                />
               </div>
               <strong>
                 {"Rp"}
@@ -200,13 +263,13 @@ export default function SolutionIllustration({
             </div>
           ))}
         </div>
-        <div className="report-source">
+        <m.div className="report-source" {...appear(1)}>
           <span className="visual-eyebrow">
             {tr("DARI ANGKA KE TRANSAKSI")}
           </span>
           <strong>{tr("Operasional → 12 transaksi")}</strong>
           <span>{tr("Rincian dan bukti tersimpan bersama laporan.")}</span>
-        </div>
+        </m.div>
       </div>
     ),
   };
