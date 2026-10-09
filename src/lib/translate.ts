@@ -32,6 +32,31 @@ export function translate(locale: Locale, text: string): string {
     [/^Konfirmasi terima (\d+) rim$/, (n) => `Confirm receipt of ${n} reams`],
     [/^(\d+) pemeriksaan tersisa$/, (n) => `${n} checks remaining`],
     [/^Tahap berikutnya: (.+)$/, (label) => `Next stage: ${t(label)}`],
+    [/^Tercatat · (.+)$/, (ref) => `Recorded · ${ref}`],
+    [/^(\d+) rim kertas A4$/, (n) => `${n} reams of A4 paper`],
+    [/^(\d+) rim$/, (n) => `${n} reams`],
+    [/^(\d+) unit$/, (n) => `${n} units`],
+    [/^(\d+) dari 4 selesai$/, (n) => `${n} of 4 done`],
+    [
+      /^Tahap ini dikerjakan oleh (.+)\.$/,
+      (role) => `This stage is done by ${t(role)}.`,
+    ],
+    [
+      /^(Pengajuan|Barang|Pekerjaan) diteruskan ke (.+)\.$/,
+      (noun, role) =>
+        `${noun === "Pengajuan" ? "The request" : noun === "Barang" ? "The goods" : "The work"} ${noun === "Barang" ? "move" : "moves"} on to ${t(role)}.`,
+    ],
+    [/^Anda akan memerankan (\d+) orang$/, (n) => `You will play ${n} people`],
+    [/^Tahap (\d+) dari (\d+)$/, (n, total) => `Stage ${n} of ${total}`],
+    [
+      /^Diskusikan proses (.+) di usaha Anda$/,
+      (label) => `Discuss the ${t(label)} workflow in your business`,
+    ],
+    [
+      /^Halo, saya sudah mencoba demo Alur Kendali dan ingin mendiskusikan proses kerja di perusahaan kami\.$/,
+      () =>
+        "Hello, I have tried the Alur Kendali demo and would like to discuss a workflow at our company.",
+    ],
     [
       /^Tahap ini membutuhkan peran (.+)\.$/,
       (role) => `This stage requires the ${t(role)} role.`,
@@ -94,7 +119,7 @@ export function translate(locale: Locale, text: string): string {
     [
       /^Halo, saya ingin mendiskusikan proses kerja di kantor yang saat ini masih manual atau pakai spreadsheet\. Area yang ingin dibahas: (.+)\. Boleh minta waktu untuk diskusi alurnya\?$/,
       (area) =>
-        `Hello, I would like to discuss a workflow at our company that is currently handled manually or in spreadsheets. The area we would like to discuss is ${area === "operasional/finance" ? "operations/finance" : area}. Could we arrange a time to talk through the process?`,
+        `Hello, I would like to discuss a workflow at our company that is currently handled manually or in spreadsheets. The area we would like to discuss is ${area === "operasional/finance" ? "operations/finance" : t(area)}. Could we arrange a time to talk through the process?`,
     ],
     [
       /^Halo, saya sudah mencoba demo (.+) Alur Kendali\. Saya ingin mendiskusikan proses (.+) di perusahaan kami\.$/,

@@ -200,14 +200,14 @@ export function transition(
   if (action.type === "role") {
     const required = scenarios[id].roles[scenarioStep(id, s)];
     if (action.role !== required)
-      return fail(`Tahap ini membutuhkan peran ${roleLabels[required]}.`);
+      return fail(`Tahap ini dikerjakan oleh ${roleLabels[required]}.`);
     s.role = action.role;
     return s;
   }
-  if (!s.started) return fail("Mulai skenario terlebih dahulu.");
+  if (!s.started) return fail("Mulai demonya dulu.");
   if (s.role !== scenarios[id].roles[scenarioStep(id, s)])
     return fail(
-      "Lanjutkan sebagai peran yang bertanggung jawab pada tahap ini.",
+      `Tahap ini dikerjakan oleh ${roleLabels[scenarios[id].roles[scenarioStep(id, s)]]}.`,
     );
   switch (action.type) {
     case "submit":

@@ -1,6 +1,8 @@
 "use client";
 import { useLocale } from "@/lib/locale";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { animate, useReducedMotion } from "motion/react";
 import { useGuided } from "@/lib/guided-store";
 import { useDemo } from "@/lib/demo-store";
 import {
@@ -9,6 +11,39 @@ import {
   scenarioStep,
   isComplete,
 } from "@/lib/demo-scenarios";
+import { ease } from "@/components/motion";
+import DemoContactLink from "@/components/demo/contact-link";
+
+/** Counts up once to a value that comes from the visitor's own demo activity. */
+function CountUp({
+  value,
+  format = String,
+}: {
+  value: number;
+  format?: (n: number) => string;
+}) {
+  const reduced = useReducedMotion();
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (reduced) {
+      setShown(value);
+      return;
+    }
+    const controls = animate(0, value, {
+      duration: 1,
+      ease,
+      onUpdate: (v) => setShown(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [value, reduced]);
+  return (
+    <>
+      <span aria-hidden="true">{format(shown)}</span>
+      <span className="sr-only">{format(value)}</span>
+    </>
+  );
+}
+
 export default function ManagementOverview() {
   const { t: tr } = useLocale();
   const { states, loaded } = useGuided();
@@ -16,7 +51,7 @@ export default function ManagementOverview() {
   if (!loaded)
     return (
       <p className="demo-loading" role="status">
-        {tr("Memuat ringkasan…")}
+        {tr("Memuat tampilan owner…")}
       </p>
     );
   const completed = scenarioIds.filter((id) =>
@@ -32,43 +67,48 @@ export default function ManagementOverview() {
     <div className="management-overview">
       <header className="report-heading">
         <div>
-          <p className="demo-eyebrow">{tr("Ringkasan manajemen")}</p>
-          <h1>
-            {tr("Lihat hasil dari proses")}
-            <br />
-            {tr("yang sudah Anda coba.")}
-          </h1>
+          <p className="demo-eyebrow">{tr("Tampilan owner")}</p>
+          <h1>{tr("Yang Anda lihat tiap pagi, tanpa bertanya di grup.")}</h1>
           <p>
-            {tr("Angka di bawah mengikuti tindakan Anda pada demo terpandu.")}
+            {tr("Angka di bawah dihitung dari tindakan Anda di demo terpandu.")}
           </p>
         </div>
-        <Link className="demo-secondary" href="/demo">
-          {tr("Pilih kasus demo")}
-        </Link>
+        <div className="report-heading-actions">
+          <DemoContactLink source="demo_overview_contact">
+            {tr("Diskusikan proses Anda")}
+          </DemoContactLink>
+          <Link className="demo-secondary" href="/demo">
+            {tr("Pilih kasus")}
+          </Link>
+        </div>
       </header>
       <dl className="management-metrics">
         <div>
-          <dt>{tr("Skenario selesai")}</dt>
+          <dt>{tr("Kasus selesai")}</dt>
           <dd>
-            {tr(completed)}
-            <span>{"/ 4"}</span>
+            <CountUp value={completed} />
+            <span className="metric-of">{"/ 4"}</span>
           </dd>
         </div>
         <div>
-          <dt>{tr("Pembayaran simulasi tercatat")}</dt>
+          <dt>{tr("Pembayaran tercatat (simulasi)")}</dt>
           <dd>
-            {"Rp"}
-            {tr(payment.toLocaleString("id-ID"))}
+            <CountUp
+              value={payment}
+              format={(n) => `Rp${n.toLocaleString("id-ID")}`}
+            />
           </dd>
         </div>
         <div>
-          <dt>{tr("Aktivitas dalam panduan")}</dt>
-          <dd>{events.length}</dd>
+          <dt>{tr("Aktivitas tercatat")}</dt>
+          <dd>
+            <CountUp value={events.length} />
+          </dd>
         </div>
       </dl>
       <div className="management-columns">
         <section>
-          <h2>{tr("Alur per kategori")}</h2>
+          <h2>{tr("Status per kasus")}</h2>
           <div className="management-modules">
             {scenarioIds.map((id) => (
               <Link href={`/demo/${id}?mode=guided`} key={id}>
@@ -81,11 +121,10 @@ export default function ManagementOverview() {
                         ? "Selesai · Lihat hasil"
                         : states[id].started
                           ? `Tahap berikutnya: ${scenarios[id].steps[scenarioStep(id, states[id])]}`
-                          : "Belum dicoba · Mulai panduan",
+                          : "Belum dicoba",
                     )}
                   </p>
                 </div>
-                <span aria-hidden="true">{"→"}</span>
               </Link>
             ))}
           </div>
@@ -93,7 +132,7 @@ export default function ManagementOverview() {
         <section>
           <div className="report-section-title">
             <h2>{tr("Aktivitas terakhir")}</h2>
-            <Link href="/demo/reporting">{tr("Lihat semua")}</Link>
+            <Link href="/demo/reporting">{tr("Lihat semua riwayat")}</Link>
           </div>
           {events.length ? (
             <ol className="management-events">
@@ -112,20 +151,22 @@ export default function ManagementOverview() {
             <div className="report-empty">
               <h3>{tr("Belum ada aktivitas.")}</h3>
               <p>
-                {tr("Coba satu skenario. Setiap tindakan akan muncul di sini.")}
+                {tr(
+                  "Coba satu kasus, dan setiap tindakannya akan muncul di sini.",
+                )}
               </p>
               <Link href="/demo/finance?mode=guided">
-                {tr("Mulai dari Finance →")}
+                {tr("Mulai dari Finance")}
               </Link>
             </div>
           )}
         </section>
       </div>
       <section className="exploration-summary">
-        <h2>{tr("Data contoh di mode eksplorasi")}</h2>
+        <h2>{tr("Mode bebas")}</h2>
         <p>
           {tr(
-            "Terpisah dari panduan agar Anda dapat mencoba perubahan dengan bebas.",
+            "Mau mencoba tanpa panduan? Di mode bebas Anda bisa membuka semua dokumen contoh, dari sudut pandang owner.",
           )}
         </p>
         <div>

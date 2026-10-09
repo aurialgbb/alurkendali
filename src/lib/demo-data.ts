@@ -41,7 +41,7 @@ export const DEMO_ROLES: Record<RoleType, UserRole> = {
   finance: {
     id: "finance",
     name: "Dewi Lestari, Ak.",
-    roleTitle: "Finance & Internal Control",
+    roleTitle: "Finance & Kontrol Internal",
     branch: "Kantor Pusat Sudirman",
     avatarLetter: "DL",
     description: "Mencocokkan nota asli dengan nominal, menjalankan 3-way matching, dan rekonsiliasi.",
@@ -53,7 +53,7 @@ export const DEMO_ROLES: Record<RoleType, UserRole> = {
   director: {
     id: "director",
     name: "Hendra Wijaya",
-    roleTitle: "Managing Director / Owner",
+    roleTitle: "Direktur / Owner",
     branch: "Kantor Pusat Sudirman",
     avatarLetter: "HW",
     description: "Memantau KPI lintas cabang, meninjau pengeluaran di atas limit, dan melihat audit trail.",
@@ -163,7 +163,7 @@ export const INITIAL_EXPENSES: ExpenseItem[] = [
   {
     id: "exp-1",
     code: "EXP-2026-081",
-    title: "Pembelian Gas Elpiji & Sabun Cuci Urgent",
+    title: "Pembelian Mendadak Gas Elpiji & Sabun Cuci",
     category: "Operasional Toko",
     amount: 850000,
     submitter: "Rian Pratama",
@@ -177,7 +177,7 @@ export const INITIAL_EXPENSES: ExpenseItem[] = [
   {
     id: "exp-2",
     code: "EXP-2026-079",
-    title: "Reimbursement BBM & E-Toll Kunjungan Klien",
+    title: "Penggantian BBM & Tol Kunjungan Klien",
     category: "Reimbursement",
     amount: 1450000,
     submitter: "Dimas Anggoro",
@@ -196,7 +196,7 @@ export const INITIAL_EXPENSES: ExpenseItem[] = [
   {
     id: "exp-3",
     code: "EXP-2026-074",
-    title: "Cash Advance Operasional Booth Pameran",
+    title: "Uang Muka Operasional Stan Pameran",
     category: "Kasbon / Advance",
     amount: 3000000,
     submitter: "Siti Rahma",
@@ -380,7 +380,7 @@ export const INITIAL_OPERATIONS: OperationTask[] = [
   {
     id: "ops-1",
     code: "OPS-2026-055",
-    title: "Opening SOP & Cash Float Checklist",
+    title: "Checklist Buka Toko & Uang Awal Kasir",
     branch: "Cabang Kemang",
     shift: "Pagi (Opening)",
     assignedTo: "Rian Pratama",
@@ -397,7 +397,7 @@ export const INITIAL_OPERATIONS: OperationTask[] = [
   {
     id: "ops-2",
     code: "OPS-2026-056",
-    title: "Mid-Day Restock & Shift Handover",
+    title: "Isi Ulang Stok Siang & Serah Terima Shift",
     branch: "Cabang Kemang",
     shift: "Pagi (Opening)",
     assignedTo: "Rian Pratama",
@@ -413,7 +413,7 @@ export const INITIAL_OPERATIONS: OperationTask[] = [
   {
     id: "ops-3",
     code: "OPS-2026-052",
-    title: "Closing & Daily Cash Drop Cabang Bandung",
+    title: "Tutup Toko & Setor Kas Harian Cabang Bandung",
     branch: "Cabang Bandung",
     shift: "Malam (Closing)",
     assignedTo: "Siti Rahma",
@@ -435,7 +435,7 @@ export const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
     module: "procurement",
     action: "PR Approved & PO Issued",
     user: "Dewi Lestari, Ak.",
-    role: "Finance & Internal Control",
+    role: "Finance & Kontrol Internal",
     docCode: "PO-2026-042",
     details: "Purchase Request disetujui, alokasi anggaran Rp3.200.000 diverifikasi terhadap pos belanja Cabang Kemang.",
   },
@@ -495,7 +495,7 @@ export const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
     module: "procurement",
     action: "3-Way Match Verified",
     user: "Dewi Lestari, Ak.",
-    role: "Finance & Internal Control",
+    role: "Finance & Kontrol Internal",
     docCode: "PO-2026-039",
     details: "Verifikasi 3 dokumen (PO vs GR-089 vs Tagihan INV-BKN-2026-11) cocok 100% senilai Rp8.500.000.",
   },
@@ -505,7 +505,7 @@ export const INITIAL_AUDIT_LOGS: AuditLogItem[] = [
     module: "finance",
     action: "Cash Advance Disbursed",
     user: "Dewi Lestari, Ak.",
-    role: "Finance & Internal Control",
+    role: "Finance & Kontrol Internal",
     docCode: "EXP-2026-074",
     details: "Mencairkan dana kasbon pameran Rp3.000.000 via transfer BCA Ref: TRX-BCA-99210.",
   },

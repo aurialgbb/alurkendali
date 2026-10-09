@@ -1,74 +1,103 @@
 "use client";
 import { useLocale } from "@/lib/locale";
-import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDemo } from "@/lib/demo-store";
 import { scenarioIds, scenarios, roleLabels } from "@/lib/demo-scenarios";
 import type { RoleType } from "@/lib/demo-data";
 import LanguageSwitch from "@/components/language-switch";
+import BrandMark from "@/components/brand";
+import DemoContactLink from "@/components/demo/contact-link";
+
 export function DemoNav() {
   const { t: tr } = useLocale();
   const path = usePathname();
+  const router = useRouter();
   const search = useSearchParams();
   const { currentRole, switchRole } = useDemo();
   const explore = search.get("mode") === "explore";
+  const mode = explore ? "explore" : "guided";
+  const ownerView = path === "/demo/overview" || path === "/demo/reporting";
+  const current = scenarioIds.find((id) => path === `/demo/${id}`);
   return (
     <>
       <a className="demo-skip" href="#demo-content">
         {tr("Langsung ke isi demo")}
       </a>
       <header className="demo-header">
-        <Link href="/" aria-label={tr("Alur Kendali, kembali ke website")}>
-          <Image
-            src="/logo.png"
-            width={180}
-            height={55}
-            alt={"Alur Kendali"}
-            priority
-          />
-        </Link>
+        <BrandMark href="/" label="Alur Kendali, kembali ke website" />
         <div className="demo-header-description">
           {tr("Ruang demo")}
-          <span>{tr("Data contoh · Tanpa pendaftaran")}</span>
+          <span>{tr("Semua data di sini contoh")}</span>
         </div>
         <LanguageSwitch />
         <Link className="demo-header-back" href="/">
-          {tr("Kembali ke website ")}
-          <span aria-hidden="true">{"↗"}</span>
+          {tr("Kembali ke website")}
         </Link>
+        <DemoContactLink
+          source="demo_header_contact"
+          className="demo-header-cta"
+        >
+          {tr("Diskusikan proses Anda")}
+        </DemoContactLink>
       </header>
       <nav className="demo-category-nav" aria-label={tr("Kategori demo")}>
-        <Link href="/demo" aria-current={path === "/demo" ? "page" : undefined}>
-          {tr("Pilih kasus")}
-        </Link>
-        {scenarioIds.map((id) => (
+        <div className="demo-nav-desktop">
           <Link
-            key={id}
-            href={`/demo/${id}?mode=${explore ? "explore" : "guided"}`}
-            aria-current={path === `/demo/${id}` ? "page" : undefined}
+            href="/demo"
+            aria-current={path === "/demo" ? "page" : undefined}
           >
-            {tr(scenarios[id].label)}
+            {tr("Pilih kasus")}
           </Link>
-        ))}
-        <Link
-          href="/demo/overview"
-          aria-current={path === "/demo/overview" ? "page" : undefined}
-        >
-          {tr("Ringkasan")}
-        </Link>
-        <Link
-          href="/demo/reporting"
-          aria-current={path === "/demo/reporting" ? "page" : undefined}
-        >
-          {tr("Riwayat")}
-        </Link>
+          {scenarioIds.map((id) => (
+            <Link
+              key={id}
+              href={`/demo/${id}?mode=${mode}`}
+              aria-current={current === id ? "page" : undefined}
+            >
+              {tr(scenarios[id].label)}
+            </Link>
+          ))}
+          <Link
+            href="/demo/overview"
+            aria-current={ownerView ? "page" : undefined}
+          >
+            {tr("Tampilan owner")}
+          </Link>
+        </div>
+        {/* Seven tabs do not fit a phone; one labelled picker replaces the scrolling row. */}
+        <div className="demo-nav-mobile">
+          <label>
+            <span>{tr("Kasus")}</span>
+            <select
+              value={current ?? (ownerView ? "owner" : "all")}
+              onChange={(event) => {
+                const value = event.target.value;
+                router.push(
+                  value === "all"
+                    ? "/demo"
+                    : value === "owner"
+                      ? "/demo/overview"
+                      : `/demo/${value}?mode=${mode}`,
+                );
+              }}
+            >
+              <option value="all">{tr("Semua kasus")}</option>
+              {scenarioIds.map((id) => (
+                <option key={id} value={id}>
+                  {tr(scenarios[id].label)}
+                </option>
+              ))}
+              <option value="owner">{tr("Tampilan owner")}</option>
+            </select>
+          </label>
+        </div>
       </nav>
       {explore && (
         <div className="demo-explore-bar">
-          <p>{tr("Mode eksplorasi · Data contoh terpisah dari panduan")}</p>
+          <p>{tr("Mode bebas · Data contoh di sini terpisah dari panduan")}</p>
           <label>
-            {tr("Peran aktif")}{" "}
+            {tr("Lihat sebagai")}{" "}
             <select
               value={currentRole}
               onChange={(e) => switchRole(e.target.value as RoleType)}

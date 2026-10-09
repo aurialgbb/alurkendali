@@ -21,12 +21,11 @@ export const englishCopy: Readonly<Record<string, string>> = {
   rim: "reams",
   " jt": " million",
   "Rp3,2 jt": "Rp3.2 million",
-  "Pembelian Gas Elpiji & Sabun Cuci Urgent":
+  "Pembelian Mendadak Gas Elpiji & Sabun Cuci":
     "Urgent LPG & Cleaning Supplies Purchase",
-  "Reimbursement BBM & E-Toll Kunjungan Klien":
+  "Penggantian BBM & Tol Kunjungan Klien":
     "Client Visit Fuel & Toll Reimbursement",
-  "Cash Advance Operasional Booth Pameran":
-    "Exhibition Booth Operating Advance",
+  "Uang Muka Operasional Stan Pameran": "Exhibition Booth Operating Advance",
   "Servis Darurat Mesin Penggiling & Chiller":
     "Emergency Grinder & Chiller Repair",
   "Transfer 50 Box Kertas A4 & Toner Cadangan":
@@ -43,7 +42,7 @@ export const englishCopy: Readonly<Record<string, string>> = {
     "Restock of 1,000 Paper Cups & Packaging Boxes",
   "Pengadaan Rak Besi Heavy Duty Gudang":
     "Heavy-Duty Warehouse Racking Purchase",
-  "Closing & Daily Cash Drop Cabang Bandung":
+  "Tutup Toko & Setor Kas Harian Cabang Bandung":
     "Bandung Branch Closing & Daily Cash Drop",
   "Kantor Pusat Sudirman": "Sudirman Head Office",
   "Gudang Pusat Sudirman": "Sudirman Central Warehouse",
@@ -874,12 +873,12 @@ export const englishCopy: Readonly<Record<string, string>> = {
   Buka: "Open",
   Siap: "Ready",
   Belum: "Not yet",
-  "Progress lama tidak dapat dibaca. Skenario dimulai dari data contoh yang baru.":
-    "The old progress could not be read. The scenario starts with fresh sample data.",
-  "Progress sebelumnya tidak dapat dibaca. Anda tetap dapat mencoba demo pada sesi ini.":
-    "Previous progress could not be read. You can still try the demo in this session.",
-  "Penyimpanan browser tidak tersedia. Perubahan hanya berlaku selama sesi ini.":
-    "Browser storage is unavailable. Changes last only for this session.",
+  "Progres demo sebelumnya tidak terbaca, jadi kasus dimulai lagi dari awal.":
+    "Your earlier demo progress could not be read, so the case starts again from the beginning.",
+  "Progres sebelumnya tidak terbaca. Demo tetap bisa dicoba di sesi ini.":
+    "Earlier progress could not be read. You can still try the demo in this session.",
+  "Browser ini tidak mengizinkan penyimpanan, jadi progres hanya bertahan selama halaman terbuka.":
+    "This browser does not allow storage, so progress only lasts while the page is open.",
   "Penyimpanan browser tidak tersedia. Perubahan hanya berlaku pada sesi ini.":
     "Browser storage is unavailable. Changes last only for this session.",
   "Data eksplorasi lama tidak sesuai. Data contoh awal digunakan kembali.":
@@ -891,9 +890,7 @@ export const englishCopy: Readonly<Record<string, string>> = {
   "Memuat ringkasan…": "Loading overview…",
   "Memuat riwayat demo…": "Loading demo history…",
   "Menyiapkan kasus ": "Preparing case: ",
-  "Mulai skenario terlebih dahulu.": "Start the scenario first.",
-  "Lanjutkan sebagai peran yang bertanggung jawab pada tahap ini.":
-    "Continue as the role responsible for this stage.",
+  "Mulai demonya dulu.": "Start the demo first.",
   "Pengajuan ini sudah dikirim.": "This request has already been submitted.",
   "Pengajuan belum dapat disetujui.": "The request cannot be approved yet.",
   "Persetujuan Manager diperlukan sebelum verifikasi.":
@@ -921,12 +918,12 @@ export const englishCopy: Readonly<Record<string, string>> = {
   "Lengkapi judul, nominal positif, dan nama bukti contoh.":
     "Enter a title, a positive amount, and a sample document name.",
   "Pengajuan tidak ditemukan.": "Request not found.",
-  "Persetujuan ini membutuhkan Manager atau Direktur dan status menunggu Manager.":
-    "Approval requires Manager or Director and a request awaiting Manager approval.",
-  "Verifikasi membutuhkan Finance/Direktur, persetujuan Manager, dan bukti contoh.":
-    "Verification requires Finance or Director, Manager approval, and a sample document.",
-  "Penolakan membutuhkan peran pemeriksa, status menunggu, dan alasan.":
-    "Rejection requires a reviewer role, a pending status, and a reason.",
+  "Persetujuan ini dilakukan Manager atau Direktur, dan hanya untuk dokumen yang menunggu Manager.":
+    "This approval is done by a Manager or Director, and only for documents awaiting the Manager.",
+  "Verifikasi dilakukan Finance atau Direktur, setelah Manager menyetujui dan bukti terlampir.":
+    "Verification is done by Finance or a Director, after the Manager approves and the evidence is attached.",
+  "Penolakan butuh alasan, dan hanya bisa dilakukan pemeriksa pada dokumen yang masih menunggu.":
+    "A rejection needs a reason, and only a reviewer can reject a document that is still pending.",
   "Penyesuaian stok membutuhkan otorisasi Manager/Finance dan status menunggu.":
     "Stock adjustment requires Manager or Finance authorization and a pending status.",
   "Pesanan tidak ditemukan.": "Order not found.",
@@ -962,7 +959,12 @@ export const englishCopy: Readonly<Record<string, string>> = {
   "Staf Operasional & Kasir": "Operations Staff & Cashier",
   "Staf Operasional": "Operations Staff",
   "Kepala Cabang Kemang": "Kemang Branch Manager",
-  "Finance & Internal Control": "Finance & Internal Control",
+  "Finance & Kontrol Internal": "Finance & Internal Control",
+  "Checklist Buka Toko & Uang Awal Kasir":
+    "Store Opening & Cash Float Checklist",
+  "Isi Ulang Stok Siang & Serah Terima Shift":
+    "Mid-Day Restock & Shift Handover",
+  "Direktur / Owner": "Managing Director / Owner",
   "Tim operasional cabang": "Branch operations team",
   "Tim pemeriksa keuangan": "Finance reviewers",
   "Tim Gudang Pusat": "Central Warehouse Team",
@@ -1086,7 +1088,8 @@ export const englishCopy: Readonly<Record<string, string>> = {
     "Branch figures do not match head office records, so the team works late matching them one by one. Financial reports can end up weeks late.",
   "Kasbon sudah diambil, transfer sudah jalan, tapi notanya hilang atau lupa difoto. Pas diperiksa, pengeluarannya susah dipertanggungjawabkan.":
     "The cash advance is taken and the transfer has gone out, but the receipt is lost or never photographed. When it is reviewed, the spending is hard to justify.",
-  "Persetujuan cuma lewat chat WhatsApp": "Approvals only happen in WhatsApp chats",
+  "Persetujuan cuma lewat chat WhatsApp":
+    "Approvals only happen in WhatsApp chats",
   "Persetujuan tenggelam di antara obrolan lain. Begitu barang datang tidak sesuai atau melewati anggaran, susah memastikan siapa yang tadi bilang boleh.":
     "Approvals get buried among other messages. When goods arrive wrong or over budget, it is hard to tell who said yes.",
   "Satu file diedit banyak orang. Kalau ada rumus yang berubah, tidak ketahuan siapa yang mengubahnya dan kapan.":
@@ -1135,8 +1138,10 @@ export const englishCopy: Readonly<Record<string, string>> = {
     "Off-the-shelf software feels rigid and does not fit how the team works",
   "Coba pilih satu proses yang paling sering macet. Dari situ kita lihat bersama apakah sistem internal memang jawabannya.":
     "Pick the one process that stalls most often. From there we can see together whether an internal system is really the answer.",
-  "Biasanya cocok kalau usaha Anda...": "Usually a good fit if your business...",
-  "Mungkin lebih baik pakai yang lain kalau...": "You may be better off with something else if...",
+  "Biasanya cocok kalau usaha Anda...":
+    "Usually a good fit if your business...",
+  "Mungkin lebih baik pakai yang lain kalau...":
+    "You may be better off with something else if...",
   "Kebutuhan Anda sudah terpenuhi software akuntansi atau POS standar. Kalau begitu, pakai itu dulu. Kami fokus pada alur kerja internal yang butuh kontrol ketat dan jejak audit. Kami tidak membuat website sederhana dan tidak mengganti seluruh ERP sekaligus.":
     "Standard accounting or POS software already covers your needs. In that case, use it first. We focus on internal workflows that need tight control and an audit trail. We do not build simple websites or replace an entire ERP in one go.",
   "Yang sering ditanyakan": "Frequently asked",
@@ -1160,4 +1165,155 @@ export const englishCopy: Readonly<Record<string, string>> = {
     "We need to understand the process first so the estimate makes sense. Cost depends on the workflow, the number of user roles, and whether it must connect to other systems. Tell us what you need on WhatsApp, then we will go over scope and a cost estimate.",
   "Bisa, dan biasanya justru itu awal yang baik. Pilih satu proses yang paling terasa masalahnya, pakai sistemnya, lalu evaluasi bersama tim. Kalau sudah jalan baik, baru kita bahas yang berikutnya.":
     "Yes, and that is usually a good place to begin. Pick the process that hurts most, use the system, then review it with the team. Once it is working well, we talk about the next one.",
+  // Demo revision 2026-10-09
+  "Pengajuan dan nota contoh sudah disiapkan. Tambahkan catatan kalau perlu, lalu kirim.":
+    "The sample request and receipt are ready. Add a note if you like, then submit.",
+  "Sekarang Anda Manager. Lihat kebutuhan cabang dan nilai notanya, lalu putuskan: setujui, atau tolak dengan alasan.":
+    "You are now the Manager. Look at the branch's need and the receipt amount, then decide: approve, or reject with a reason.",
+  "Sekarang Anda Finance. Cocokkan nilai pengajuan Rp350.000 dengan notanya, lalu catat pembayarannya.":
+    "You are now Finance. Match the Rp350.000 request against its receipt, then record the payment.",
+  "Pengajuan, persetujuan, dan pembayaran bisa ditelusuri dari satu dokumen.":
+    "The request, approval, and payment can all be traced from one document.",
+  "Tentukan berapa rim kertas yang dikirim. Gudang punya 100 rim, cabang 10 rim.":
+    "Decide how many reams of paper to send. The warehouse has 100 reams, the branch 10.",
+  "Sekarang Anda Manager cabang. Konfirmasi barang yang sampai, lalu saldonya pindah ke cabang.":
+    "You are now the branch Manager. Confirm the goods that arrived, and the balance moves to the branch.",
+  "Barang sudah sampai. Totalnya tetap 110 rim, hanya lokasinya yang berubah.":
+    "The goods have arrived. The total is still 110 reams; only the location changed.",
+  "Cabang butuh 2 scanner senilai Rp3.200.000. Setujui pesanannya supaya PO terbit.":
+    "The branch needs 2 scanners worth Rp3.200.000. Approve the order so the PO is issued.",
+  "Sekarang Anda Staf cabang. Catat 2 scanner yang diterima. Catatan ini nanti jadi pembanding tagihan.":
+    "You are now branch Staff. Record the 2 scanners received. This record is what the invoice is checked against.",
+  "Tagihan supplier sudah masuk. Cocokkan dengan PO dan penerimaan barang sebelum dibayar.":
+    "The supplier invoice has arrived. Match it against the PO and goods receipt before paying.",
+  "Tiga dokumen sudah cocok. Sekarang pembayarannya boleh dicatat.":
+    "All three documents match. The payment can now be recorded.",
+  "Pembayaran ini punya dasar yang jelas: pesanan, penerimaan, dan tagihan yang cocok.":
+    "This payment has a clear basis: an order, a receipt, and a matching invoice.",
+  "Centang pemeriksaan yang sudah dikerjakan. Setiap centang langsung tercatat dengan nama dan jamnya.":
+    "Tick the checks that are done. Each tick is recorded right away with a name and time.",
+  "Empat pemeriksaan selesai. Simpan laporannya supaya shift berikutnya tahu cabang sudah siap.":
+    "All four checks are done. Save the report so the next shift knows the branch is ready.",
+  "Laporan cabang tersimpan, lengkap dengan siapa yang memeriksa dan kapan.":
+    "The branch report is saved, with who checked what and when.",
+  "Alurnya selesai, dan semua jejaknya tersimpan.":
+    "The flow is done, and every step is on record.",
+  "Pengajuan ditolak, alasannya tersimpan.":
+    "The request was rejected, and the reason is saved.",
+  "Coba kasus ini sendiri.": "Try this case yourself.",
+  "Manager menolak dengan alasan, dan keputusannya tercatat. Coba lagi untuk melihat jalur persetujuannya.":
+    "The Manager rejected it with a reason, and the decision is on record. Try again to see the approval path.",
+  "Tagihan Rp3.500.000 tidak cocok dengan PO, jadi pembayaran ditahan otomatis. Terima tagihan koreksi dari supplier untuk melanjutkan.":
+    "The Rp3.500.000 invoice does not match the PO, so payment is held automatically. Accept the supplier's corrected invoice to continue.",
+  "Anda sekarang": "You are now",
+  "Centang daftar di sebelah kanan.": "Tick the list on the right.",
+  "Tombolnya ada di bawah dokumen.": "The button is below the document.",
+  "Coba lagi dengan persetujuan": "Try again with approval",
+  "Setiap tindakan Anda akan muncul di sini, lengkap dengan nama dan jamnya.":
+    "Every action you take will appear here, with a name and time.",
+  "Keputusan dan alasannya tersimpan, jadi tidak ada yang hilang di chat.":
+    "The decision and its reason are saved, so nothing gets lost in chat.",
+  " · PT Selaras Niaga": " · PT Selaras Niaga",
+  "Disetujui Manager": "Approved by Manager",
+  "✓ Cocok dengan pengajuan Rp350.000": "✓ Matches the Rp350.000 request",
+  "Bandingkan dengan total pengajuan": "Compare with the request total",
+  "Tindakan ini langsung masuk ke jejak pekerjaan.":
+    "This action goes straight into the work trail.",
+  "Belum masuk": "Not received yet",
+  "Selisih Rp300.000 dari PO": "Rp300.000 over the PO",
+  "Menunggu barang diterima": "Waiting for goods receipt",
+  "Pembayaran ditahan": "Payment held",
+  Cocok: "Matched",
+  "Supplier sudah mengirim tagihan koreksi sebesar Rp3.200.000.":
+    "The supplier has sent a corrected invoice for Rp3.200.000.",
+  "Tagihan supplier masuk: Rp3.500.000. Cocokkan dulu dengan PO dan penerimaan barang.":
+    "Supplier invoice received: Rp3.500.000. Match it against the PO and goods receipt first.",
+  "Cocokkan tagihan koreksi Rp3.200.000":
+    "Match the corrected Rp3.200.000 invoice",
+  "✓ Laporan tersimpan bersama pelaksana dan jam setiap pemeriksaan.":
+    "✓ Report saved with who did each check and when.",
+  "Tampilan owner": "Owner view",
+  "Ini yang Anda lihat sebagai owner.": "This is what you see as the owner.",
+  "Tanpa bertanya di grup, Anda tahu siapa mengerjakan apa, kapan, dan buktinya di mana.":
+    "Without asking in the group chat, you know who did what, when, and where the evidence is.",
+  "✓ Selesai": "✓ Done",
+  "Tampilan owner lengkap": "Full owner view",
+  "Riwayat dokumen": "Document history",
+  "Coba kasus lain": "Try another case",
+  "Nilai pengajuan": "Request amount",
+  Bukti: "Evidence",
+  "Nota terlampir, nominal cocok": "Receipt attached, amount matches",
+  Dikirim: "Sent",
+  "Saldo cabang": "Branch balance",
+  "Total di semua lokasi": "Total across locations",
+  "Nilai pesanan": "Order value",
+  "Tagihan selisih ditahan, versi koreksi dibayar":
+    "Mismatched invoice held, corrected one paid",
+  "Cocok dengan pesanan": "Matches the order",
+  Pemeriksaan: "Checks",
+  Tersimpan: "Saved",
+  "Anda memerankan satu orang": "You play one person",
+  "Sekitar 1 menit": "About 1 minute",
+  "Pilih proses yang paling mirip dengan pekerjaan di kantor Anda. Kami pandu langkah demi langkah, sampai jejaknya tercatat.":
+    "Pick the process closest to the work in your office. We guide you step by step until the trail is recorded.",
+  "Pilih satu kasus, jalankan sendiri, lihat hasilnya.":
+    "Pick a case, run it yourself, see the result.",
+  "Data contoh sudah disiapkan. Tidak perlu daftar atau mengisi data perusahaan. Satu kasus selesai sekitar satu menit.":
+    "Sample data is ready. No sign-up and no company data needed. One case takes about a minute.",
+  "Lihat tampilan owner": "See the owner view",
+  "Langsung diskusikan proses Anda": "Discuss your workflow now",
+  "Mau mencoba tanpa panduan? ": "Want to try without the guide? ",
+  "Buka mode bebas": "Open free mode",
+  "Siapa melakukan apa, dan kapan.": "Who did what, and when.",
+  "Setiap tindakan di demo tercatat di sini. Cari per dokumen atau unduh sebagai CSV.":
+    "Every action in the demo is recorded here. Search by document or download as CSV.",
+  "Mode bebas": "Free mode",
+  "Riwayat demo hanya disimpan di browser ini. Kalau sebuah kasus diulang, riwayat kasus itu ikut terhapus.":
+    "Demo history is stored only in this browser. Restarting a case also clears that case's history.",
+  "Coba ajukan biaya, kirim barang, atau isi checklist. Tindakan Anda akan tercatat di sini.":
+    "Try submitting an expense, sending goods, or filling in a checklist. Your actions will be recorded here.",
+  Sistem: "System",
+  "Kembali ke panduan ": "Back to the guide: ",
+  "Mode bebas · ": "Free mode · ",
+  "Buka dokumen contoh dan coba tindakannya. Ganti peran di atas untuk melihat apa yang bisa dilakukan tiap orang.":
+    "Open sample documents and try their actions. Switch roles above to see what each person can do.",
+  "Perubahan Anda di mode bebas tersimpan di browser ini.":
+    "Your changes in free mode are stored in this browser.",
+  "Kembalikan data awal": "Restore the starting data",
+  "Kembalikan data awal?": "Restore the starting data?",
+  "Hanya nama berkas contoh. Tidak ada nota asli yang diunggah.":
+    "Only a sample file name. No real receipt is uploaded.",
+  "Dokumen ini menunggu Manager. Ganti peran di atas untuk memprosesnya.":
+    "This document is waiting for the Manager. Switch roles above to process it.",
+  "Dokumen ini menunggu Finance. Ganti peran di atas untuk memprosesnya.":
+    "This document is waiting for Finance. Switch roles above to process it.",
+  "Penyesuaian stok disetujui oleh Manager atau Finance. Ganti peran di atas untuk memprosesnya.":
+    "Stock adjustments are approved by a Manager or Finance. Switch roles above to process it.",
+  "Pembayaran dicatat oleh Finance setelah dokumen cocok. Ganti peran di atas untuk memprosesnya.":
+    "Finance records the payment once the documents match. Switch roles above to process it.",
+  "Semua perubahan di mode bebas akan dihapus. Progress di empat panduan tetap aman.":
+    "All changes in free mode will be removed. Progress in the four guided cases stays safe.",
+  "Memuat tampilan owner…": "Loading the owner view…",
+  "Yang Anda lihat tiap pagi, tanpa bertanya di grup.":
+    "What you see every morning, without asking in the group chat.",
+  "Angka di bawah dihitung dari tindakan Anda di demo terpandu.":
+    "The numbers below come from what you did in the guided demo.",
+  "Diskusikan proses Anda": "Discuss your workflow",
+  "Kasus selesai": "Cases completed",
+  "Pembayaran tercatat (simulasi)": "Payments recorded (simulated)",
+  "Aktivitas tercatat": "Activities recorded",
+  "Status per kasus": "Status by case",
+  "Lihat semua riwayat": "See all history",
+  "Mulai dari Finance": "Start with Finance",
+  "Belum dicoba": "Not tried yet",
+  "Coba satu kasus, dan setiap tindakannya akan muncul di sini.":
+    "Try one case, and each of its actions will appear here.",
+  "Mau mencoba tanpa panduan? Di mode bebas Anda bisa membuka semua dokumen contoh, dari sudut pandang owner.":
+    "Want to try without the guide? In free mode you can open every sample document from the owner's point of view.",
+  "Semua data di sini contoh": "All data here is sample data",
+  "Kembali ke website": "Back to the website",
+  Kasus: "Case",
+  "Mode bebas · Data contoh di sini terpisah dari panduan":
+    "Free mode · The sample data here is separate from the guided cases",
+  "Lihat sebagai": "View as",
 };

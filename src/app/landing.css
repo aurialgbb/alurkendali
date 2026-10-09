@@ -159,9 +159,41 @@
 .lp .demo-explainer {
   animation: none;
 }
-.lp .flow-connectors path {
-  stroke-dasharray: none;
-  stroke-dashoffset: 0;
+/* The connector lines are drawn by Motion through their stroke-dasharray attribute;
+   no CSS rule may set stroke-dasharray on them or they show fully from the start. */
+/* In the narrow two-column range the records and the request would overlap and hide
+   the lines, so both get a little smaller to leave room for them. */
+@media (min-width: 1051px) and (max-width: 1180px) {
+  .lp .source-doc {
+    width: 148px;
+    padding: 12px;
+  }
+  .lp .controlled-card {
+    width: 258px;
+  }
+}
+/* Data flowing from each record into the request: dashes that travel toward the
+   card, and small packets that run the full length of each line. */
+.lp .flow-connectors .flow-dash {
+  stroke: #7d96e6;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 10;
+  animation: flow-travel 1.1s linear infinite;
+}
+@keyframes flow-travel {
+  to {
+    stroke-dashoffset: -15;
+  }
+}
+.flow-connectors .flow-packet {
+  fill: var(--blue);
+  stroke: white;
+  stroke-width: 1.5;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp .flow-connectors .flow-dash {
+    animation: none;
+  }
 }
 /* Rotation lives on the independent rotate property so Motion can own transform. */
 .lp .source-doc,

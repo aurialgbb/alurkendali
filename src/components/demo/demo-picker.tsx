@@ -1,10 +1,15 @@
 "use client";
 import { useLocale } from "@/lib/locale";
 import Link from "next/link";
+import { m } from "motion/react";
 import { scenarios, scenarioIds, type ScenarioId } from "@/lib/demo-scenarios";
 import { useGuided } from "@/lib/guided-store";
 import { isComplete } from "@/lib/demo-scenarios";
+import { ease, once } from "@/components/motion";
+import DemoContactLink from "./contact-link";
 
+// Each preview plays its case once when it scrolls into view: the receipt meets the
+// request, the stock moves, the three documents line up, the checklist fills.
 export function ProcessPreview({ id }: { id: ScenarioId }) {
   const { t: tr } = useLocale();
   if (id === "finance")
@@ -16,12 +21,25 @@ export function ProcessPreview({ id }: { id: ScenarioId }) {
           <div className="mini-lines" />
           <small>{tr("Perlengkapan cabang")}</small>
         </div>
-        <div className="mini-receipt">
+        <m.div
+          className="mini-receipt"
+          initial={{ opacity: 0, x: 40, rotate: 14 }}
+          whileInView={{ opacity: 1, x: 0, rotate: 5 }}
+          viewport={once}
+          transition={{ duration: 0.7, ease }}
+        >
           <span>{tr("Nota contoh")}</span>
           <div className="mini-lines" />
           <strong>{"Rp350.000"}</strong>
-          <small>{tr("Nominal cocok ✓")}</small>
-        </div>
+          <m.small
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={once}
+            transition={{ duration: 0.4, delay: 0.8 }}
+          >
+            {tr("Nominal cocok ✓")}
+          </m.small>
+        </m.div>
         <div className="mini-flow">
           <span>{tr("Staf")}</span>
           <i /> <span>{"Manager"}</span>
@@ -45,10 +63,16 @@ export function ProcessPreview({ id }: { id: ScenarioId }) {
             <small>{tr("rim")}</small>
           </strong>
         </div>
-        <div className="mini-transfer">
+        <m.div
+          className="mini-transfer"
+          initial={{ opacity: 0, x: -18 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={once}
+          transition={{ duration: 0.8, ease }}
+        >
           {tr("20 rim")}
           <span>{"→"}</span>
-        </div>
+        </m.div>
         <div className="mini-location">
           <span>{tr("Cabang Kemang")}</span>
           <div className="mini-boxes">
@@ -65,7 +89,14 @@ export function ProcessPreview({ id }: { id: ScenarioId }) {
     return (
       <div className="preview-procurement" aria-hidden="true">
         {["Pesanan", "Penerimaan", "Tagihan"].map((t, i) => (
-          <div key={t} className="mini-document">
+          <m.div
+            key={t}
+            className="mini-document"
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: i === 1 ? -9 : 0 }}
+            viewport={once}
+            transition={{ duration: 0.5, delay: i * 0.15, ease }}
+          >
             <small>
               {"0"}
               {i + 1}
@@ -73,7 +104,7 @@ export function ProcessPreview({ id }: { id: ScenarioId }) {
             <span>{tr(t)}</span>
             <div className="mini-lines" />
             <strong>{tr(i === 1 ? "2 unit" : "Rp3,2 jt")}</strong>
-          </div>
+          </m.div>
         ))}
         <span className="mini-match">
           {tr("Tiga dokumen, satu pemeriksaan")}
@@ -87,7 +118,12 @@ export function ProcessPreview({ id }: { id: ScenarioId }) {
         <strong>{tr("Persiapan buka")}</strong>
         <small>{tr("2 dari 4 pemeriksaan")}</small>
         <div className="mini-progress">
-          <i />
+          <m.i
+            initial={{ width: "0%" }}
+            whileInView={{ width: "50%" }}
+            viewport={once}
+            transition={{ duration: 0.9, ease }}
+          />
         </div>
       </div>
       <div className="mini-checks">
@@ -107,27 +143,32 @@ export default function DemoPicker() {
     <div className="demo-picker">
       <div className="picker-intro">
         <div>
-          <p className="demo-eyebrow">{tr("Coba alurnya. Lihat hasilnya.")}</p>
+          <p className="demo-eyebrow">{tr("Demo interaktif")}</p>
           <h1>
-            {tr("Mulai dari satu")}
-            <br />
-            <span>{tr("masalah sehari-hari.")}</span>
+            {tr("Mulai dari satu")} <span>{tr("masalah sehari-hari.")}</span>
           </h1>
           <p>
             {tr(
-              "Pilih proses yang paling dekat dengan pekerjaan Anda. Kami pandu dari tindakan pertama sampai hasilnya tercatat.",
+              "Pilih proses yang paling mirip dengan pekerjaan di kantor Anda. Kami pandu langkah demi langkah, sampai jejaknya tercatat.",
             )}
           </p>
         </div>
         <div className="picker-note">
-          <span>{"01 → 02 → 03"}</span>
-          <strong>{tr("Pilih kasus. Jalankan. Pahami.")}</strong>
+          <strong>
+            {tr("Pilih satu kasus, jalankan sendiri, lihat hasilnya.")}
+          </strong>
           <p>
             {tr(
-              "Gunakan data contoh yang sudah tersedia. Tidak perlu daftar atau mengisi data perusahaan.",
+              "Data contoh sudah disiapkan. Tidak perlu daftar atau mengisi data perusahaan. Satu kasus selesai sekitar satu menit.",
             )}
           </p>
-          <Link href="/demo/overview">{tr("Lihat ringkasan manajemen →")}</Link>
+          <Link href="/demo/overview">{tr("Lihat tampilan owner")}</Link>
+          <DemoContactLink
+            source="demo_picker_contact"
+            className="demo-text-link"
+          >
+            {tr("Langsung diskusikan proses Anda")}
+          </DemoContactLink>
         </div>
       </div>
       {notice && (
@@ -177,7 +218,6 @@ export default function DemoPicker() {
                         ? "Lanjutkan demo"
                         : `Coba ${c.label}`,
                   )}
-                  <span aria-hidden="true">{"↗"}</span>
                 </span>
               </div>
             </Link>
@@ -186,9 +226,8 @@ export default function DemoPicker() {
       </div>
       <div className="picker-footer">
         <p>
-          {tr(
-            "Seluruh dokumen, perusahaan, dan transaksi di sini adalah simulasi.",
-          )}
+          {tr("Mau mencoba tanpa panduan? ")}
+          <Link href="/demo/finance?mode=explore">{tr("Buka mode bebas")}</Link>
         </p>
         <Link href="/">{tr("Kembali ke Alur Kendali")}</Link>
       </div>

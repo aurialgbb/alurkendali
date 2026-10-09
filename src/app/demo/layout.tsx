@@ -5,6 +5,7 @@ import { LocalizedText } from "@/lib/locale";
 import { localeCookie, pageCopy } from "@/lib/translate";
 import { DemoProvider } from "@/lib/demo-store";
 import { GuidedProvider } from "@/lib/guided-store";
+import { MotionProvider } from "@/components/motion";
 import { DemoNav } from "./demo-nav";
 import "./demo.css";
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,20 +24,22 @@ export default function DemoLayout({
   return (
     <DemoProvider>
       <GuidedProvider>
-        <div className="demo-shell">
-          <Suspense
-            fallback={
-              <div className="demo-loading">
-                <LocalizedText>Memuat navigasi demo…</LocalizedText>
-              </div>
-            }
-          >
-            <DemoNav />
-          </Suspense>
-          <main id="demo-content" className="demo-main">
-            {children}
-          </main>
-        </div>
+        <MotionProvider>
+          <div className="demo-shell">
+            <Suspense
+              fallback={
+                <div className="demo-loading">
+                  <LocalizedText>Memuat navigasi demo…</LocalizedText>
+                </div>
+              }
+            >
+              <DemoNav />
+            </Suspense>
+            <main id="demo-content" className="demo-main">
+              {children}
+            </main>
+          </div>
+        </MotionProvider>
       </GuidedProvider>
     </DemoProvider>
   );

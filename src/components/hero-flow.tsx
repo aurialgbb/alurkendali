@@ -1,22 +1,20 @@
 "use client";
-import { m } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { m, useReducedMotion } from "motion/react";
 import { useLocale } from "@/lib/locale";
 import Icon from "@/components/icon";
 import { ease } from "@/components/motion";
 
-// Plays once on load: scattered records arrive, connectors draw, the records settle
-// into one controlled request, then each control is ticked in order. It tells the
-// page's core promise (scattered to controlled) before the visitor scrolls.
+// Plays on load: scattered records arrive, connectors draw, the records settle into
+// one controlled request, then each control is ticked in order. After that a quiet
+// flow keeps running along the lines (dashes and small packets travelling from each
+// record into the request), because the point of the illustration is that data now
+// moves on its own. It pauses off-screen and in hidden tabs, and is static under
+// reduced motion.
 const sources = [
   { className: "source-sheet", dx: -40, dy: -18 },
   { className: "source-chat", dx: -56, dy: 10 },
   { className: "source-evidence", dx: -36, dy: 22 },
-];
-
-const connectors = [
-  "M150 78H193Q218 78 218 105V176Q218 200 243 200H290",
-  "M160 200H290",
-  "M150 322H193Q218 322 218 298V224Q218 200 243 200H290",
 ];
 
 const steps = [
@@ -24,6 +22,23 @@ const steps = [
   ["Atasan sudah menyetujui", "Keputusannya tersimpan"],
   ["Bukti sudah dilampirkan", "Bisa dibuka saat dibutuhkan"],
 ];
+
+const RADIUS = 26;
+// Order of the intro, in seconds: the records arrive (0.3 to about 1.5), the request
+// card slides in (1.5 to 2.2), only then do the lines draw, and the flow starts last.
+const LINES_AT = 2.3;
+const INK_AT = LINES_AT + 1;
+const FLOW_AT = INK_AT + 0.5;
+const FLOW_START = FLOW_AT + 0.4;
+
+type Geometry = {
+  width: number;
+  height: number;
+  cardLeft: number;
+  entryY: number;
+  entryX: number;
+  paths: string[];
+};
 
 function SourceBody({ index }: { index: number }) {
   const { t: tr } = useLocale();
@@ -70,6 +85,92 @@ function SourceBody({ index }: { index: number }) {
 
 export default function HeroFlow() {
   const { t: tr } = useLocale();
+  const reduced = useReducedMotion();
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const docRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [geo, setGeo] = useState<Geometry | null>(null);
+
+  // The lines are built from where the records and the card really are, so they meet
+  // the cards at any width instead of relying on fixed coordinates.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    function measure() {
+      const card = cardRef.current;
+      const docs = docRefs.current;
+      if (!canvas || !card || docs.length < 3 || docs.some((d) => !d)) return;
+      const starts = docs.map((d) => ({
+        x: d!.offsetLeft + d!.offsetWidth,
+        y: d!.offsetTop + d!.offsetHeight / 2,
+      }));
+      const cardLeft = card.offsetLeft;
+      const farthest = Math.max(...starts.map((s) => s.x));
+      const space = cardLeft - farthest;
+      // Not enough room between the records and the card for a readable line.
+      if (space < 40) {
+        setGeo(null);
+        return;
+      }
+      const junction = farthest + space * 0.5;
+      const radius = Math.min(RADIUS, space * 0.3);
+      const entryY = starts[1].y;
+      const entryX = junction + radius;
+      const paths = starts.map((s) => {
+        const gap = entryY - s.y;
+        if (Math.abs(gap) < radius * 2) return `M${s.x} ${s.y}H${entryX}`;
+        const dir = Math.sign(gap);
+        return [
+          `M${s.x} ${s.y}`,
+          `H${junction - radius}`,
+          `Q${junction} ${s.y} ${junction} ${s.y + dir * radius}`,
+          `V${entryY - dir * radius}`,
+          `Q${junction} ${entryY} ${entryX} ${entryY}`,
+        ].join("");
+      });
+      setGeo({
+        width: canvas.clientWidth,
+        height: canvas.clientHeight,
+        cardLeft,
+        entryY,
+        entryX,
+        paths,
+      });
+    }
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(canvas);
+    document.fonts?.ready.then(measure);
+    return () => observer.disconnect();
+  }, []);
+
+  // SMIL packets keep running on their own clock, so pause them whenever the
+  // illustration is out of view or the tab is hidden.
+  useEffect(() => {
+    const svg = svgRef.current;
+    const canvas = canvasRef.current;
+    if (!svg || !canvas || reduced) return;
+    let visible = true;
+    const sync = () => {
+      if (visible && !document.hidden) svg.unpauseAnimations();
+      else svg.pauseAnimations();
+    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(canvas);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, [reduced, geo]);
+
   return (
     <div
       className="hero-flow"
@@ -82,33 +183,77 @@ export default function HeroFlow() {
         <span>{tr("Proses yang tersebar")}</span>
         <span>{tr("Alur yang terkendali")}</span>
       </div>
-      <div className="flow-canvas">
-        <svg
-          className="flow-connectors"
-          viewBox="0 0 600 400"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          {connectors.map((d, index) => (
+      <div className="flow-canvas" ref={canvasRef}>
+        {geo && (
+          <svg
+            ref={svgRef}
+            className="flow-connectors"
+            viewBox={`0 0 ${geo.width} ${geo.height}`}
+            aria-hidden="true"
+          >
+            {geo.paths.map((d, index) => (
+              <g key={d}>
+                <m.path
+                  d={d}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{
+                    duration: 0.9,
+                    delay: LINES_AT + index * 0.12,
+                    ease,
+                  }}
+                />
+                {!reduced && (
+                  <m.path
+                    className="flow-dash"
+                    d={d}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: FLOW_AT }}
+                  />
+                )}
+              </g>
+            ))}
             <m.path
-              key={d}
-              d={d}
+              className="flow-ink"
+              d={`M${geo.entryX} ${geo.entryY}H${geo.cardLeft}`}
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1 }}
-              transition={{ duration: 0.9, delay: 1 + index * 0.12, ease }}
+              transition={{ duration: 0.4, delay: INK_AT, ease }}
             />
-          ))}
-          <m.path
-            className="flow-ink"
-            d="M250 200h40"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.4, delay: 1.9, ease }}
-          />
-        </svg>
+            {!reduced &&
+              geo.paths.map((d, index) => (
+                <circle
+                  key={`packet-${d}`}
+                  className="flow-packet"
+                  r="3.5"
+                  opacity="0"
+                >
+                  <animateMotion
+                    dur="2.6s"
+                    begin={`${FLOW_START + index * 0.85}s`}
+                    repeatCount="indefinite"
+                    path={`${d}H${geo.cardLeft}`}
+                    calcMode="linear"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    dur="2.6s"
+                    begin={`${FLOW_START + index * 0.85}s`}
+                    repeatCount="indefinite"
+                    values="0;1;1;0"
+                    keyTimes="0;0.1;0.88;1"
+                  />
+                </circle>
+              ))}
+          </svg>
+        )}
         {sources.map((source, index) => (
           <m.div
             key={source.className}
+            ref={(el) => {
+              docRefs.current[index] = el;
+            }}
             className={`source-doc ${source.className}`}
             initial={{ opacity: 0, x: source.dx, y: source.dy }}
             animate={{
@@ -127,6 +272,7 @@ export default function HeroFlow() {
           </m.div>
         ))}
         <m.div
+          ref={cardRef}
           className="controlled-card"
           initial={{ opacity: 0, x: 28, scale: 0.97 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}

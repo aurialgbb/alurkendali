@@ -387,11 +387,6 @@ h1 > span {
   stroke: #bbc9e9;
   stroke-width: 1.5;
 }
-.flow-connectors path {
-  stroke-dasharray: 500;
-  stroke-dashoffset: 500;
-  animation: draw-line 1.6s ease 1s forwards;
-}
 .flow-connectors .flow-ink {
   stroke: var(--blue);
   stroke-width: 2;

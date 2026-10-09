@@ -78,11 +78,11 @@ const fs = require("node:fs");
     const value = await page.locator("#contact-message").inputValue();
     assert.match(value, /Area yang ingin dibahas:/);
     const expected = [
-      "finance / reconciliation",
-      "inventory / asset",
-      "procurement / spending",
-      "workflow / approval",
-      "management reporting",
+      "finance dan rekonsiliasi",
+      "persediaan dan aset",
+      "pembelian dan pengeluaran",
+      "alur kerja dan persetujuan",
+      "laporan manajemen",
     ][i];
     assert(value.includes(expected));
     await page.keyboard.press("Escape");

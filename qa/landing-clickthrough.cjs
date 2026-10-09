@@ -67,7 +67,7 @@ const log = (line) => console.log(`PASS ${line}`);
   log("solution tabs: click Procurement, ArrowRight -> Operations, illustration follows");
   await page.locator("#solusi").getByRole("button", { name: "Diskusikan Operations" }).click();
   await page.locator("#contact-title").waitFor();
-  assert.match(await page.locator("#contact-message").inputValue(), /workflow \/ approval/);
+  assert.match(await page.locator("#contact-message").inputValue(), /alur kerja dan persetujuan/);
   await page.keyboard.press("Escape");
   log("solution 'Diskusikan Operations' -> dialog with operations context");
 

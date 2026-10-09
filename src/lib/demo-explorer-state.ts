@@ -17,7 +17,8 @@ export type NewExpense = {
 };
 export function initialExplorer() {
   return structuredClone({
-    currentRole: "staff" as RoleType,
+    // Free mode opens as the owner, so no document is locked on first look.
+    currentRole: "director" as RoleType,
     expenses: INITIAL_EXPENSES,
     inventory: INITIAL_INVENTORY,
     procurement: INITIAL_PROCUREMENT,
@@ -113,7 +114,7 @@ export function explorerReducer(
         item.status !== "pending_manager"
       )
         return fail(
-          "Persetujuan ini membutuhkan Manager atau Direktur dan status menunggu Manager.",
+          "Persetujuan ini dilakukan Manager atau Direktur, dan hanya untuk dokumen yang menunggu Manager.",
         );
       item.status = "pending_finance";
       item.managerApproval = {
@@ -135,7 +136,7 @@ export function explorerReducer(
         !item.receiptName
       )
         return fail(
-          "Verifikasi membutuhkan Finance/Direktur, persetujuan Manager, dan bukti contoh.",
+          "Verifikasi dilakukan Finance atau Direktur, setelah Manager menyetujui dan bukti terlampir.",
         );
       item.status = "verified_paid";
       item.financeVerification = {
@@ -159,7 +160,7 @@ export function explorerReducer(
           : user.canVerifyAudit)
       )
         return fail(
-          "Penolakan membutuhkan peran pemeriksa, status menunggu, dan alasan.",
+          "Penolakan butuh alasan, dan hanya bisa dilakukan pemeriksa pada dokumen yang masih menunggu.",
         );
       item.status = "rejected";
       item.notes += ` Alasan penolakan: ${action.note.trim()}`;

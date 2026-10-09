@@ -7,6 +7,29 @@ export const site = {
   linkedin: "",
 };
 
+/** WhatsApp number from env, or "" when it is missing or malformed. */
+export function whatsappNumber() {
+  const number = site.whatsappNumber.replace(/[^0-9]/g, "");
+  return /^[1-9]\d{7,14}$/.test(number) ? number : "";
+}
+
+/**
+ * Where a "discuss this" button should go. With a WhatsApp number it opens a chat
+ * with a prefilled message; without one it returns to the landing page, which opens
+ * its contact dialog on `kontak=1`.
+ */
+export function contactHref(message: string, demo?: string) {
+  const number = whatsappNumber();
+  if (number)
+    return {
+      href: `https://wa.me/${number}?text=${encodeURIComponent(message)}`,
+      external: true,
+    };
+  const query = new URLSearchParams({ kontak: "1" });
+  if (demo) query.set("demo", demo);
+  return { href: `/?${query.toString()}#diskusi`, external: false };
+}
+
 export const navigation = [
   { label: "Solusi", href: "#solusi" },
   { label: "Demo interaktif", href: "/demo" },
@@ -19,7 +42,7 @@ export const solutions = [
     id: "finance",
     label: "Finance & Controls",
     short: "Finance",
-    context: "finance / reconciliation",
+    context: "finance dan rekonsiliasi",
     title: "Uangnya sudah keluar, tapi bukti dan notanya ada di mana?",
     description:
       "Pengajuan biaya, reimbursement, dan uang muka disimpan bersama persetujuan dan buktinya. Mau cek kelengkapannya, tidak perlu buka banyak file.",
@@ -41,7 +64,7 @@ export const solutions = [
     id: "inventory",
     label: "Inventory & Assets",
     short: "Inventory",
-    context: "inventory / asset",
+    context: "persediaan dan aset",
     title: "Barangnya sekarang di mana, dan siapa yang memegangnya?",
     description:
       "Barang masuk, pindah lokasi, dan serah terima aset tercatat. Kalau stok selisih, tim punya jejak untuk mulai menelusurinya.",
@@ -63,8 +86,9 @@ export const solutions = [
     id: "procurement",
     label: "Procurement",
     short: "Procurement",
-    context: "procurement / spending",
-    title: "Tagihan supplier tiba-tiba datang, tapi siapa yang pesan barangnya?",
+    context: "pembelian dan pengeluaran",
+    title:
+      "Tagihan supplier tiba-tiba datang, tapi siapa yang pesan barangnya?",
     description:
       "Permintaan pembelian, persetujuan anggaran, PO, dan invoice saling terhubung. Jadi kelihatan apa yang dipesan dan sudah sampai tahap mana.",
     outcomes: [
@@ -85,8 +109,9 @@ export const solutions = [
     id: "operations",
     label: "Operations",
     short: "Operations",
-    context: "workflow / approval",
-    title: "Pekerjaan tersendat di tengah jalan karena tidak jelas giliran siapa?",
+    context: "alur kerja dan persetujuan",
+    title:
+      "Pekerjaan tersendat di tengah jalan karena tidak jelas giliran siapa?",
     description:
       "Pekerjaan rutin antar tim atau cabang jadi lebih rapi. Pengajuan, dokumen, dan statusnya langsung terlihat oleh orang yang harus menindaklanjuti.",
     outcomes: [
@@ -107,8 +132,9 @@ export const solutions = [
     id: "reporting",
     label: "Reporting",
     short: "Reporting",
-    context: "management reporting",
-    title: "Mau tahu kondisi bisnis terbaru, tapi harus menunggu rekap manual berhari-hari?",
+    context: "laporan manajemen",
+    title:
+      "Mau tahu kondisi bisnis terbaru, tapi harus menunggu rekap manual berhari-hari?",
     description:
       "Laporan disusun dari pekerjaan yang sudah tercatat. Kalau ada angka yang perlu dijelaskan, transaksi di baliknya bisa dibuka.",
     outcomes: [

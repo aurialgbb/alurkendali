@@ -56,12 +56,12 @@ export function GuidedProvider({ children }: { children: ReactNode }) {
           dispatch({ type: "load", value: saved.states });
         else
           setNotice(
-            "Progress lama tidak dapat dibaca. Skenario dimulai dari data contoh yang baru.",
+            "Progres demo sebelumnya tidak terbaca, jadi kasus dimulai lagi dari awal.",
           );
       }
     } catch {
       setNotice(
-        "Progress sebelumnya tidak dapat dibaca. Anda tetap dapat mencoba demo pada sesi ini.",
+        "Progres sebelumnya tidak terbaca. Demo tetap bisa dicoba di sesi ini.",
       );
     }
     setLoaded(true);
@@ -72,7 +72,7 @@ export function GuidedProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(KEY, JSON.stringify({ version: 1, states }));
     } catch {
       setNotice(
-        "Penyimpanan browser tidak tersedia. Perubahan hanya berlaku selama sesi ini.",
+        "Browser ini tidak mengizinkan penyimpanan, jadi progres hanya bertahan selama halaman terbuka.",
       );
     }
   }, [states, loaded]);

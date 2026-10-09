@@ -20,8 +20,15 @@ import {
   useReducedMotion,
   useScroll,
 } from "motion/react";
-import { faqs, navigation, site, solutions } from "@/lib/site";
+import {
+  faqs,
+  navigation,
+  site,
+  solutions,
+  whatsappNumber,
+} from "@/lib/site";
 import Icon from "@/components/icon";
+import BrandMark from "@/components/brand";
 import HeroFlow from "@/components/hero-flow";
 import DemoSection from "@/components/demo-flow";
 import SolutionIllustration from "@/components/solution-illustration";
@@ -34,27 +41,7 @@ import {
 } from "@/components/pain-visuals";
 import { MotionProvider, ease, once, rise, stagger } from "@/components/motion";
 
-type EventDetails = Record<string, string>;
-declare global {
-  interface Window {
-    alurEvents?: { event: string; details: EventDetails; at: string }[];
-  }
-}
-function track(event: string, details: EventDetails = {}) {
-  const query = new URLSearchParams(window.location.search);
-  const attribution: EventDetails = {};
-  ["utm_source", "utm_medium", "utm_campaign"].forEach((key) => {
-    const value = query.get(key);
-    if (value) attribution[key] = value.slice(0, 120);
-  });
-  const entry = {
-    event,
-    details: { ...attribution, ...details },
-    at: new Date().toISOString(),
-  };
-  window.alurEvents = [...(window.alurEvents ?? []).slice(-99), entry];
-  window.dispatchEvent(new CustomEvent("alur:analytics", { detail: entry }));
-}
+import { track } from "@/lib/track";
 
 // Headings are wiped in from the top, like a line being written into a ledger.
 // It is the one repeated entrance on the page; body copy stays still.
@@ -92,33 +79,21 @@ function Headline({
 
 function Brand({ footer = false }: { footer?: boolean }) {
   const { t: tr } = useLocale();
+  if (!footer)
+    return <BrandMark href="#top" label={`${site.name}, kembali ke atas`} />;
   return (
     <a
-      className={`brand ${footer ? "brand-footer" : ""}`}
+      className="brand brand-footer"
       href="#top"
       aria-label={tr(`${site.name}, kembali ke atas`)}
     >
-      {footer ? (
-        <Image
-          src="/logo.png"
-          alt={tr(site.name)}
-          width={360}
-          height={110}
-          className="brand-image"
-        />
-      ) : (
-        <>
-          <Image
-            src="/logo-icon.png"
-            alt=""
-            width={40}
-            height={40}
-            priority
-            className="brand-icon"
-          />
-          <span className="brand-wordmark">{"AlurKendali"}</span>
-        </>
-      )}
+      <Image
+        src="/logo.png"
+        alt={tr(site.name)}
+        width={360}
+        height={110}
+        className="brand-image"
+      />
     </a>
   );
 }
@@ -989,8 +964,8 @@ function LandingPage() {
     const text = `Halo, saya ingin mendiskusikan proses kerja di kantor yang saat ini masih manual atau pakai spreadsheet. Area yang ingin dibahas: ${area}. Boleh minta waktu untuk diskusi alurnya?`;
     track(source, { area });
     setMenuOpen(false);
-    const number = site.whatsappNumber.replace(/[^0-9]/g, "");
-    if (/^[1-9]\d{7,14}$/.test(number)) {
+    const number = whatsappNumber();
+    if (number) {
       window.open(
         `https://wa.me/${number}?text=${encodeURIComponent(tr(text))}`,
         "_blank",
@@ -1001,6 +976,25 @@ function LandingPage() {
     setMessage(text);
     dialogRef.current?.showModal();
   }
+
+  // A visitor coming back from the demo (`?kontak=1`) lands on the open contact
+  // dialog, already carrying the category they tried.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("kontak") !== "1") return;
+    params.delete("kontak");
+    const query = params.toString();
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`,
+    );
+    // With a WhatsApp number the demo links straight to wa.me, and a popup opened
+    // without a click would be blocked anyway.
+    if (!whatsappNumber()) openContact("demo_contact_return");
+    // openContact is recreated each render; this should run once on arrival.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ContactContext.Provider value={openContact}>

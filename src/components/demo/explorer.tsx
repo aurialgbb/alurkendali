@@ -123,14 +123,13 @@ export default function Explorer({ id }: { id: ScenarioId }) {
   return (
     <div className="explorer-view">
       <Link className="explorer-return" href={`/demo/${id}?mode=guided`}>
-        {tr("Ikuti panduan ")}
+        {tr("Kembali ke panduan ")}
         {tr(scenarios[id].label)}
-        {" →"}
       </Link>
       <header className="report-heading">
         <div>
           <p className="demo-eyebrow">
-            {tr("Mode eksplorasi · ")}
+            {tr("Mode bebas · ")}
             {tr(scenarios[id].label)}
           </p>
           <h1>
@@ -146,7 +145,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
           </h1>
           <p>
             {tr(
-              "Telusuri data contoh, buka dokumen, dan coba tindakan sesuai peran Anda.",
+              "Buka dokumen contoh dan coba tindakannya. Ganti peran di atas untuk melihat apa yang bisa dilakukan tiap orang.",
             )}
           </p>
         </div>
@@ -291,13 +290,9 @@ export default function Explorer({ id }: { id: ScenarioId }) {
         </div>
       )}
       <footer className="explorer-footer">
-        <p>
-          {tr(
-            "Semua nama, lampiran, dan pembayaran di sini adalah data contoh.",
-          )}
-        </p>
+        <p>{tr("Perubahan Anda di mode bebas tersimpan di browser ini.")}</p>
         <button className="demo-text-button" onClick={() => setResetting(true)}>
-          {tr("Reset data eksplorasi")}
+          {tr("Kembalikan data awal")}
         </button>
       </footer>
       {selected && (
@@ -336,7 +331,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                 <p>{expense.receiptName}</p>
                 <span>
                   {tr(
-                    "Representasi dokumen untuk simulasi. Tidak ada nota asli atau berkas pribadi yang diunggah.",
+                    "Hanya nama berkas contoh. Tidak ada nota asli yang diunggah.",
                   )}
                 </span>
               </div>
@@ -420,13 +415,11 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                 </div>
               ) : expense.status.startsWith("pending") ? (
                 <p className="explorer-role-hint">
-                  {tr("Pilih peran")}{" "}
                   {tr(
                     expense.status === "pending_manager"
-                      ? "Manager"
-                      : "Finance",
-                  )}{" "}
-                  {tr("di atas halaman untuk memproses dokumen ini.")}
+                      ? "Dokumen ini menunggu Manager. Ganti peran di atas untuk memprosesnya."
+                      : "Dokumen ini menunggu Finance. Ganti peran di atas untuk memprosesnya.",
+                  )}
                 </p>
               ) : null}
             </>
@@ -469,7 +462,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                 ) : (
                   <p className="explorer-role-hint">
                     {tr(
-                      "Pilih peran Manager atau Finance untuk menyetujui penyesuaian.",
+                      "Penyesuaian stok disetujui oleh Manager atau Finance. Ganti peran di atas untuk memprosesnya.",
                     )}
                   </p>
                 ))}
@@ -529,7 +522,7 @@ export default function Explorer({ id }: { id: ScenarioId }) {
                 ) : (
                   <p className="explorer-role-hint">
                     {tr(
-                      "Pilih peran Finance untuk mencatat pembayaran setelah dokumen cocok.",
+                      "Pembayaran dicatat oleh Finance setelah dokumen cocok. Ganti peran di atas untuk memprosesnya.",
                     )}
                   </p>
                 ))}
@@ -633,12 +626,12 @@ export default function Explorer({ id }: { id: ScenarioId }) {
       )}
       {resetting && (
         <RecordDialog
-          title="Reset data eksplorasi?"
+          title="Kembalikan data awal?"
           onClose={() => setResetting(false)}
         >
           <p>
             {tr(
-              "Seluruh perubahan pada mode eksplorasi kembali ke data awal. Progress empat panduan tidak ikut direset.",
+              "Semua perubahan di mode bebas akan dihapus. Progress di empat panduan tetap aman.",
             )}
           </p>
           <div className="explorer-detail-actions">

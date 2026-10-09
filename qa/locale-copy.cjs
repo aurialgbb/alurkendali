@@ -59,8 +59,8 @@ for (const record of [
   if (
     /[A-Za-z]/.test(record.title) &&
     ![
-      "Opening SOP & Cash Float Checklist",
-      "Mid-Day Restock & Shift Handover",
+      "Checklist Buka Toko & Uang Awal Kasir",
+      "Isi Ulang Stok Siang & Serah Terima Shift",
     ].includes(record.title)
   )
     assert.notEqual(

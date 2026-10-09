@@ -1,12 +1,33 @@
 "use client";
 import { useLocale } from "@/lib/locale";
 import { useState, type FormEvent } from "react";
+import { AnimatePresence, m } from "motion/react";
+import { ease } from "@/components/motion";
 import {
   checklist,
+  roleLabels,
   type ScenarioState,
   type ScenarioAction,
 } from "@/lib/demo-scenarios";
 export const rupiah = (n: number) => `Rp${n.toLocaleString("id-ID")}`;
+
+/** A number that slides in when it changes, so a moving balance is noticed. */
+function Count({ value }: { value: number }) {
+  return (
+    <AnimatePresence mode="popLayout" initial={false}>
+      <m.span
+        key={value}
+        className="count-value"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.35, ease }}
+      >
+        {value}
+      </m.span>
+    </AnimatePresence>
+  );
+}
 type Props = {
   s: ScenarioState;
   enabled: boolean;
@@ -25,10 +46,26 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
     else if (status === "submitted") act({ type: "approve" });
     else act({ type: "verify" });
   }
+  const comparing = status === "approved";
   return (
     <form onSubmit={submit} className="workbench-finance">
       <div className="document-pair">
         <section className="business-document">
+          {/* The decision lands on the document itself, the way a stamp would. */}
+          <AnimatePresence>
+            {["approved", "paid", "rejected"].includes(status) && (
+              <m.span
+                key={status === "rejected" ? "rejected" : "approved"}
+                className={`doc-stamp ${status === "rejected" ? "is-rejected" : ""}`}
+                initial={{ opacity: 0, scale: 1.4, rotate: -14 }}
+                animate={{ opacity: 1, scale: 1, rotate: -8 }}
+                transition={{ duration: 0.4, ease }}
+                aria-hidden="true"
+              >
+                {tr(status === "rejected" ? "Ditolak" : "Disetujui Manager")}
+              </m.span>
+            )}
+          </AnimatePresence>
           <div className="document-topline">
             <span>{"EXP-DEMO-001"}</span>
             <span>{tr("Pengajuan biaya")}</span>
@@ -54,7 +91,9 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
               <dt>{tr("Cabang")}</dt>
               <dd>{"Kemang"}</dd>
             </div>
-            <div className="document-total">
+            <div
+              className={`document-total ${comparing ? "is-comparing" : ""}`}
+            >
               <dt>{tr("Total pengajuan")}</dt>
               <dd>{tr(rupiah(350000))}</dd>
             </div>
@@ -94,7 +133,6 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
         <aside className="receipt-paper" aria-label={tr("Nota belanja contoh")}>
           <span className="receipt-label">{tr("Lampiran · Nota contoh")}</span>
           <h3>{tr("Toko Perlengkapan")}</h3>
-          <p>{tr("Dokumen simulasi, bukan nota transaksi nyata.")}</p>
           <div className="receipt-rule" />
           <div className="receipt-item">
             <span>
@@ -113,14 +151,31 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
             <strong>{"Rp100.000"}</strong>
           </div>
           <div className="receipt-rule" />
-          <div className="receipt-item receipt-total">
+          <div
+            className={`receipt-item receipt-total ${comparing ? "is-comparing" : ""}`}
+          >
             <span>{"Total"}</span>
             <strong>{"Rp350.000"}</strong>
           </div>
-          <div className="receipt-match">
-            <span>{"✓"}</span>
-            {tr(" Sama dengan nilai pengajuan")}
-          </div>
+          {/* Matching is Finance's job, so the receipt only says "cocok" once Finance has checked it. */}
+          {status === "paid" ? (
+            <m.div
+              className="receipt-match"
+              initial={{ opacity: 0, scale: 1.3, rotate: -6 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 0.4, ease }}
+            >
+              {tr("✓ Cocok dengan pengajuan Rp350.000")}
+            </m.div>
+          ) : (
+            <div className="receipt-match is-pending">
+              {tr(
+                comparing
+                  ? "Bandingkan dengan total pengajuan"
+                  : "Belum dicocokkan",
+              )}
+            </div>
+          )}
           <div className="receipt-end">
             {tr("Bukti dan pengajuan")}
             <br />
@@ -153,7 +208,6 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
                       ? "Setujui pengajuan"
                       : "Verifikasi & catat pembayaran",
               )}
-              <span aria-hidden="true">{"→"}</span>
             </button>
             {status === "submitted" && (
               <button
@@ -169,7 +223,7 @@ export function FinanceWorkbench({ s, enabled, act }: Props) {
             {tr(
               status === "approved"
                 ? "Pembayaran ini simulasi. Tidak ada uang yang ditransfer."
-                : "Tindakan Anda akan tercatat pada riwayat dokumen.",
+                : "Tindakan ini langsung masuk ke jejak pekerjaan.",
             )}
           </p>
         </div>
@@ -196,15 +250,31 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
           </div>
           <h2>{tr("Gudang Pusat")}</h2>
           <strong>
-            {tr(inv.source)}
+            <Count value={inv.source} />
             <small>{tr("rim")}</small>
           </strong>
           <p>{tr("Saldo tersedia")}</p>
         </section>
         <div className={`stock-transit ${inv.transit ? "is-moving" : ""}`}>
-          <span aria-hidden="true">{"→"}</span>
+          {/* The parcel sits where the goods are: warehouse, on the road, or at the branch. */}
+          <span className="transit-track" aria-hidden="true">
+            <m.i
+              className="transit-parcel"
+              initial={false}
+              animate={{
+                left:
+                  inv.status === "draft"
+                    ? "0%"
+                    : inv.status === "sent"
+                      ? "50%"
+                      : "100%",
+                opacity: inv.status === "draft" ? 0.35 : 1,
+              }}
+              transition={{ duration: 0.9, ease }}
+            />
+          </span>
           <strong>
-            {tr(inv.transit)}
+            <Count value={inv.transit} />
             {tr(" rim")}
           </strong>
           <p>
@@ -222,7 +292,7 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
           </div>
           <h2>{tr("Cabang Kemang")}</h2>
           <strong>
-            {tr(inv.destination)}
+            <Count value={inv.destination} />
             <small>{tr("rim")}</small>
           </strong>
           <p>{tr("Saldo tersedia")}</p>
@@ -230,11 +300,17 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
       </div>
       <div className="stock-conservation">
         <span>{tr("Kertas A4 · SKU-KRT-001")}</span>
-        <strong>
+        {/* Flashes on every move to show the total never changes, only the location. */}
+        <m.strong
+          key={inv.status}
+          initial={{ backgroundColor: "#fbeee0" }}
+          animate={{ backgroundColor: "#fbeee000" }}
+          transition={{ duration: 1.4 }}
+        >
           {"Total "}
           {tr(inv.source + inv.transit + inv.destination)}
           {tr(" rim di seluruh lokasi")}
-        </strong>
+        </m.strong>
       </div>
       <form
         className="transfer-document"
@@ -281,7 +357,6 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
                 ? "Kirim dari Gudang Pusat"
                 : `Konfirmasi terima ${inv.quantity} rim`,
             )}
-            <span aria-hidden="true">{"→"}</span>
           </button>
         )}
         {inv.status === "received" && (
@@ -298,12 +373,18 @@ export function InventoryWorkbench({ s, enabled, act }: Props) {
 export function ProcurementWorkbench({ s, enabled, act }: Props) {
   const { t: tr } = useLocale();
   const [quantity, setQuantity] = useState("2");
-  const [invoice, setInvoice] = useState(String(s.procurement.invoice));
   const p = s.procurement;
   const received = ["received", "matched", "paid"].includes(p.status);
   const matched = ["matched", "paid"].includes(p.status);
-  const configuredInvoice =
-    p.status === "received" ? Number(invoice) : p.invoice;
+  // The supplier's first invoice is Rp300.000 too high. Matching it is not optional:
+  // the visitor sees payment held before the corrected invoice arrives.
+  const FIRST_INVOICE = 3500000;
+  const shownInvoice =
+    p.status === "received"
+      ? p.mismatch
+        ? p.invoice
+        : FIRST_INVOICE
+      : p.invoice;
   return (
     <div className="workbench-procurement">
       <div className="procurement-context">
@@ -375,16 +456,47 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
               <dd>{"PO-DEMO-001"}</dd>
             </div>
           </dl>
-          <strong>{tr(rupiah(configuredInvoice))}</strong>
+          <strong>
+            {received ? tr(rupiah(shownInvoice)) : tr("Belum masuk")}
+          </strong>
           <span className={`document-status ${matched ? "is-ok" : ""}`}>
             {tr(
               matched
                 ? "✓ Tagihan cocok"
                 : p.mismatch
-                  ? "Selisih perlu diperiksa"
-                  : "Belum dicocokkan",
+                  ? "Selisih Rp300.000 dari PO"
+                  : received
+                    ? "Belum dicocokkan"
+                    : "Menunggu barang diterima",
             )}
           </span>
+          <AnimatePresence>
+            {p.mismatch && p.status === "received" && (
+              <m.span
+                key="held"
+                className="doc-stamp is-held"
+                initial={{ opacity: 0, scale: 1.4, rotate: -14 }}
+                animate={{ opacity: 1, scale: 1, rotate: -8 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease }}
+                aria-hidden="true"
+              >
+                {tr("Pembayaran ditahan")}
+              </m.span>
+            )}
+            {matched && (
+              <m.span
+                key="matched"
+                className="doc-stamp"
+                initial={{ opacity: 0, scale: 1.4, rotate: -14 }}
+                animate={{ opacity: 1, scale: 1, rotate: -8 }}
+                transition={{ duration: 0.4, ease }}
+                aria-hidden="true"
+              >
+                {tr("Cocok")}
+              </m.span>
+            )}
+          </AnimatePresence>
         </section>
       </div>
       {p.status === "paid" && (
@@ -404,7 +516,10 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
                 : p.status === "ordered"
                   ? { type: "goods", quantity: Number(quantity) }
                   : p.status === "received"
-                    ? { type: "match", invoice: Number(invoice) }
+                    ? {
+                        type: "match",
+                        invoice: p.mismatch ? 3200000 : FIRST_INVOICE,
+                      }
                     : { type: "pay" },
             );
           }}
@@ -429,25 +544,13 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
             </label>
           )}
           {p.status === "received" && (
-            <label className="demo-field">
-              {tr("Pilih tagihan contoh")}
-              <select
-                value={invoice}
-                onChange={(e) => setInvoice(e.target.value)}
-              >
-                <option value="3200000">
-                  {tr("Rp3.200.000 · Sesuai pesanan")}
-                </option>
-                <option value="3500000">
-                  {tr("Rp3.500.000 · Coba tagihan berselisih")}
-                </option>
-              </select>
-              <small>
-                {tr(
-                  "Selisih Rp300.000 akan menahan pembayaran sampai tagihan dikoreksi.",
-                )}
-              </small>
-            </label>
+            <p className="procurement-invoice-note">
+              {tr(
+                p.mismatch
+                  ? "Supplier sudah mengirim tagihan koreksi sebesar Rp3.200.000."
+                  : "Tagihan supplier masuk: Rp3.500.000. Cocokkan dulu dengan PO dan penerimaan barang.",
+              )}
+            </p>
           )}
           <button className="demo-primary" type="submit">
             {tr(
@@ -456,10 +559,11 @@ export function ProcurementWorkbench({ s, enabled, act }: Props) {
                 : p.status === "ordered"
                   ? "Catat penerimaan barang"
                   : p.status === "received"
-                    ? "Cocokkan tiga dokumen"
+                    ? p.mismatch
+                      ? "Cocokkan tagihan koreksi Rp3.200.000"
+                      : "Cocokkan tiga dokumen"
                     : "Catat pembayaran simulasi",
             )}
-            <span aria-hidden="true">{"→"}</span>
           </button>
           {p.status === "matched" && (
             <p>
@@ -516,22 +620,45 @@ export function OperationsWorkbench({ s, enabled, act }: Props) {
         </div>
         <h3>{tr("Periksa sebelum pelanggan datang")}</h3>
         <div className="operations-checks">
-          {checklist.map((label, index) => (
-            <label
-              className={s.operations.checks[index] ? "is-checked" : ""}
-              key={label}
-            >
-              <input
-                type="checkbox"
-                checked={s.operations.checks[index]}
-                disabled={!enabled || s.operations.completed}
-                onChange={(e) =>
-                  act({ type: "check", index, checked: e.target.checked })
-                }
-              />
-              <span>{tr(label)}</span>
-            </label>
-          ))}
+          {checklist.map((label, index) => {
+            const checked = s.operations.checks[index];
+            // Who ticked it and when, straight from the event log: the evidence the
+            // next shift or the owner would otherwise have to ask for.
+            const stamp = checked
+              ? s.events.findLast((e) => e.action === `Selesai: ${label}.`)
+              : undefined;
+            return (
+              <label className={checked ? "is-checked" : ""} key={label}>
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  disabled={!enabled || s.operations.completed}
+                  onChange={(e) =>
+                    act({ type: "check", index, checked: e.target.checked })
+                  }
+                />
+                <span>{tr(label)}</span>
+                <AnimatePresence>
+                  {stamp && (
+                    <m.small
+                      className="check-meta"
+                      initial={{ opacity: 0, x: 8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3, ease }}
+                    >
+                      {tr(roleLabels[stamp.actor])}
+                      {" · "}
+                      {new Date(stamp.at).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </m.small>
+                  )}
+                </AnimatePresence>
+              </label>
+            );
+          })}
         </div>
         {enabled && !s.operations.completed && (
           <>
@@ -541,7 +668,6 @@ export function OperationsWorkbench({ s, enabled, act }: Props) {
               disabled={done !== 4}
             >
               {tr("Simpan laporan pembukaan")}
-              <span aria-hidden="true">{"→"}</span>
             </button>
             {done !== 4 && (
               <p className="checklist-hint">
@@ -555,7 +681,7 @@ export function OperationsWorkbench({ s, enabled, act }: Props) {
         {s.operations.completed && (
           <p className="document-verified">
             {tr(
-              "✓ Seluruh pemeriksaan selesai. Pelaksana dan waktu tersimpan di riwayat.",
+              "✓ Laporan tersimpan bersama pelaksana dan jam setiap pemeriksaan.",
             )}
           </p>
         )}

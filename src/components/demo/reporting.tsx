@@ -4,7 +4,79 @@ import { useState } from "react";
 import Link from "next/link";
 import { useGuided } from "@/lib/guided-store";
 import { useDemo } from "@/lib/demo-store";
+import { INITIAL_AUDIT_LOGS } from "@/lib/demo-data";
 import { scenarioIds, scenarios, roleLabels } from "@/lib/demo-scenarios";
+const INITIAL_LOG_IDS = new Set(INITIAL_AUDIT_LOGS.map((log) => log.id));
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mei",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+];
+
+// Exploration events come in two shapes: seed text ("Hari ini, 10:30", "Kemarin,
+// 21:00", "15 Sep, 16:45") and browser-local strings ("9/10/2026, 10.15.30").
+// Both become a timestamp so rows sort newest first and read in one format.
+function parseExploreTime(value: string) {
+  const now = new Date();
+  const day = (offset: number, h: string, mi: string) =>
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - offset,
+      +h,
+      +mi,
+    ).getTime();
+  let match = value.match(/^(Hari ini|Kemarin), (\d{1,2})[.:](\d{2})$/);
+  if (match) return day(match[1] === "Kemarin" ? 1 : 0, match[2], match[3]);
+  match = value.match(/^(\d{1,2}) (\w{3}), (\d{1,2})[.:](\d{2})$/);
+  if (match) {
+    const month = MONTHS.indexOf(match[2]);
+    if (month >= 0)
+      return new Date(
+        now.getFullYear(),
+        month,
+        +match[1],
+        +match[3],
+        +match[4],
+      ).getTime();
+  }
+  match = value.match(
+    /^(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s+(\d{1,2})[.:](\d{2})/,
+  );
+  if (match)
+    return new Date(
+      +match[3],
+      +match[2] - 1,
+      +match[1],
+      +match[4],
+      +match[5],
+    ).getTime();
+  return 0;
+}
+
+function relativeTime(at: number) {
+  const date = new Date(at);
+  const clock = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+  const today = new Date();
+  const startOfToday = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  ).getTime();
+  if (at >= startOfToday) return `Hari ini, ${clock}`;
+  if (at >= startOfToday - 86400000) return `Kemarin, ${clock}`;
+  return `${date.getDate()} ${MONTHS[date.getMonth()]}, ${clock}`;
+}
+
 export default function Reporting({
   initialScenario,
   initialDocument,
@@ -30,23 +102,34 @@ export default function Reporting({
         action: tr(e.action),
         searchAction: e.action,
         actor: tr(roleLabels[e.actor]),
-        date: new Date(e.at).toLocaleString("id-ID"),
+        date: relativeTime(Date.parse(e.at)),
         sort: e.at,
         href: `/demo/${id}?mode=guided`,
       })),
     )
     .sort((a, b) => b.sort.localeCompare(a.sort));
-  const exploration = auditLogs.map((e) => ({
-    key: e.id,
-    module: e.module as string,
-    code: e.docCode,
-    action: e.action === "Pengajuan ditolak" ? e.details : tr(e.details),
-    searchAction: e.details,
-    actor: e.user,
-    date: e.timestamp,
-    sort: "",
-    href: `/demo/${e.module === "system" ? "overview" : e.module}?mode=explore`,
-  }));
+  const exploration = auditLogs
+    .map((e) => {
+      const at = parseExploreTime(e.timestamp);
+      return {
+        key: e.id,
+        module: e.module as string,
+        code: e.docCode,
+        action: e.action === "Pengajuan ditolak" ? e.details : tr(e.details),
+        searchAction: e.details,
+        actor: e.user,
+        date: at ? relativeTime(at) : e.timestamp,
+        // Seed rows carry made-up relative times ("Hari ini, 10:30") that can be later
+        // than the visitor's own actions, so the visitor's actions always sort first.
+        sort: `${INITIAL_LOG_IDS.has(e.id) ? 0 : 1}${String(at).padStart(15, "0")}`,
+        href: `/demo/${e.module === "system" ? "overview" : e.module}?mode=explore`,
+      };
+    })
+    .sort((a, b) => b.sort.localeCompare(a.sort));
+  const moduleLabel = (module: string) =>
+    scenarioIds.find((id) => id === module)
+      ? scenarios[module as (typeof scenarioIds)[number]].label
+      : "Sistem";
   const records = source === "guided" ? guided : exploration;
   const filtered = records.filter(
     (e) =>
@@ -61,7 +144,9 @@ export default function Reporting({
     const csv = [
       ["Dokumen", "Modul", "Aktivitas", "Pelaksana", "Waktu"].map(tr).join(","),
       ...filtered.map((e) =>
-        [e.code, e.module, e.action, e.actor, e.date].map(cell).join(","),
+        [e.code, moduleLabel(e.module), e.action, e.actor, e.date]
+          .map(cell)
+          .join(","),
       ),
     ].join("\r\n");
     const url = URL.createObjectURL(
@@ -84,9 +169,13 @@ export default function Reporting({
     <div className="demo-report">
       <header className="report-heading">
         <div>
-          <p className="demo-eyebrow">{tr("Riwayat & pelaporan")}</p>
-          <h1>{tr("Dari hasil, kembali ke prosesnya.")}</h1>
-          <p>{tr("Lihat siapa melakukan apa pada setiap dokumen simulasi.")}</p>
+          <p className="demo-eyebrow">{tr("Riwayat")}</p>
+          <h1>{tr("Siapa melakukan apa, dan kapan.")}</h1>
+          <p>
+            {tr(
+              "Setiap tindakan di demo tercatat di sini. Cari per dokumen atau unduh sebagai CSV.",
+            )}
+          </p>
         </div>
         <button
           className="demo-secondary"
@@ -107,7 +196,7 @@ export default function Reporting({
             }}
           >
             <option value="guided">{tr("Demo terpandu")}</option>
-            <option value="exploration">{tr("Mode eksplorasi")}</option>
+            <option value="exploration">{tr("Mode bebas")}</option>
           </select>
         </label>
         <label className="demo-field">
@@ -162,7 +251,7 @@ export default function Reporting({
             <li key={e.key}>
               <div className="report-record-code">
                 <Link href={e.href}>{tr(e.code || "Catatan sistem")}</Link>
-                <span>{tr(e.module)}</span>
+                <span>{tr(moduleLabel(e.module))}</span>
               </div>
               <div className="report-record-action">
                 <p>{e.action}</p>
@@ -185,15 +274,15 @@ export default function Reporting({
             {tr(
               records.length
                 ? "Ubah kata pencarian atau hapus filter untuk melihat catatan lainnya."
-                : "Coba pengajuan biaya, kirim barang, atau isi checklist. Tindakan Anda akan tercatat di sini.",
+                : "Coba ajukan biaya, kirim barang, atau isi checklist. Tindakan Anda akan tercatat di sini.",
             )}
           </p>
-          <Link href="/demo">{tr("Pilih kasus demo →")}</Link>
+          <Link href="/demo">{tr("Pilih kasus demo")}</Link>
         </div>
       )}
       <p className="report-footnote">
         {tr(
-          "Catatan disimpan pada browser ini untuk keperluan demo. Mengulang skenario akan menghapus riwayat skenario tersebut.",
+          "Riwayat demo hanya disimpan di browser ini. Kalau sebuah kasus diulang, riwayat kasus itu ikut terhapus.",
         )}
       </p>
     </div>
